@@ -1,0 +1,79 @@
+{
+    "common": {
+        "backHome": "Back to Home",
+        "save": "Save",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "delete": "Delete",
+        "edit": "Edit",
+        "close": "Close",
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "retry": "Try again"
+    },
+    "home": {
+        "welcome": "Welcome",
+        "subtitle": "Start your learning journey",
+        "startExercise": "Start Exercise",
+        "profile": "Profile",
+        "settings": "Settings",
+        "results": "Results"
+    },
+    "exercise": {
+        "title": "Exercise",
+        "theme": "Theme",
+        "area": "Area",
+        "placeholder": "Exercise content will be displayed here.",
+        "check": "Check",
+        "next": "Next",
+        "hint": "Hint",
+        "correct": "Correct!",
+        "incorrect": "Incorrect",
+        "tryAgain": "Try again",
+        "showSolution": "Show solution"
+    },
+    "profile": {
+        "title": "Profile",
+        "placeholder": "Profile information and progress will be displayed here.",
+        "nickname": "Nickname",
+        "avatar": "Avatar",
+        "level": "Level",
+        "stars": "Stars",
+        "streak": "Streak",
+        "badges": "Badges"
+    },
+    "settings": {
+        "title": "Settings",
+        "placeholder": "Application settings will be displayed here.",
+        "language": "Language",
+        "theme": "Theme",
+        "fontSize": "Font Size",
+        "fontSizeNormal": "Normal",
+        "fontSizeLarge": "Large",
+        "fontSizeExtraLarge": "Extra Large",
+        "highContrast": "High Contrast",
+        "animations": "Animations",
+        "sound": "Sound",
+        "teacherPin": "Teacher PIN",
+        "resetProgress": "Reset Progress"
+    },
+    "results": {
+        "title": "Results",
+        "placeholder": "Exercise results and progress will be displayed here.",
+        "totalExercises": "Total Exercises",
+        "correctRate": "Correct Rate",
+        "averageTime": "Average Time",
+        "recentActivity": "Recent Activity"
+    },
+    "badges": {
+        "title": "Badges",
+        "earned": "Earned",
+        "locked": "Not yet earned"
+    },
+    "nav": {
+        "home": "Home",
+        "exercise": "Exercise",
+        "profile": "Profile",
+        "settings": "Settings"
+    }
+}

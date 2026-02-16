@@ -1,0 +1,988 @@
+{
+    "exercises": [
+        {
+            "id": "fill-blank-001",
+            "type": "fill-blank",
+            "areaId": "vocabulary",
+            "themeId": "everyday-life",
+            "level": 1,
+            "difficulty": 1,
+            "instruction": "Fill in the blank with the correct word.",
+            "content": {
+                "type": "fill-blank",
+                "sentence": "Ich {{blank}} jeden Tag zur Schule.",
+                "correctAnswer": "gehe",
+                "acceptableAnswers": [
+                    "laufe",
+                    "fahre"
+                ]
+            },
+            "hints": [
+                "Think about what you do when you move to school.",
+                "The verb starts with 'g'."
+            ],
+            "feedbackCorrect": "Great job! 'Gehe' means 'I go' in German.",
+            "feedbackIncorrect": "Not quite. The correct answer is 'gehe' - 'I go' in German."
+        },
+        {
+            "id": "fill-blank-002",
+            "type": "fill-blank",
+            "areaId": "grammar",
+            "themeId": "food",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Complete the sentence with the correct article.",
+            "content": {
+                "type": "fill-blank",
+                "sentence": "Ich möchte {{blank}} Apfel, bitte.",
+                "correctAnswer": "einen",
+                "acceptableAnswers": [
+                    "ein"
+                ]
+            },
+            "hints": [
+                "Remember: Apfel is masculine (der Apfel).",
+                "What form does 'ein' take in the accusative case?"
+            ],
+            "feedbackCorrect": "Perfect! 'Einen' is correct because Apfel is masculine and in the accusative case.",
+            "feedbackIncorrect": "The correct answer is 'einen'. Apfel is masculine, and in the accusative case, 'ein' becomes 'einen'."
+        },
+        {
+            "id": "fill-blank-003",
+            "type": "fill-blank",
+            "areaId": "vocabulary",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Fill in the missing number word.",
+            "content": {
+                "type": "fill-blank",
+                "sentence": "In meiner Klasse sind {{blank}} Schüler.",
+                "correctAnswer": "zwanzig",
+                "acceptableAnswers": [
+                    "20"
+                ],
+                "numericWordForm": "zwanzig"
+            },
+            "hints": [
+                "It's a two-digit number.",
+                "The number starts with 'zw'."
+            ],
+            "feedbackCorrect": "Excellent! 'Zwanzig' means 'twenty' in German.",
+            "feedbackIncorrect": "The answer is 'zwanzig' (twenty). Keep practicing your number words!"
+        },
+        {
+            "id": "multiple-choice-001",
+            "type": "multiple-choice",
+            "areaId": "vocabulary",
+            "themeId": "everyday-life",
+            "level": 1,
+            "difficulty": 1,
+            "instruction": "Choose the correct translation.",
+            "content": {
+                "type": "multiple-choice",
+                "question": "What does 'Guten Morgen' mean?",
+                "options": [
+                    "Good night",
+                    "Good morning",
+                    "Good evening",
+                    "Goodbye"
+                ],
+                "correctIndex": 1
+            },
+            "hints": [
+                "Think about when you greet someone early in the day.",
+                "Morgen means 'morning'."
+            ],
+            "feedbackCorrect": "That's right! 'Guten Morgen' means 'Good morning'.",
+            "feedbackIncorrect": "'Guten Morgen' means 'Good morning'. 'Morgen' translates to 'morning'."
+        },
+        {
+            "id": "multiple-choice-002",
+            "type": "multiple-choice",
+            "areaId": "grammar",
+            "themeId": "school",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Select the correct verb form.",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Er ___ ein Buch.",
+                "options": [
+                    "lesen",
+                    "liest",
+                    "lese",
+                    "leset"
+                ],
+                "correctIndex": 1
+            },
+            "hints": [
+                "The subject is 'er' (he).",
+                "What is the third person singular form of 'lesen'?"
+            ],
+            "feedbackCorrect": "Correct! 'Liest' is the third person singular form of 'lesen'.",
+            "feedbackIncorrect": "The correct form is 'liest'. For 'er/sie/es', the verb 'lesen' becomes 'liest'."
+        },
+        {
+            "id": "multiple-choice-003",
+            "type": "multiple-choice",
+            "areaId": "comprehension",
+            "themeId": "food",
+            "level": 2,
+            "difficulty": 1,
+            "instruction": "Read and answer the question.",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Maria möchte ein Sandwich mit Käse und Tomaten. Was möchte Maria?",
+                "options": [
+                    "Eine Pizza",
+                    "Ein Sandwich",
+                    "Einen Salat",
+                    "Eine Suppe"
+                ],
+                "correctIndex": 1
+            },
+            "hints": [
+                "Read the sentence carefully.",
+                "What food item is mentioned?"
+            ],
+            "feedbackCorrect": "Well done! Maria wants a sandwich with cheese and tomatoes.",
+            "feedbackIncorrect": "Maria wants 'ein Sandwich' (a sandwich). The sentence clearly states this."
+        },
+        {
+            "id": "matching-001",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "everyday-life",
+            "level": 1,
+            "difficulty": 1,
+            "instruction": "Match the German words with their English translations.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "Haus",
+                        "right": "house"
+                    },
+                    {
+                        "left": "Auto",
+                        "right": "car"
+                    },
+                    {
+                        "left": "Baum",
+                        "right": "tree"
+                    },
+                    {
+                        "left": "Blume",
+                        "right": "flower"
+                    }
+                ]
+            },
+            "hints": [
+                "Haus sounds like 'house'.",
+                "Auto is related to 'automobile'."
+            ],
+            "feedbackCorrect": "Excellent matching! You've correctly paired all the words.",
+            "feedbackIncorrect": "Some pairs were incorrect. Check the correct matches and try again."
+        },
+        {
+            "id": "matching-002",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "food",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Match the foods to their categories.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "Apfel",
+                        "right": "Obst"
+                    },
+                    {
+                        "left": "Karotte",
+                        "right": "Gemüse"
+                    },
+                    {
+                        "left": "Hähnchen",
+                        "right": "Fleisch"
+                    },
+                    {
+                        "left": "Saft",
+                        "right": "Getränk"
+                    }
+                ]
+            },
+            "hints": [
+                "Obst means fruit.",
+                "Gemüse means vegetable."
+            ],
+            "feedbackCorrect": "Perfect! You know your food categories well.",
+            "feedbackIncorrect": "Remember: Obst = fruit, Gemüse = vegetable, Fleisch = meat, Getränk = drink."
+        },
+        {
+            "id": "matching-003",
+            "type": "matching",
+            "areaId": "grammar",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Match the articles to the correct nouns.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "der",
+                        "right": "Tisch"
+                    },
+                    {
+                        "left": "die",
+                        "right": "Tafel"
+                    },
+                    {
+                        "left": "das",
+                        "right": "Buch"
+                    },
+                    {
+                        "left": "die (plural)",
+                        "right": "Stifte"
+                    }
+                ]
+            },
+            "hints": [
+                "Tisch (table) is masculine.",
+                "Buch (book) is neuter."
+            ],
+            "feedbackCorrect": "Great job! You know the genders of these nouns.",
+            "feedbackIncorrect": "Remember: der Tisch, die Tafel, das Buch, die Stifte."
+        },
+        {
+            "id": "sentence-builder-001",
+            "type": "sentence-builder",
+            "areaId": "grammar",
+            "themeId": "everyday-life",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Build a correct German sentence from the words.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subject",
+                        "words": [
+                            "Ich",
+                            "Du",
+                            "Er"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "gehe",
+                            "gehst",
+                            "geht"
+                        ]
+                    },
+                    {
+                        "label": "Object",
+                        "words": [
+                            "nach Hause",
+                            "zur Schule",
+                            "ins Kino"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Ich gehe nach Hause",
+                    "Du gehst zur Schule",
+                    "Er geht ins Kino"
+                ]
+            },
+            "hints": [
+                "Start with the subject.",
+                "Make sure the verb matches the subject."
+            ],
+            "feedbackCorrect": "Perfect sentence construction!",
+            "feedbackIncorrect": "Remember: subject + verb + object. The verb must match the subject."
+        },
+        {
+            "id": "sentence-builder-002",
+            "type": "sentence-builder",
+            "areaId": "grammar",
+            "themeId": "food",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Build sentences about food preferences.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subject",
+                        "words": [
+                            "Ich",
+                            "Wir",
+                            "Meine Familie"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "mag",
+                            "mögen",
+                            "isst"
+                        ]
+                    },
+                    {
+                        "label": "Object",
+                        "words": [
+                            "Pizza",
+                            "Nudeln",
+                            "Salat"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Ich mag Pizza",
+                    "Wir mögen Nudeln",
+                    "Meine Familie isst Salat"
+                ]
+            },
+            "hints": [
+                "Watch out for verb conjugation.",
+                "'Meine Familie' is singular (it)."
+            ],
+            "feedbackCorrect": "Excellent! You built grammatically correct sentences.",
+            "feedbackIncorrect": "Check your verb conjugations. Each subject needs a matching verb form."
+        },
+        {
+            "id": "sorting-001",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "food",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Sort the words into the correct categories.",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Obst (Fruit)",
+                        "items": [
+                            "Apfel",
+                            "Banane",
+                            "Orange"
+                        ]
+                    },
+                    {
+                        "label": "Gemüse (Vegetable)",
+                        "items": [
+                            "Tomate",
+                            "Gurke",
+                            "Karotte"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Apfel is a fruit.",
+                "Karotte is a vegetable."
+            ],
+            "feedbackCorrect": "Great sorting! You correctly categorized all the foods.",
+            "feedbackIncorrect": "Remember: Apfel, Banane, Orange are fruits. Tomate, Gurke, Karotte are vegetables."
+        },
+        {
+            "id": "sorting-002",
+            "type": "sorting",
+            "areaId": "grammar",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Sort the nouns by their gender.",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Maskulin (der)",
+                        "items": [
+                            "Tisch",
+                            "Stuhl",
+                            "Lehrer"
+                        ]
+                    },
+                    {
+                        "label": "Feminin (die)",
+                        "items": [
+                            "Tafel",
+                            "Tür",
+                            "Lehrerin"
+                        ]
+                    },
+                    {
+                        "label": "Neutrum (das)",
+                        "items": [
+                            "Buch",
+                            "Fenster",
+                            "Heft"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Most nouns ending in -in are feminine.",
+                "Most nouns ending in -er referring to people are masculine."
+            ],
+            "feedbackCorrect": "Perfect! You know your noun genders well.",
+            "feedbackIncorrect": "Study the genders: der Tisch, der Stuhl, der Lehrer, die Tafel, die Tür, die Lehrerin, das Buch, das Fenster, das Heft."
+        },
+        {
+            "id": "sorting-003",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "nature",
+            "level": 2,
+            "difficulty": 1,
+            "instruction": "Sort the animals by where they live.",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Im Wasser",
+                        "items": [
+                            "Fisch",
+                            "Wal",
+                            "Delfin"
+                        ]
+                    },
+                    {
+                        "label": "Auf dem Land",
+                        "items": [
+                            "Hund",
+                            "Katze",
+                            "Pferd"
+                        ]
+                    },
+                    {
+                        "label": "In der Luft",
+                        "items": [
+                            "Vogel",
+                            "Schmetterling",
+                            "Biene"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Fisch lives in water.",
+                "Vogel can fly."
+            ],
+            "feedbackCorrect": "Excellent categorization of animal habitats!",
+            "feedbackIncorrect": "Remember: Fisch, Wal, Delfin live in water; Hund, Katze, Pferd on land; Vogel, Schmetterling, Biene in the air."
+        },
+        {
+            "id": "writing-001",
+            "type": "writing",
+            "areaId": "writing",
+            "themeId": "everyday-life",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Write about your daily routine.",
+            "content": {
+                "type": "writing",
+                "prompt": "Describe your morning routine. What do you do after you wake up?",
+                "scaffoldLevel": "medium",
+                "scaffoldHints": [
+                    "Start with 'Ich...' (I...)",
+                    "Use time expressions like 'dann' (then)",
+                    "Include at least 3 activities"
+                ],
+                "starterWords": [
+                    "Ich",
+                    "stehe",
+                    "auf",
+                    "dann",
+                    "frühstücke",
+                    "ich"
+                ],
+                "minLength": 20
+            },
+            "hints": [
+                "Use verbs like: aufstehen, frühstücken, anziehen",
+                "Time words: zuerst, dann, danach"
+            ],
+            "feedbackCorrect": "Great writing! Your sentences are clear and grammatically correct.",
+            "feedbackIncorrect": "Good effort! Try to use complete sentences with subject and verb."
+        },
+        {
+            "id": "writing-002",
+            "type": "writing",
+            "areaId": "writing",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Write about your favorite subject in school.",
+            "content": {
+                "type": "writing",
+                "prompt": "What is your favorite subject in school? Why do you like it?",
+                "scaffoldLevel": "low",
+                "scaffoldHints": [
+                    "Name the subject",
+                    "Give reasons using 'weil' (because)",
+                    "Describe what you do in this subject"
+                ],
+                "starterWords": [
+                    "Mein",
+                    "Lieblingsfach",
+                    "ist",
+                    "Ich",
+                    "mag",
+                    "es"
+                ],
+                "minLength": 30
+            },
+            "hints": [
+                "Use 'weil' to give reasons",
+                "Include specific activities you do"
+            ],
+            "feedbackCorrect": "Excellent composition! Your writing shows good German skills.",
+            "feedbackIncorrect": "Keep practicing! Try to write longer sentences with connecting words."
+        },
+        {
+            "id": "conjugation-table-001",
+            "type": "conjugation-table",
+            "areaId": "grammar",
+            "themeId": "everyday-life",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Conjugate the verb 'sein' (to be) in present tense.",
+            "content": {
+                "type": "conjugation-table",
+                "verb": "sein",
+                "tense": "Präsens",
+                "cells": [
+                    {
+                        "person": "ich",
+                        "correctForm": "bin",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "du",
+                        "correctForm": "bist",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "er/sie/es",
+                        "correctForm": "ist",
+                        "prefilled": true
+                    },
+                    {
+                        "person": "wir",
+                        "correctForm": "sind",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "ihr",
+                        "correctForm": "seid",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "sie/Sie",
+                        "correctForm": "sind",
+                        "prefilled": false
+                    }
+                ]
+            },
+            "hints": [
+                "'sein' is an irregular verb",
+                "ich bin, du bist, er ist"
+            ],
+            "feedbackCorrect": "Perfect conjugation! You know the verb 'sein' well.",
+            "feedbackIncorrect": "Remember: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind."
+        },
+        {
+            "id": "conjugation-table-002",
+            "type": "conjugation-table",
+            "areaId": "grammar",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Conjugate the verb 'haben' (to have) in present tense.",
+            "content": {
+                "type": "conjugation-table",
+                "verb": "haben",
+                "tense": "Präsens",
+                "cells": [
+                    {
+                        "person": "ich",
+                        "correctForm": "habe",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "du",
+                        "correctForm": "hast",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "er/sie/es",
+                        "correctForm": "hat",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "wir",
+                        "correctForm": "haben",
+                        "prefilled": true
+                    },
+                    {
+                        "person": "ihr",
+                        "correctForm": "habt",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "sie/Sie",
+                        "correctForm": "haben",
+                        "prefilled": false
+                    }
+                ]
+            },
+            "hints": [
+                "'haben' is irregular in du and er/sie/es forms",
+                "ich habe, du hast, er hat"
+            ],
+            "feedbackCorrect": "Excellent! You've correctly conjugated 'haben'.",
+            "feedbackIncorrect": "Remember: ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben."
+        },
+        {
+            "id": "conjugation-table-003",
+            "type": "conjugation-table",
+            "areaId": "grammar",
+            "themeId": "everyday-life",
+            "level": 4,
+            "difficulty": 3,
+            "instruction": "Conjugate the regular verb 'lernen' (to learn) in present tense.",
+            "content": {
+                "type": "conjugation-table",
+                "verb": "lernen",
+                "tense": "Präsens",
+                "cells": [
+                    {
+                        "person": "ich",
+                        "correctForm": "lerne",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "du",
+                        "correctForm": "lernst",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "er/sie/es",
+                        "correctForm": "lernt",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "wir",
+                        "correctForm": "lernen",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "ihr",
+                        "correctForm": "lernt",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "sie/Sie",
+                        "correctForm": "lernen",
+                        "prefilled": false
+                    }
+                ]
+            },
+            "hints": [
+                "Regular verbs follow a pattern",
+                "Remove -en and add the ending: -e, -st, -t, -en, -t, -en"
+            ],
+            "feedbackCorrect": "Perfect! You understand regular verb conjugation.",
+            "feedbackIncorrect": "Regular verbs: ich lerne, du lernst, er/sie/es lernt, wir lernen, ihr lernt, sie/Sie lernen."
+        },
+        {
+            "id": "connector-insert-001",
+            "type": "connector-insert",
+            "areaId": "grammar",
+            "themeId": "everyday-life",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Choose the correct connector to complete the sentence.",
+            "content": {
+                "type": "connector-insert",
+                "sentencePart1": "Ich gehe zur Schule,",
+                "sentencePart2": "ich lerne Deutsch.",
+                "correctConnector": "weil",
+                "options": [
+                    "weil",
+                    "und",
+                    "aber",
+                    "oder"
+                ]
+            },
+            "hints": [
+                "The second part gives a reason.",
+                "'Weil' means 'because'."
+            ],
+            "feedbackCorrect": "Correct! 'Weil' connects the sentence with a reason.",
+            "feedbackIncorrect": "The correct connector is 'weil' (because). It introduces the reason for going to school."
+        },
+        {
+            "id": "connector-insert-002",
+            "type": "connector-insert",
+            "areaId": "grammar",
+            "themeId": "food",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Select the best connector for this sentence.",
+            "content": {
+                "type": "connector-insert",
+                "sentencePart1": "Ich möchte Pizza,",
+                "sentencePart2": "mein Bruder möchte Nudeln.",
+                "correctConnector": "aber",
+                "options": [
+                    "und",
+                    "aber",
+                    "weil",
+                    "denn"
+                ]
+            },
+            "hints": [
+                "The two parts show contrast.",
+                "'Aber' means 'but'."
+            ],
+            "feedbackCorrect": "Great! 'Aber' shows the contrast between your and your brother's preferences.",
+            "feedbackIncorrect": "Use 'aber' (but) to show contrast between two different preferences."
+        },
+        {
+            "id": "connector-insert-003",
+            "type": "connector-insert",
+            "areaId": "grammar",
+            "themeId": "hobbies",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Complete the sentence with the right connector.",
+            "content": {
+                "type": "connector-insert",
+                "sentencePart1": "Ich spiele Fußball",
+                "sentencePart2": "ich schwimme gern.",
+                "correctConnector": "und",
+                "options": [
+                    "und",
+                    "oder",
+                    "aber",
+                    "weil"
+                ]
+            },
+            "hints": [
+                "Both activities are positive.",
+                "'Und' means 'and'."
+            ],
+            "feedbackCorrect": "Correct! 'Und' connects two similar activities.",
+            "feedbackIncorrect": "Use 'und' (and) to connect two activities that you both do."
+        },
+        {
+            "id": "word-order-001",
+            "type": "word-order",
+            "areaId": "grammar",
+            "themeId": "everyday-life",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "Put the words in the correct order to form a sentence.",
+            "content": {
+                "type": "word-order",
+                "correctOrder": [
+                    "Ich",
+                    "gehe",
+                    "jeden",
+                    "Tag",
+                    "zur",
+                    "Schule"
+                ],
+                "scrambled": [
+                    "zur",
+                    "Ich",
+                    "Schule",
+                    "gehe",
+                    "Tag",
+                    "jeden"
+                ]
+            },
+            "hints": [
+                "Start with the subject (Ich).",
+                "The verb usually comes second in German."
+            ],
+            "feedbackCorrect": "Perfect! In German, the verb typically comes second in main clauses.",
+            "feedbackIncorrect": "The correct order is: Ich gehe jeden Tag zur Schule. Remember: Subject + Verb + Time + Place."
+        },
+        {
+            "id": "word-order-002",
+            "type": "word-order",
+            "areaId": "grammar",
+            "themeId": "food",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Arrange the words to form a correct question.",
+            "content": {
+                "type": "word-order",
+                "correctOrder": [
+                    "Was",
+                    "möchtest",
+                    "du",
+                    "zum",
+                    "Frühstück",
+                    "essen"
+                ],
+                "scrambled": [
+                    "du",
+                    "Frühstück",
+                    "Was",
+                    "essen",
+                    "zum",
+                    "möchtest"
+                ]
+            },
+            "hints": [
+                "Questions often start with a question word.",
+                "Was means 'what'."
+            ],
+            "feedbackCorrect": "Excellent! You formed the question correctly.",
+            "feedbackIncorrect": "The correct order is: Was möchtest du zum Frühstück essen? (What would you like to eat for breakfast?)"
+        },
+        {
+            "id": "word-order-003",
+            "type": "word-order",
+            "areaId": "grammar",
+            "themeId": "school",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Put the words in order to make a sentence with 'weil'.",
+            "content": {
+                "type": "word-order",
+                "correctOrder": [
+                    "Ich",
+                    "lerne",
+                    "Deutsch",
+                    "weil",
+                    "ich",
+                    "in",
+                    "Deutschland",
+                    "wohnen",
+                    "möchte"
+                ],
+                "scrambled": [
+                    "Deutschland",
+                    "ich",
+                    "lerne",
+                    "wohnen",
+                    "weil",
+                    "Ich",
+                    "in",
+                    "Deutsch",
+                    "möchte"
+                ]
+            },
+            "hints": [
+                "The main clause comes first.",
+                "After 'weil', the verb goes to the end."
+            ],
+            "feedbackCorrect": "Perfect! In subordinate clauses with 'weil', the verb moves to the end.",
+            "feedbackIncorrect": "Remember: Ich lerne Deutsch, weil ich in Deutschland wohnen möchte. The verb 'möchte' goes to the end after 'weil'."
+        },
+        {
+            "id": "picture-vocabulary-001",
+            "type": "picture-vocabulary",
+            "areaId": "vocabulary",
+            "themeId": "everyday-life",
+            "level": 1,
+            "difficulty": 1,
+            "instruction": "What is this? Type the German word.",
+            "content": {
+                "type": "picture-vocabulary",
+                "picture": "🏠",
+                "pictureAlt": "A small house with a roof and door",
+                "correctAnswer": "Haus",
+                "acceptableAnswers": [
+                    "das Haus"
+                ],
+                "options": [
+                    "Haus",
+                    "Auto",
+                    "Baum",
+                    "Garten"
+                ]
+            },
+            "hints": [
+                "It's where people live.",
+                "The word starts with 'H'."
+            ],
+            "feedbackCorrect": "Richtig! 'Haus' means 'house' in German.",
+            "feedbackIncorrect": "The correct answer is 'Haus' (house). This is where people live."
+        },
+        {
+            "id": "picture-vocabulary-002",
+            "type": "picture-vocabulary",
+            "areaId": "vocabulary",
+            "themeId": "food",
+            "level": 1,
+            "difficulty": 1,
+            "instruction": "What fruit is this? Write the German word.",
+            "content": {
+                "type": "picture-vocabulary",
+                "picture": "🍎",
+                "pictureAlt": "A red apple",
+                "correctAnswer": "Apfel",
+                "acceptableAnswers": [
+                    "der Apfel",
+                    "ein Apfel"
+                ],
+                "options": [
+                    "Apfel",
+                    "Banane",
+                    "Orange",
+                    "Birne"
+                ]
+            },
+            "hints": [
+                "It's red and round.",
+                "The word starts with 'A'."
+            ],
+            "feedbackCorrect": "Sehr gut! 'Apfel' is the German word for 'apple'.",
+            "feedbackIncorrect": "This is an 'Apfel' (apple). Remember: der Apfel."
+        },
+        {
+            "id": "picture-vocabulary-003",
+            "type": "picture-vocabulary",
+            "areaId": "vocabulary",
+            "themeId": "nature",
+            "level": 2,
+            "difficulty": 2,
+            "instruction": "What animal is this? Type the German word.",
+            "content": {
+                "type": "picture-vocabulary",
+                "picture": "🐕",
+                "pictureAlt": "A brown dog",
+                "correctAnswer": "Hund",
+                "acceptableAnswers": [
+                    "der Hund",
+                    "ein Hund"
+                ],
+                "options": [
+                    "Hund",
+                    "Katze",
+                    "Pferd",
+                    "Vogel"
+                ]
+            },
+            "hints": [
+                "It's a common pet.",
+                "The word sounds similar to the English word."
+            ],
+            "feedbackCorrect": "Wunderbar! 'Hund' means 'dog' in German.",
+            "feedbackIncorrect": "This is a 'Hund' (dog). It's a common household pet."
+        }
+    ]
+}

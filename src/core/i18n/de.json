@@ -1,0 +1,79 @@
+{
+    "common": {
+        "backHome": "Zurück zur Startseite",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "confirm": "Bestätigen",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "close": "Schließen",
+        "loading": "Wird geladen...",
+        "error": "Ein Fehler ist aufgetreten",
+        "retry": "Erneut versuchen"
+    },
+    "home": {
+        "welcome": "Willkommen",
+        "subtitle": "Starte deine Lernreise",
+        "startExercise": "Übung starten",
+        "profile": "Profil",
+        "settings": "Einstellungen",
+        "results": "Ergebnisse"
+    },
+    "exercise": {
+        "title": "Übung",
+        "theme": "Thema",
+        "area": "Bereich",
+        "placeholder": "Übungsinhalt wird hier angezeigt.",
+        "check": "Prüfen",
+        "next": "Weiter",
+        "hint": "Hinweis",
+        "correct": "Richtig!",
+        "incorrect": "Leider falsch",
+        "tryAgain": "Nochmal versuchen",
+        "showSolution": "Lösung anzeigen"
+    },
+    "profile": {
+        "title": "Profil",
+        "placeholder": "Profilinformationen und Fortschritt werden hier angezeigt.",
+        "nickname": "Spitzname",
+        "avatar": "Avatar",
+        "level": "Level",
+        "stars": "Sterne",
+        "streak": "Serie",
+        "badges": "Abzeichen"
+    },
+    "settings": {
+        "title": "Einstellungen",
+        "placeholder": "Anwendungseinstellungen werden hier angezeigt.",
+        "language": "Sprache",
+        "theme": "Design",
+        "fontSize": "Schriftgröße",
+        "fontSizeNormal": "Normal",
+        "fontSizeLarge": "Groß",
+        "fontSizeExtraLarge": "Sehr groß",
+        "highContrast": "Hoher Kontrast",
+        "animations": "Animationen",
+        "sound": "Töne",
+        "teacherPin": "Lehrer-PIN",
+        "resetProgress": "Fortschritt zurücksetzen"
+    },
+    "results": {
+        "title": "Ergebnisse",
+        "placeholder": "Übungsergebnisse und Fortschritt werden hier angezeigt.",
+        "totalExercises": "Übungen gesamt",
+        "correctRate": "Richtigkeitsrate",
+        "averageTime": "Durchschnittliche Zeit",
+        "recentActivity": "Letzte Aktivität"
+    },
+    "badges": {
+        "title": "Abzeichen",
+        "earned": "Verdient",
+        "locked": "Noch nicht verdient"
+    },
+    "nav": {
+        "home": "Start",
+        "exercise": "Üben",
+        "profile": "Profil",
+        "settings": "Einstellungen"
+    }
+}

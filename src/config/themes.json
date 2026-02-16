@@ -1,0 +1,82 @@
+[
+    {
+        "id": "everyday-life",
+        "name": "Everyday Life",
+        "icon": "🏠",
+        "color": "#4CAF50",
+        "description": "Daily routines, household activities, and common situations",
+        "minLevel": 1
+    },
+    {
+        "id": "school",
+        "name": "School & Education",
+        "icon": "📚",
+        "color": "#2196F3",
+        "description": "Classroom activities, subjects, and academic vocabulary",
+        "minLevel": 1
+    },
+    {
+        "id": "food",
+        "name": "Food & Cooking",
+        "icon": "🍽️",
+        "color": "#FF9800",
+        "description": "Food items, meals, recipes, and dining vocabulary",
+        "minLevel": 1
+    },
+    {
+        "id": "travel",
+        "name": "Travel & Transport",
+        "icon": "✈️",
+        "color": "#00BCD4",
+        "description": "Transportation, directions, and travel experiences",
+        "minLevel": 2
+    },
+    {
+        "id": "nature",
+        "name": "Nature & Environment",
+        "icon": "🌿",
+        "color": "#8BC34A",
+        "description": "Weather, animals, plants, and environmental topics",
+        "minLevel": 2
+    },
+    {
+        "id": "hobbies",
+        "name": "Hobbies & Free Time",
+        "icon": "🎮",
+        "color": "#9C27B0",
+        "description": "Sports, games, entertainment, and leisure activities",
+        "minLevel": 2
+    },
+    {
+        "id": "health",
+        "name": "Health & Wellness",
+        "icon": "💪",
+        "color": "#E91E63",
+        "description": "Body parts, health issues, and healthy living",
+        "minLevel": 3
+    },
+    {
+        "id": "work",
+        "name": "Work & Professions",
+        "icon": "💼",
+        "color": "#607D8B",
+        "description": "Jobs, workplace vocabulary, and professional skills",
+        "minLevel": 3
+    },
+    {
+        "id": "culture",
+        "name": "Culture & Traditions",
+        "icon": "🎭",
+        "color": "#F44336",
+        "description": "Holidays, customs, celebrations, and cultural practices",
+        "minLevel": 4
+    },
+    {
+        "id": "technology",
+        "name": "Technology & Media",
+        "icon": "💻",
+        "color": "#3F51B5",
+        "description": "Digital devices, internet, and media literacy",
+        "minLevel": 4
+    }
+]

@@ -1,0 +1,48 @@
+{
+    "name": "mini-trainer-engine",
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "npm run build:data && tsc -b && vite build",
+        "build:data": "node scripts/build-exercise-data.mjs",
+        "build:pwa": "npm run build && node scripts/generate-sw.mjs",
+        "preview": "vite preview",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "typecheck": "tsc --noEmit",
+        "validate": "node scripts/validate-config.mjs",
+        "add-exercise": "node scripts/add-exercise.mjs",
+        "clean": "rm -rf dist node_modules/.vite"
+    },
+    "dependencies": {
+        "autoprefixer": "^10.4.24",
+        "i18next": "^24.2.2",
+        "idb": "^8.0.1",
+        "postcss": "^8.5.6",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-i18next": "^15.4.0",
+        "react-router-dom": "^6.28.2",
+        "tailwindcss": "^3.4.17",
+        "zustand": "^5.0.3"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.1.0",
+        "@types/node": "^25.2.3",
+        "@types/react": "^19.2.14",
+        "@types/react-dom": "^19.2.3",
+        "@typescript-eslint/eslint-plugin": "^8.55.0",
+        "@typescript-eslint/parser": "^8.55.0",
+        "@vitejs/plugin-react": "^4.3.4",
+        "eslint": "^9.39.2",
+        "jsdom": "^28.1.0",
+        "typescript": "^5.6.3",
+        "vite": "^6.0.5",
+        "vitest": "^2.1.8"
+    }
+}

@@ -1,0 +1,64 @@
+import { defineConfig, type Plugin } from 'vite';
+import react from '@vitejs/plugin-react';
+import { fileURLToPath, URL } from 'node:url';
+
+/**
+ * Vite plugin for file:// protocol compatibility.
+ * 
+ * When the app is opened directly via file:// protocol (e.g., from a local file),
+ * ES modules don't work properly. This plugin transforms the built HTML to:
+ * - Strip type="module" from script tags
+ * - Remove crossorigin attributes
+ * - Convert scripts to defer instead of async
+ * 
+ * This enables the app to work when opened as a local file.
+ */
+function fileProtocolPlugin(): Plugin {
+    return {
+        name: 'file-protocol-compat',
+        enforce: 'post',
+        transformIndexHtml(html, { bundle }) {
+            // Only apply in build mode
+            if (!bundle) return html;
+
+            // Transform script tags for file:// protocol compatibility
+            return html
+                .replace(/type="module"\s*/g, '')
+                .replace(/crossorigin\s*=\s*"[^"]*"\s*/g, '')
+                .replace(/<script\s+src=/g, '<script defer src=');
+        },
+    };
+}
+
+// https://vite.dev/config/
+export default defineConfig({
+    plugins: [react(), fileProtocolPlugin()],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            '@core': fileURLToPath(new URL('./src/core', import.meta.url)),
+            '@config': fileURLToPath(new URL('./src/config', import.meta.url)),
+            '@types': fileURLToPath(new URL('./src/types', import.meta.url)),
+        },
+    },
+    build: {
+        // Ensure compatibility with file:// protocol for local file usage
+        target: 'esnext',
+        // Use IIFE format for file:// protocol compatibility
+        // This wraps the code in immediately invoked function expressions
+        // which work better with file:// protocol than ES modules
+        rollupOptions: {
+            output: {
+                format: 'iife',
+                // Inline dynamic imports to avoid module loading issues
+                inlineDynamicImports: true,
+            },
+        },
+    },
+    server: {
+        // Allow serving from file:// protocol in development
+        fs: {
+            allow: ['..'],
+        },
+    },
+});
