@@ -282,7 +282,6 @@ describe('appStore', () => {
             });
 
             // Check that localStorage was updated (zustand persist uses the storage)
-            const stored = localStorageMock.getItem('mini-trainer-settings');
             // Note: zustand persist middleware may not sync immediately in test environment
             // The important thing is that the state is updated correctly
             const state = useAppStore.getState();

@@ -15,6 +15,7 @@ import type {
     AccessibilityDefaults,
     ValidationError,
     ValidationWarning,
+    Exercise,
 } from '@/types';
 import {
     validateSubjectConfig,
@@ -32,6 +33,7 @@ import subjectJson from '@/config/subject.json';
 import areasJson from '@/config/areas.json';
 import themesJson from '@/config/themes.json';
 import badgesJson from '@/config/badges.json';
+import exercisesJson from '@/data/exercises.json';
 
 // ============================================================================
 // Default Configuration
@@ -184,6 +186,16 @@ export function loadBadges(): BadgeDefinition[] {
         badge: item.badge,
         checkExpression: `${item.type}:${item.threshold}`,
     }));
+}
+
+/**
+ * Load exercises from the exercises.json file.
+ * 
+ * @returns Array of exercises
+ */
+export function loadExercises(): Exercise[] {
+    const exercisesData = exercisesJson as { exercises: Exercise[] };
+    return exercisesData.exercises;
 }
 
 /**

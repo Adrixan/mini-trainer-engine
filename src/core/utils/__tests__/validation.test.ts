@@ -18,7 +18,10 @@ function createValidConfig(): TrainerConfig {
     return {
         id: 'test-trainer',
         name: 'Test Trainer',
+        description: 'Test trainer description',
         version: '1.0.0',
+        supportedLocales: ['de', 'en'],
+        defaultLocale: 'de',
         subject: {
             id: 'german',
             name: 'German as a Second Language',
@@ -52,6 +55,24 @@ function createValidConfig(): TrainerConfig {
             },
         ],
         badges: [],
+        gamification: {
+            starStrategy: 'attempts',
+            maxStarsPerExercise: 3,
+            levelThresholds: [
+                { level: 1, starsRequired: 0 },
+                { level: 2, starsRequired: 100 },
+                { level: 3, starsRequired: 250 },
+            ],
+            streakConfig: {
+                milestones: [3, 7, 14, 30],
+            },
+        },
+        accessibility: {
+            defaultFontSize: 'normal',
+            defaultHighContrast: false,
+            defaultAnimationsEnabled: true,
+            defaultSoundEnabled: true,
+        },
     };
 }
 

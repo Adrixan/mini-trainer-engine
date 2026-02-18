@@ -70,6 +70,25 @@
         "earned": "Earned",
         "locked": "Not yet earned"
     },
+    "theme": {
+        "title": "Choose a Theme",
+        "subtitle": "Select a theme to practice. Complete exercises to earn stars and unlock new themes!",
+        "vocabularyLevel": "Vocabulary Level",
+        "levelLabel": "Level {{level}}",
+        "themeList": "Available themes",
+        "selectTheme": "Select {{name}} theme",
+        "lockedTheme": "{{name}} theme locked. Requires level {{level}}.",
+        "unlockAt": "Level {{level}} required",
+        "minLevel": "Level {{level}}+",
+        "progress": "{{completed}}/{{total}} exercises",
+        "notStarted": "Not started",
+        "stars": "{{earned}}/{{max}} stars",
+        "progressLabel": "{{percent}}% complete"
+    },
+    "navigation": {
+        "back": "Back",
+        "backToHome": "Back to home"
+    },
     "nav": {
         "home": "Home",
         "exercise": "Exercise",

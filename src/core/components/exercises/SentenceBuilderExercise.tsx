@@ -70,8 +70,8 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
                                         aria-checked={isSelected}
                                         aria-label={word}
                                         className={`w-full py-2 px-3 rounded-lg text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${isSelected
-                                                ? 'bg-primary text-white shadow-md'
-                                                : 'bg-white border border-gray-200 text-gray-700 hover:border-primary hover:bg-primary/5'
+                                            ? 'bg-primary text-white shadow-md'
+                                            : 'bg-white border border-gray-200 text-gray-700 hover:border-primary hover:bg-primary/5'
                                             } ${showSolution ? 'cursor-default' : ''}`}
                                     >
                                         {word}
@@ -129,7 +129,7 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
                 <button
                     onClick={handleCheck}
                     disabled={!allSelected}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

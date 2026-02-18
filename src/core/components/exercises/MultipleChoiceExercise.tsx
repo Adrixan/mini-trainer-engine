@@ -128,7 +128,7 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
                 <button
                     onClick={handleCheck}
                     disabled={selected === null}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

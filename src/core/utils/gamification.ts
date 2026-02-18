@@ -61,6 +61,34 @@ export function getStarArray(stars: number): [boolean, boolean, boolean] {
 export const DEFAULT_STARS_PER_LEVEL = 10;
 
 /**
+ * Level thresholds for vocabulary level progression.
+ * These thresholds are intentionally low for quick progress.
+ * Based on original mini-daz-trainer-kids implementation.
+ */
+export const VOCABULARY_LEVEL_THRESHOLDS = {
+    LEVEL_2: 4,   // >= 4 stars -> Level 2
+    LEVEL_3: 12,  // >= 12 stars -> Level 3
+    LEVEL_4: 20,  // >= 20 stars -> Level 4
+} as const;
+
+/**
+ * Calculate vocabulary level from total stars.
+ * Uses fixed thresholds from the original app:
+ * - >= 4 stars -> Level 2
+ * - >= 12 stars -> Level 3
+ * - >= 20 stars -> Level 4
+ * 
+ * @param totalStars - Total stars earned
+ * @returns Vocabulary level (1-4)
+ */
+export function levelFromStars(totalStars: number): number {
+    if (totalStars >= VOCABULARY_LEVEL_THRESHOLDS.LEVEL_4) return 4;
+    if (totalStars >= VOCABULARY_LEVEL_THRESHOLDS.LEVEL_3) return 3;
+    if (totalStars >= VOCABULARY_LEVEL_THRESHOLDS.LEVEL_2) return 2;
+    return 1;
+}
+
+/**
  * Calculate level from total stars.
  * 
  * @param totalStars - Total stars earned

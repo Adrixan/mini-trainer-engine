@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useFocusTrap } from '@core/hooks/useFocusTrap';
 
 interface LevelUpCelebrationProps {
@@ -41,13 +42,13 @@ function getLevelEmoji(level: number): string {
 /**
  * Get title for a level.
  */
-function getLevelTitle(level: number): string {
-    if (level >= 20) return 'Grand Master';
-    if (level >= 15) return 'Expert';
-    if (level >= 10) return 'Champion';
-    if (level >= 5) return 'Achiever';
-    if (level >= 3) return 'Rising Star';
-    return 'Beginner';
+function getLevelTitle(level: number, t: (key: string, defaultValue: string) => string): string {
+    if (level >= 20) return t('levelTitles.grandMaster', 'Großmeister');
+    if (level >= 15) return t('levelTitles.expert', 'Experte');
+    if (level >= 10) return t('levelTitles.champion', 'Champion');
+    if (level >= 5) return t('levelTitles.achiever', 'Achiever');
+    if (level >= 3) return t('levelTitles.risingStar', 'Aufsteigender Stern');
+    return t('levelTitles.beginner', 'Anfänger');
 }
 
 /**
@@ -59,6 +60,7 @@ export function LevelUpCelebration({
     onDone,
     duration = 4500
 }: LevelUpCelebrationProps) {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(true);
     const dialogRef = useFocusTrap<HTMLDivElement>();
 
@@ -77,13 +79,13 @@ export function LevelUpCelebration({
         announcement.setAttribute('aria-live', 'polite');
         announcement.setAttribute('aria-atomic', 'true');
         announcement.className = 'sr-only';
-        announcement.textContent = `Congratulations! You reached level ${newLevel}!`;
+        announcement.textContent = t('gamification.newLevel', { level: newLevel, defaultValue: `Glückwunsch! Du hast Level ${newLevel} erreicht!` });
         document.body.appendChild(announcement);
 
         return () => {
             document.body.removeChild(announcement);
         };
-    }, [newLevel]);
+    }, [newLevel, t]);
 
     if (!visible) return null;
 
@@ -118,7 +120,7 @@ export function LevelUpCelebration({
     });
 
     const emoji = getLevelEmoji(newLevel);
-    const title = getLevelTitle(newLevel);
+    const title = getLevelTitle(newLevel, t);
 
     const handleClick = () => {
         setVisible(false);
@@ -148,7 +150,7 @@ export function LevelUpCelebration({
                 <div className="absolute inset-0 rounded-3xl animate-levelGlow pointer-events-none" />
 
                 <p className="text-sm font-bold text-primary uppercase tracking-widest mb-1">
-                    Level Up!
+                    {t('gamification.levelUp', 'Level-Up!')}
                 </p>
 
                 {/* Big emoji */}
@@ -158,7 +160,7 @@ export function LevelUpCelebration({
 
                 {/* Level number */}
                 <div className="text-5xl font-black text-gray-800 mb-1">
-                    Level {newLevel}
+                    {t('theme.levelLabel', { level: newLevel, defaultValue: `Level ${newLevel}` })}
                 </div>
 
                 {/* Title */}
@@ -180,7 +182,7 @@ export function LevelUpCelebration({
                 </div>
 
                 <p className="text-sm text-gray-600 font-medium">
-                    Tap to continue
+                    {t('gamification.continue', 'Tippe zum Fortfahren')}
                 </p>
             </div>
 

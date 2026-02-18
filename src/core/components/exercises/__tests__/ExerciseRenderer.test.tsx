@@ -273,7 +273,7 @@ describe('ExerciseRenderer', () => {
             );
 
             expect(screen.getByRole('status')).toBeInTheDocument();
-            expect(screen.getByLabelText('Loading exercise')).toBeInTheDocument();
+            expect(screen.getByLabelText('Übung wird geladen')).toBeInTheDocument();
         });
     });
 
@@ -292,7 +292,7 @@ describe('ExerciseRenderer', () => {
             );
 
             expect(screen.getByRole('alert')).toBeInTheDocument();
-            expect(screen.getByText(/Unknown exercise type/)).toBeInTheDocument();
+            expect(screen.getByText(/Unbekannter Übungstyp/)).toBeInTheDocument();
         });
 
         it('renders custom fallback for unknown exercise type', () => {

@@ -9,7 +9,11 @@
         "close": "Schließen",
         "loading": "Wird geladen...",
         "error": "Ein Fehler ist aufgetreten",
-        "retry": "Erneut versuchen"
+        "retry": "Erneut versuchen",
+        "or": "oder"
+    },
+    "app": {
+        "title": "Mini Trainer"
     },
     "home": {
         "welcome": "Willkommen",
@@ -18,6 +22,20 @@
         "profile": "Profil",
         "settings": "Einstellungen",
         "results": "Ergebnisse"
+    },
+    "dashboard": {
+        "welcome": "Willkommen zurück",
+        "streakActive": "Weiter so! Deine Serie ist aktiv.",
+        "startExercises": "Übungen starten",
+        "progress": "Fortschritt",
+        "settings": "Einstellungen",
+        "results": "Ergebnisse"
+    },
+    "stats": {
+        "stars": "Sterne",
+        "streak": "Serie",
+        "totalStars": "Sterne gesamt",
+        "dayStreak": "Tage-Serie"
     },
     "exercise": {
         "title": "Übung",
@@ -30,17 +48,33 @@
         "correct": "Richtig!",
         "incorrect": "Leider falsch",
         "tryAgain": "Nochmal versuchen",
-        "showSolution": "Lösung anzeigen"
+        "showSolution": "Lösung anzeigen",
+        "loading": "Übungen werden geladen...",
+        "complete": "Sitzung abgeschlossen!",
+        "completedAll": "Du hast alle Übungen abgeschlossen.",
+        "viewResults": "Ergebnisse ansehen",
+        "noExercise": "Keine Übung verfügbar.",
+        "progress": "Übung {{current}} von {{total}}",
+        "finish": "Beenden"
     },
     "profile": {
         "title": "Profil",
         "placeholder": "Profilinformationen und Fortschritt werden hier angezeigt.",
         "nickname": "Spitzname",
+        "nicknamePlaceholder": "Gib deinen Namen ein",
         "avatar": "Avatar",
+        "selectAvatar": "Wähle deinen Avatar",
+        "avatarLabel": "Avatar-Auswahl",
         "level": "Level",
         "stars": "Sterne",
         "streak": "Serie",
-        "badges": "Abzeichen"
+        "badges": "Abzeichen",
+        "createSubtitle": "Erstelle dein Profil, um mit dem Lernen zu beginnen",
+        "create": "Profil erstellen",
+        "loading": "Wird geladen...",
+        "loadGame": "Spielstand laden",
+        "importFailed": "Import fehlgeschlagen",
+        "invalidFile": "Ungültige Datei"
     },
     "settings": {
         "title": "Einstellungen",
@@ -54,8 +88,25 @@
         "highContrast": "Hoher Kontrast",
         "animations": "Animationen",
         "sound": "Töne",
+        "soundEffects": "Sound-Effekte",
+        "soundEffectsDescription": "Töne für richtige/falsche Antworten und Erfolge abspielen",
+        "toggleSound": "Sound-Effekte ein/ausschalten",
         "teacherPin": "Lehrer-PIN",
-        "resetProgress": "Fortschritt zurücksetzen"
+        "resetProgress": "Fortschritt zurücksetzen",
+        "saveGame": "Spielstand speichern",
+        "saveSuccess": "Spiel erfolgreich gespeichert!",
+        "saveFailed": "Spiel konnte nicht gespeichert werden",
+        "loadSuccess": "Spiel erfolgreich geladen!",
+        "loadFailed": "Spiel konnte nicht geladen werden",
+        "invalidFile": "Ungültige Speicherdatei",
+        "saving": "Wird gespeichert...",
+        "saveButton": "Spiel speichern",
+        "loading": "Wird geladen...",
+        "loadButton": "Spiel laden",
+        "saveDescription": "Speichere deinen Fortschritt in einer Datei oder lade einen früheren Spielstand.",
+        "teacherArea": "Lehrer-Bereich",
+        "teacherAreaDescription": "Zugriff auf das Lehrer-Dashboard für Fortschrittskontrolle und Statistiken.",
+        "openTeacherArea": "Lehrer-Bereich öffnen"
     },
     "results": {
         "title": "Ergebnisse",
@@ -70,10 +121,205 @@
         "earned": "Verdient",
         "locked": "Noch nicht verdient"
     },
+    "theme": {
+        "title": "Thema wählen",
+        "subtitle": "Wähle ein Thema zum Üben. Bearbeite Übungen, um Sterne zu sammeln und neue Themen freizuschalten!",
+        "vocabularyLevel": "Wortschatz-Level",
+        "levelLabel": "Level {{level}}",
+        "themeList": "Verfügbare Themen",
+        "selectTheme": "{{name}} Thema auswählen",
+        "lockedTheme": "{{name}} Thema gesperrt. Erfordert Level {{level}}.",
+        "unlockAt": "Level {{level}} erforderlich",
+        "minLevel": "Level {{level}}+",
+        "progress": "{{completed}}/{{total}} Übungen",
+        "notStarted": "Nicht begonnen",
+        "stars": "{{earned}}/{{max}} Sterne",
+        "progressLabel": "{{percent}}% abgeschlossen"
+    },
+    "level": {
+        "themeNotFound": "Thema nicht gefunden",
+        "themeNotFoundDesc": "Das ausgewählte Thema konnte nicht gefunden werden.",
+        "totalProgress": "Gesamtfortschritt",
+        "exercises": "Übungen",
+        "selectPrompt": "Wähle eine Schwierigkeitsstufe, um mit dem Üben zu beginnen.",
+        "levelList": "Verfügbare Schwierigkeitsstufen",
+        "playAllLevels": "Alle Level spielen",
+        "allLevels": "Alle Level",
+        "noExercisesForTheme": "Für dieses Thema sind noch keine Übungen verfügbar.",
+        "beginner": "Anfänger",
+        "beginnerDesc": "Einfache Übungen für Anfänger",
+        "elementary": "Grundschule",
+        "elementaryDesc": "Grundlegende Übungen mit mehr Abwechslung",
+        "intermediate": "Mittelstufe",
+        "intermediateDesc": "Anspruchsvollere Übungen",
+        "advanced": "Fortgeschritten",
+        "advancedDesc": "Komplexe Übungen für Experten",
+        "locked": "Gesperrt",
+        "noExercises": "Keine Übungen",
+        "notStarted": "Nicht begonnen",
+        "completed": "Abgeschlossen!",
+        "inProgress": "{{count}}/{{total}} Übungen",
+        "lockedAria": "{{name}} Level ist gesperrt. Verdiente mehr Sterne zum Freischalten.",
+        "emptyAria": "{{name}} Level hat keine Übungen verfügbar.",
+        "selectAria": "Wähle {{name}} Level mit {{count}} Übungen.",
+        "unlockAt": "Level {{level}} erforderlich",
+        "levelNumber": "Level {{level}}",
+        "exerciseCount": "{{count}} Übungen",
+        "progressLabel": "{{percent}}% abgeschlossen",
+        "noExercisesAvailable": "Keine Übungen verfügbar"
+    },
+    "navigation": {
+        "back": "Zurück",
+        "backToHome": "Zurück zur Startseite",
+        "backToThemes": "Zurück zu den Themen"
+    },
     "nav": {
         "home": "Start",
         "exercise": "Üben",
         "profile": "Profil",
         "settings": "Einstellungen"
+    },
+    "gamification": {
+        "levelUp": "Level-Up!",
+        "newLevel": "Du hast Level {{level}} erreicht!",
+        "badgeEarned": "Abzeichen verdient!",
+        "continue": "Weiter",
+        "starsEarned": "Sterne verdient",
+        "newBadge": "Neues Abzeichen!"
+    },
+    "accessibility": {
+        "title": "Barrierefreiheit",
+        "highContrast": "Hoher Kontrast",
+        "highContrastDesc": "Erhöht den Kontrast für bessere Sichtbarkeit",
+        "fontSize": "Schriftgröße",
+        "fontSizeNormal": "Normal",
+        "fontSizeLarge": "Groß",
+        "fontSizeExtraLarge": "Sehr groß",
+        "animations": "Animationen",
+        "animationsDesc": "Animationen ein- oder ausschalten (berücksichtigt Systemeinstellung)",
+        "sound": "Sound-Effekte",
+        "soundDesc": "Sound-Effekte ein- oder ausschalten",
+        "screenReaderNote": "Screenreader-Information",
+        "screenReaderInfo": "Diese Anwendung ist für die Nutzung mit Screenreadern konzipiert. Verwende Tab zum Navigieren zwischen Steuerelementen und Enter oder Leertaste zum Aktivieren von Schaltflächen."
+    },
+    "levelTitles": {
+        "beginner": "Anfänger",
+        "risingStar": "Aufsteigender Stern",
+        "achiever": "Achiever",
+        "champion": "Champion",
+        "expert": "Experte",
+        "grandMaster": "Großmeister"
+    },
+    "exercises": {
+        "instruction": "Aufgabe",
+        "exerciseArea": "Übungsbereich",
+        "check": "Prüfen",
+        "next": "Weiter",
+        "hint": "Hinweis",
+        "hintNext": "Nächster Hinweis ({{current}}/{{total}})",
+        "hintShow": "Hinweis anzeigen ({{total}} verfügbar)",
+        "correct": "Richtig!",
+        "incorrect": "Leider falsch",
+        "tryAgain": "Nochmal versuchen",
+        "attempts": "Versuch {{current}} von {{max}}",
+        "reset": "Zurücksetzen",
+        "solved": "Gelöst!",
+        "multipleChoice": {
+            "question": "Frage",
+            "options": "Antwortmöglichkeiten"
+        },
+        "fillBlank": {
+            "answerLabel": "Antwort eingeben",
+            "wrongCase": "Achte auf Groß- und Kleinschreibung!",
+            "followUp": "Noch eine Frage:",
+            "followUpHint": "Tipp: Achte auf die Endung",
+            "followUpLabel": "Folgeantwort eingeben",
+            "correctAnswer": "Richtige Antwort:"
+        },
+        "matching": {
+            "instruction": "Verbinde die zusammengehörenden Paare",
+            "solution": "Lösung:"
+        },
+        "wordOrder": {
+            "yourSentence": "Dein Satz",
+            "placedWords": "Platzierte Wörter",
+            "tapToPlace": "Tippe auf ein Wort, um es zu platzieren",
+            "availableWords": "Verfügbare Wörter",
+            "allPlaced": "Alle Wörter platziert",
+            "correctOrder": "Richtige Reihenfolge!"
+        },
+        "sorting": {
+            "itemPool": "Wörterpool",
+            "dragOrTap": "Ziehe oder tippe, um Wörter zuzuordnen",
+            "allSorted": "Alle zugeordnet",
+            "categories": "Kategorien",
+            "correctSorting": "Richtige Zuordnung!"
+        },
+        "pictureVocabulary": {
+            "whatIsThis": "Was ist das?",
+            "options": "Antwortmöglichkeiten",
+            "correctAnswer": "Die richtige Antwort ist:"
+        },
+        "writing": {
+            "prompt": "Schreibaufgabe",
+            "starterWords": "Startwörter",
+            "addWord": "Wort hinzufügen",
+            "scaffoldHints": "Hilfestellungen",
+            "placeholder": "Schreibe deinen Text hier...",
+            "wordCount": "{{count}} Wörter",
+            "minLength": "Mindestens {{count}} Wörter",
+            "tooShort": "Dein Text ist noch zu kurz. Schreibe mindestens {{count}} Wörter."
+        },
+        "connectorInsert": {
+            "instruction": "Wähle den passenden Connector",
+            "selectedConnector": "Ausgewählt: {{connector}}",
+            "noConnector": "Noch kein Connector ausgewählt",
+            "solution": "Lösung:"
+        },
+        "conjugationTable": {
+            "instruction": "Konjugiere das Verb in der richtigen Form",
+            "verb": "Verb",
+            "tense": "Zeitform",
+            "person": "Person",
+            "form": "Form"
+        },
+        "sentenceBuilder": {
+            "instruction": "Bilde einen sinnvollen Satz aus den Wörtern",
+            "yourSentence": "Dein Satz:",
+            "selectWord": "Wähle Wörter aus"
+        }
+    },
+    "teacher": {
+        "pinTitle": "Lehrer-Login",
+        "pinSubtitle": "Gib deine PIN ein, um zum Lehrer-Bereich zu gelangen",
+        "pinSetup": "PIN erstellen",
+        "pinSetupHint": "Erstelle eine PIN, um den Lehrer-Bereich zu schützen",
+        "pinPlaceholder": "PIN eingeben",
+        "pinConfirm": "PIN bestätigen",
+        "pinSubmit": "Anmelden",
+        "pinInvalid": "Ungültige PIN",
+        "pinTooShort": "PIN muss mindestens 4 Ziffern haben",
+        "pinMismatch": "PINs stimmen nicht überein",
+        "dashboardTitle": "Lehrer-Dashboard",
+        "logout": "Abmelden",
+        "totalProfiles": "Profile",
+        "totalExercises": "Übungen",
+        "averageStars": "⌀ Sterne",
+        "averageTime": "⌀ Zeit",
+        "seconds": "{{count}}s",
+        "profileOverview": "Profil-Übersicht",
+        "noProfiles": "Noch keine Profile vorhanden",
+        "exercisesCount": "{{count}} Übungen",
+        "avgScore": "⌀ {{score}}",
+        "areaBreakdown": "Bereiche",
+        "backToChild": "Zurück zum Schüler-Modus"
+    },
+    "areas": {
+        "woerter-und-saetze": "Wörter und Sätze",
+        "klaenge-und-silben": "Klänge und Silben",
+        "kommunikation": "Kommunikation",
+        "textkompetenz": "Textkompetenz",
+        "sprachbetrachtung": "Sprachbetrachtung",
+        "rechtschreibung": "Rechtschreibung"
     }
 }

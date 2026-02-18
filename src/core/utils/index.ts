@@ -126,3 +126,16 @@ export {
     getPreviousFocusable,
     announceToScreenReader,
 } from './accessibility';
+
+// Sound effects
+export {
+    soundManager,
+    playSound,
+    playCorrect,
+    playIncorrect,
+    playLevelUp,
+    playBadge,
+    playStar,
+    type SoundEffect,
+    type SoundManager,
+} from './sounds';

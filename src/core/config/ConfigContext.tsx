@@ -22,10 +22,12 @@ import type {
     BadgeDefinition,
     GamificationConfig,
     AccessibilityDefaults,
+    Exercise,
 } from '@/types';
 import {
     loadGamificationConfig,
     loadConfigSafe,
+    loadExercises,
     type ConfigLoadResult,
 } from './loader';
 
@@ -45,6 +47,8 @@ export interface ConfigContextState {
     error: string | null;
     /** The full trainer configuration */
     config: TrainerConfig | null;
+    /** All exercises */
+    exercises: Exercise[];
 }
 
 /**
@@ -67,6 +71,12 @@ export interface ConfigContextValue extends ConfigContextState {
     getGamification: () => GamificationConfig;
     /** Get accessibility defaults */
     getAccessibilityDefaults: () => AccessibilityDefaults;
+    /** Get all exercises */
+    getExercises: () => Exercise[];
+    /** Get exercises filtered by theme */
+    getExercisesByTheme: (themeId: string) => Exercise[];
+    /** Get exercises filtered by area */
+    getExercisesByArea: (areaId: string) => Exercise[];
     /** Reload configuration */
     reload: () => Promise<void>;
 }
@@ -114,6 +124,7 @@ export function ConfigProvider({
         isLoaded: false,
         error: null,
         config: null,
+        exercises: [],
     });
 
     /**
@@ -136,6 +147,7 @@ export function ConfigProvider({
                     isLoaded: false,
                     error: errorMessage,
                     config: null,
+                    exercises: [],
                 });
 
                 onConfigError?.(errorMessage);
@@ -151,11 +163,15 @@ export function ConfigProvider({
                 console.groupEnd();
             }
 
+            // Load exercises
+            const exercises = loadExercises();
+
             setState({
                 isLoading: false,
                 isLoaded: true,
                 error: null,
                 config: result.config,
+                exercises,
             });
 
             onConfigLoaded?.(result.config);
@@ -167,6 +183,7 @@ export function ConfigProvider({
                 isLoaded: false,
                 error: errorMessage,
                 config: null,
+                exercises: [],
             });
 
             onConfigError?.(errorMessage);
@@ -225,6 +242,18 @@ export function ConfigProvider({
         };
     }, [state.config]);
 
+    const getExercises = useCallback((): Exercise[] => {
+        return state.exercises;
+    }, [state.exercises]);
+
+    const getExercisesByTheme = useCallback((themeId: string): Exercise[] => {
+        return state.exercises.filter((exercise) => exercise.themeId === themeId);
+    }, [state.exercises]);
+
+    const getExercisesByArea = useCallback((areaId: string): Exercise[] => {
+        return state.exercises.filter((exercise) => exercise.areaId === areaId);
+    }, [state.exercises]);
+
     // Memoized context value
     const value = useMemo<ConfigContextValue>(() => ({
         ...state,
@@ -236,6 +265,9 @@ export function ConfigProvider({
         getBadges,
         getGamification,
         getAccessibilityDefaults,
+        getExercises,
+        getExercisesByTheme,
+        getExercisesByArea,
         reload,
     }), [
         state,
@@ -247,6 +279,9 @@ export function ConfigProvider({
         getBadges,
         getGamification,
         getAccessibilityDefaults,
+        getExercises,
+        getExercisesByTheme,
+        getExercisesByArea,
         reload,
     ]);
 
@@ -373,4 +408,42 @@ export function useGamification(): GamificationConfig {
 export function useAccessibilityDefaults(): AccessibilityDefaults {
     const { getAccessibilityDefaults } = useConfig();
     return getAccessibilityDefaults();
+}
+
+/**
+ * Hook to get all exercises.
+ * 
+ * @returns Array of exercises
+ */
+export function useExercises(): Exercise[] {
+    const { getExercises } = useConfig();
+    return getExercises();
+}
+
+/**
+ * Hook to get exercises filtered by theme.
+ * 
+ * @param themeId - Theme ID to filter by
+ * @returns Array of exercises for the theme
+ */
+export function useExercisesByTheme(themeId: string): Exercise[] {
+    const { getExercisesByTheme, exercises } = useConfig();
+    return useMemo(
+        () => getExercisesByTheme(themeId),
+        [getExercisesByTheme, themeId, exercises]
+    );
+}
+
+/**
+ * Hook to get exercises filtered by area.
+ * 
+ * @param areaId - Area ID to filter by
+ * @returns Array of exercises for the area
+ */
+export function useExercisesByArea(areaId: string): Exercise[] {
+    const { getExercisesByArea, exercises } = useConfig();
+    return useMemo(
+        () => getExercisesByArea(areaId),
+        [getExercisesByArea, areaId, exercises]
+    );
 }

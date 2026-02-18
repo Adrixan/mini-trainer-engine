@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Badge } from '@/types/profile';
 
 interface BadgeEarnedToastProps {
@@ -25,6 +26,7 @@ export function BadgeEarnedToast({
     onDismiss,
     duration = 4000
 }: BadgeEarnedToastProps) {
+    const { t } = useTranslation();
     const [isExiting, setIsExiting] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -49,13 +51,13 @@ export function BadgeEarnedToast({
         announcement.setAttribute('aria-live', 'polite');
         announcement.setAttribute('aria-atomic', 'true');
         announcement.className = 'sr-only';
-        announcement.textContent = `Achievement unlocked: ${badge.name}! ${badge.description}`;
+        announcement.textContent = t('gamification.newBadge', { defaultValue: `Erfolg freigeschaltet: ${badge.name}! ${badge.description}` });
         document.body.appendChild(announcement);
 
         return () => {
             document.body.removeChild(announcement);
         };
-    }, [badge]);
+    }, [badge, t]);
 
     const handleDismiss = () => {
         setIsExiting(true);
@@ -99,7 +101,7 @@ export function BadgeEarnedToast({
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                         <span className="text-xs font-semibold text-orange-600 uppercase tracking-wide">
-                            Badge Earned!
+                            {t('gamification.badgeEarned', 'Abzeichen verdient!')}
                         </span>
                     </div>
                     <h3 className="text-base font-bold text-gray-900 truncate">
@@ -117,7 +119,7 @@ export function BadgeEarnedToast({
                         e.stopPropagation();
                         handleDismiss();
                     }}
-                    aria-label="Dismiss notification"
+                    aria-label={t('common.close', 'Schließen')}
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

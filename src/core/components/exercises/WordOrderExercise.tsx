@@ -90,12 +90,12 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
                                 role="listitem"
                                 aria-label={`${word}, position ${idx + 1}. Click to remove.`}
                                 className={`px-3 py-1.5 rounded-lg font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${showSolution
-                                        ? result
+                                    ? result
+                                        ? 'bg-green-100 text-green-800 border-2 border-green-300'
+                                        : word === content.correctOrder[idx]
                                             ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                                            : word === content.correctOrder[idx]
-                                                ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                                                : 'bg-red-100 text-red-700 border-2 border-red-300'
-                                        : 'bg-primary/10 text-primary border-2 border-primary/30 hover:bg-primary/20 active:scale-95'
+                                            : 'bg-red-100 text-red-700 border-2 border-red-300'
+                                    : 'bg-primary/10 text-primary border-2 border-primary/30 hover:bg-primary/20 active:scale-95'
                                     }`}
                             >
                                 {word}
@@ -176,7 +176,7 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
                     <button
                         onClick={handleCheck}
                         disabled={placed.length !== content.correctOrder.length}
-                        className="flex-1 py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                        className="flex-1 py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                     >
                         {t('exercises.check')}
                     </button>

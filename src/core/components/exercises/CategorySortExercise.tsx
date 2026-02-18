@@ -338,10 +338,10 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                                     aria-pressed={selectedItem === item}
                                     aria-label={`${item}${selectedItem === item ? ', selected' : ''}`}
                                     className={`px-3 py-1.5 rounded-lg font-bold text-sm transition-all shadow-sm select-none touch-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${draggingItem === item
-                                            ? 'opacity-40 scale-95'
-                                            : selectedItem === item
-                                                ? 'bg-primary text-white border-2 border-primary scale-105'
-                                                : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary active:scale-95 cursor-grab active:cursor-grabbing'
+                                        ? 'opacity-40 scale-95'
+                                        : selectedItem === item
+                                            ? 'bg-primary text-white border-2 border-primary scale-105'
+                                            : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary active:scale-95 cursor-grab active:cursor-grabbing'
                                         }`}
                                 >
                                     {item}
@@ -372,10 +372,10 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                             role="region"
                             aria-label={`${cat.label}${selectedItem ? `, click to place ${selectedItem}` : ''}`}
                             className={`rounded-xl p-3 border-2 transition-all text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${isOver
-                                    ? 'border-primary bg-primary/10 scale-[1.02] shadow-md'
-                                    : selectedItem && !showSolution
-                                        ? 'border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer'
-                                        : 'border-gray-200 bg-white cursor-default'
+                                ? 'border-primary bg-primary/10 scale-[1.02] shadow-md'
+                                : selectedItem && !showSolution
+                                    ? 'border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer'
+                                    : 'border-gray-200 bg-white cursor-default'
                                 }`}
                             tabIndex={selectedItem ? 0 : -1}
                             onKeyDown={(e) => {
@@ -414,12 +414,12 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                                                 }
                                             }}
                                             className={`px-2 py-1 rounded text-xs font-semibold transition-all select-none focus:outline-none focus:ring-2 focus:ring-primary ${showSolution
-                                                    ? itemResult
-                                                        ? 'bg-green-100 text-green-800 border border-green-300'
-                                                        : 'bg-red-100 text-red-700 border border-red-300'
-                                                    : draggingItem === item
-                                                        ? 'opacity-40 bg-primary/10 text-primary border border-primary/20'
-                                                        : 'bg-primary/10 text-primary border border-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 cursor-grab active:cursor-grabbing touch-none'
+                                                ? itemResult
+                                                    ? 'bg-green-100 text-green-800 border border-green-300'
+                                                    : 'bg-red-100 text-red-700 border border-red-300'
+                                                : draggingItem === item
+                                                    ? 'opacity-40 bg-primary/10 text-primary border border-primary/20'
+                                                    : 'bg-primary/10 text-primary border border-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 cursor-grab active:cursor-grabbing touch-none'
                                                 }`}
                                         >
                                             {item}{!showSolution && ' ✕'}
@@ -471,7 +471,7 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                     <button
                         onClick={handleCheck}
                         disabled={!allPlaced}
-                        className="flex-1 py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                        className="flex-1 py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                     >
                         {t('exercises.check')}
                     </button>

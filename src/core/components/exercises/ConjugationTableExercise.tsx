@@ -148,12 +148,12 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
                                             aria-invalid={result === false}
                                             aria-describedby={result === false ? `correct-${idx}` : undefined}
                                             className={`w-full px-3 py-1.5 text-sm border-2 rounded-lg focus:outline-none transition-colors ${result === true
-                                                    ? 'border-green-400 bg-green-50'
-                                                    : result === false
-                                                        ? 'border-red-400 bg-red-50'
-                                                        : caseWrongCells[idx]
-                                                            ? 'border-amber-400 bg-amber-50'
-                                                            : 'border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/30'
+                                                ? 'border-green-400 bg-green-50'
+                                                : result === false
+                                                    ? 'border-red-400 bg-red-50'
+                                                    : caseWrongCells[idx]
+                                                        ? 'border-amber-400 bg-amber-50'
+                                                        : 'border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/30'
                                                 }`}
                                             placeholder="..."
                                         />
@@ -197,7 +197,7 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
                 <button
                     onClick={handleCheck}
                     disabled={!allFilled}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

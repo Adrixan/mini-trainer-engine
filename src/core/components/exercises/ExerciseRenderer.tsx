@@ -2,6 +2,7 @@
 // Uses a component map instead of repeated conditionals.
 
 import { memo, ComponentType, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ExerciseContent, ExerciseType } from '@/types/exercise';
 import { SentenceBuilderExercise } from './SentenceBuilderExercise';
 import { ConjugationTableExercise } from './ConjugationTableExercise';
@@ -56,11 +57,12 @@ const EXERCISE_COMPONENTS: Record<ExerciseType, ComponentType<any>> = {
  * Loading component displayed while exercise is loading.
  */
 function ExerciseLoading() {
+    const { t } = useTranslation();
     return (
         <div
             className="animate-pulse space-y-4"
             role="status"
-            aria-label="Loading exercise"
+            aria-label={t('exercise.loading', 'Übung wird geladen')}
         >
             <div className="h-16 bg-gray-200 rounded-xl" />
             <div className="h-12 bg-gray-200 rounded-xl" />
@@ -74,16 +76,17 @@ function ExerciseLoading() {
  * Error fallback component displayed when exercise type is unknown.
  */
 function ExerciseError({ type }: { type?: string }) {
+    const { t } = useTranslation();
     return (
         <div
             className="bg-red-50 border border-red-200 rounded-xl p-4 text-center"
             role="alert"
         >
             <p className="text-red-800 font-semibold">
-                Unknown exercise type: {type || 'undefined'}
+                {t('exercise.unknownType', 'Unbekannter Übungstyp')}: {type || 'undefined'}
             </p>
             <p className="text-red-600 text-sm mt-1">
-                Please contact support if this issue persists.
+                {t('exercise.contactSupport', 'Bitte kontaktiere den Support, falls dieses Problem weiterhin besteht.')}
             </p>
         </div>
     );

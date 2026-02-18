@@ -180,7 +180,7 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                     <button
                         onClick={handleFollowUpCheck}
                         disabled={!followUpAnswer.trim()}
-                        className="w-full py-2.5 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
+                        className="w-full py-2.5 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
                     >
                         {t('exercises.check')}
                     </button>
@@ -213,7 +213,7 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                 <button
                     onClick={handleCheck}
                     disabled={!answer.trim()}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

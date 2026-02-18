@@ -301,11 +301,29 @@ export const selectCurrentExercise = (state: ExerciseSessionState) => state.curr
 
 /**
  * Selector for session progress.
+ * Uses memoization to return stable references.
  */
-export const selectProgress = (state: ExerciseSessionState) => ({
-    current: state.currentIndex + 1,
-    total: state.totalExercises,
-});
+let cachedProgress: { current: number; total: number } | null = null;
+let lastProgressDeps: { currentIndex: number; totalExercises: number } | null = null;
+
+export const selectProgress = (state: ExerciseSessionState) => {
+    const deps = { currentIndex: state.currentIndex, totalExercises: state.totalExercises };
+
+    // Return cached result if dependencies haven't changed
+    if (
+        cachedProgress &&
+        lastProgressDeps &&
+        lastProgressDeps.currentIndex === deps.currentIndex &&
+        lastProgressDeps.totalExercises === deps.totalExercises
+    ) {
+        return cachedProgress;
+    }
+
+    // Create new cached result
+    cachedProgress = { current: state.currentIndex + 1, total: state.totalExercises };
+    lastProgressDeps = deps;
+    return cachedProgress;
+};
 
 /**
  * Selector for session stats.

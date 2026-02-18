@@ -295,7 +295,8 @@ function validateContent(type, content, index) {
             break;
 
         case 'connector-insert':
-            if (!content.sentencePart1) {
+            // sentencePart1 can be empty string when connector is at the beginning
+            if (content.sentencePart1 === undefined || content.sentencePart1 === null) {
                 errors.push({ path: `${basePath}.sentencePart1`, message: 'Missing sentencePart1' });
             }
             if (!content.sentencePart2) {

@@ -54,12 +54,12 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
                 </span>
                 <span
                     className={`inline-block mx-2 px-3 py-1 rounded-lg text-base font-bold min-w-[80px] text-center transition-all ${showSolution
-                            ? selected === content.correctConnector
-                                ? 'bg-green-100 text-green-700 border-2 border-green-400'
-                                : 'bg-red-100 text-red-700 border-2 border-red-400'
-                            : selected
-                                ? 'bg-primary/10 text-primary border-2 border-primary'
-                                : 'bg-white text-gray-400 border-2 border-dashed border-gray-300'
+                        ? selected === content.correctConnector
+                            ? 'bg-green-100 text-green-700 border-2 border-green-400'
+                            : 'bg-red-100 text-red-700 border-2 border-red-400'
+                        : selected
+                            ? 'bg-primary/10 text-primary border-2 border-primary'
+                            : 'bg-white text-gray-400 border-2 border-dashed border-gray-300'
                         }`}
                     role="status"
                     aria-label={selected ? t('exercises.connectorInsert.selectedConnector', { connector: selected }) : t('exercises.connectorInsert.noConnector')}
@@ -132,7 +132,7 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
                 <button
                     onClick={handleCheck}
                     disabled={selected === null}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

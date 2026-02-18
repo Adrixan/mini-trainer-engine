@@ -13,6 +13,7 @@ export {
     loadGamificationConfig,
     loadFullConfig,
     loadConfigSafe,
+    loadExercises,
     type ConfigLoadResult,
 } from './loader';
 
@@ -39,6 +40,9 @@ export {
     useBadges,
     useGamification,
     useAccessibilityDefaults,
+    useExercises,
+    useExercisesByTheme,
+    useExercisesByArea,
     type ConfigContextState,
     type ConfigContextValue,
     type ConfigProviderProps,

@@ -100,8 +100,8 @@ export function WritingExercise({ content, hints, onSubmit, showSolution }: Prop
                     placeholder={t('exercises.writing.placeholder')}
                     aria-describedby="word-count"
                     className={`w-full h-32 p-3 rounded-xl border-2 text-sm font-medium resize-none transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${showSolution
-                            ? 'bg-gray-50 border-gray-200 text-gray-600'
-                            : 'bg-white border-gray-200 text-gray-800 focus:border-primary'
+                        ? 'bg-gray-50 border-gray-200 text-gray-600'
+                        : 'bg-white border-gray-200 text-gray-800 focus:border-primary'
                         }`}
                 />
 
@@ -137,7 +137,7 @@ export function WritingExercise({ content, hints, onSubmit, showSolution }: Prop
                 <button
                     onClick={handleCheck}
                     disabled={!meetsMinimum}
-                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
                     {t('exercises.check')}
                 </button>

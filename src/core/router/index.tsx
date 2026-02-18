@@ -18,7 +18,19 @@ export const routes: RouteObject[] = [
         lazy: () => import('@/pages/HomePage').then((m) => ({ Component: m.HomePage })),
     },
     {
+        path: '/themes',
+        lazy: () => import('@/pages/ThemeSelectPage').then((m) => ({ Component: m.ThemeSelectPage })),
+    },
+    {
+        path: '/themes/:themeId/levels',
+        lazy: () => import('@/pages/LevelSelectPage').then((m) => ({ Component: m.LevelSelectPage })),
+    },
+    {
         path: '/exercise/:themeId',
+        lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
+    },
+    {
+        path: '/exercise/:themeId/level/:level',
         lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
     },
     {
@@ -36,6 +48,14 @@ export const routes: RouteObject[] = [
     {
         path: '/results',
         lazy: () => import('@/pages/ResultsPage').then((m) => ({ Component: m.ResultsPage })),
+    },
+    {
+        path: '/teacher/pin',
+        lazy: () => import('@/pages/TeacherPinPage').then((m) => ({ Component: m.TeacherPinPage })),
+    },
+    {
+        path: '/teacher/dashboard',
+        lazy: () => import('@/pages/TeacherDashboardPage').then((m) => ({ Component: m.TeacherDashboardPage })),
     },
 ];
 
@@ -59,11 +79,16 @@ export function createRouter() {
  */
 export const ROUTES = {
     HOME: '/',
+    THEMES: '/themes',
+    LEVEL_SELECT: (themeId: string) => `/themes/${themeId}/levels`,
     EXERCISE: (themeId: string) => `/exercise/${themeId}`,
+    EXERCISE_WITH_LEVEL: (themeId: string, level: number) => `/exercise/${themeId}/level/${level}`,
     EXERCISE_WITH_AREA: (themeId: string, areaId: string) => `/exercise/${themeId}/${areaId}`,
     PROFILE: '/profile',
     SETTINGS: '/settings',
     RESULTS: '/results',
+    TEACHER_PIN: '/teacher/pin',
+    TEACHER_DASHBOARD: '/teacher/dashboard',
 } as const;
 
 /**
