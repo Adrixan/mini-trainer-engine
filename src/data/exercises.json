@@ -7,7 +7,7 @@
             "themeId": "everyday-life",
             "level": 1,
             "difficulty": 1,
-            "instruction": "Fill in the blank with the correct word.",
+            "instruction": "t:exercises.fillBlank.instruction",
             "content": {
                 "type": "fill-blank",
                 "sentence": "Ich {{blank}} jeden Tag zur Schule.",

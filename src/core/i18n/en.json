@@ -231,6 +231,7 @@
             "options": "Answer options"
         },
         "fillBlank": {
+            "instruction": "Fill in the blank with the correct word.",
             "answerLabel": "Enter answer",
             "wrongCase": "Watch out for capitalization!",
             "followUp": "One more question:",

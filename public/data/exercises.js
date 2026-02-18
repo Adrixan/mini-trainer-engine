@@ -17,7 +17,7 @@ window.__TRAINER_EXERCISES__ = {
       "themeId": "everyday-life",
       "level": 1,
       "difficulty": 1,
-      "instruction": "Fill in the blank with the correct word.",
+      "instruction": "t:exercises.fillBlank.instruction",
       "content": {
         "type": "fill-blank",
         "sentence": "Ich {{blank}} jeden Tag zur Schule.",
@@ -14744,5 +14744,5 @@ window.__TRAINER_EXERCISES__ = {
 
 // Also export for ES modules if needed
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = outputData;
+  module.exports = outputData;
 }

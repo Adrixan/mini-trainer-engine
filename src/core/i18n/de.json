@@ -229,6 +229,7 @@
             "options": "Antwortmöglichkeiten"
         },
         "fillBlank": {
+            "instruction": "Fülle die Lücke mit dem richtigen Wort.",
             "answerLabel": "Antwort eingeben",
             "wrongCase": "Achte auf Groß- und Kleinschreibung!",
             "followUp": "Noch eine Frage:",

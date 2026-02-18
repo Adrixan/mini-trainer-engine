@@ -215,7 +215,9 @@ export function ExercisePage() {
             {/* Exercise instruction */}
             <div className="mb-4">
                 <h1 className="text-xl font-bold text-gray-900">
-                    {currentExercise.instruction}
+                    {currentExercise.instruction.startsWith('t:')
+                        ? t(currentExercise.instruction.slice(2))
+                        : currentExercise.instruction}
                 </h1>
             </div>
 
