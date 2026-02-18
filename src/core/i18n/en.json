@@ -324,5 +324,23 @@
         "textkompetenz": "Text Competence",
         "sprachbetrachtung": "Language Analysis",
         "rechtschreibung": "Spelling"
+    },
+    "feedback": {
+        "correct": {
+            "richtig": "Correct!",
+            "super": "Super!",
+            "toll": "Great!",
+            "perfekt": "Perfect!",
+            "ausgezeichnet": "Excellent!",
+            "prima": "Great!",
+            "sehrGut": "Very good!",
+            "wunderbar": "Wonderful!",
+            "gutGemacht": "Well done!"
+        },
+        "incorrect": {
+            "leiderFalsch": "Unfortunately wrong.",
+            "nichtGanz": "Not quite.",
+            "versuchsNochmal": "Try again!"
+        }
     }
 }

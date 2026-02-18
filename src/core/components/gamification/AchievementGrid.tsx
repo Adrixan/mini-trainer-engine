@@ -61,7 +61,7 @@ export function AchievementGrid({
     // Get all badges with progress if showing locked
     const allBadges = showLocked
         ? getAllBadgesWithProgress(
-            { badges, totalStars: 0, longestStreak: 0, currentLevels: {}, themeProgress: {} } as any,
+            { badges, totalStars: 0, longestStreak: 0, currentLevels: {}, themeProgress: {} } as { badges: Set<string>; totalStars: number; longestStreak: number; currentLevels: Record<string, number>; themeProgress: Record<string, { completed: number; total: number }> },
             badgeDefinitions
         )
         : null;

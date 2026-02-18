@@ -322,5 +322,23 @@
         "textkompetenz": "Textkompetenz",
         "sprachbetrachtung": "Sprachbetrachtung",
         "rechtschreibung": "Rechtschreibung"
+    },
+    "feedback": {
+        "correct": {
+            "richtig": "Richtig!",
+            "super": "Super!",
+            "toll": "Toll!",
+            "perfekt": "Perfekt!",
+            "ausgezeichnet": "Ausgezeichnet!",
+            "prima": "Prima!",
+            "sehrGut": "Sehr gut!",
+            "wunderbar": "Wunderbar!",
+            "gutGemacht": "Gut gemacht!"
+        },
+        "incorrect": {
+            "leiderFalsch": "Leider falsch.",
+            "nichtGanz": "Nicht ganz.",
+            "versuchsNochmal": "Versuch's nochmal!"
+        }
     }
 }

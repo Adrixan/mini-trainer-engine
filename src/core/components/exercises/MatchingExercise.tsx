@@ -30,7 +30,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
     // Shuffle the right-hand side once on mount
     const shuffledRight = useMemo(
         () => shuffle(content.pairs.map((p) => p.right)),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // content.pairs is stable from props, only shuffle once on mount
         [],
     );
 
@@ -41,7 +41,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
         if (showSolution) return;
 
         // If this left item already has a match, unmatch it (tap to undo)
-        if (matches[idx] != null) {
+        if (matches[idx] !== undefined) {
             setMatches((prev) => {
                 const next = { ...prev };
                 delete next[idx];
@@ -92,7 +92,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                         const isSelected = selectedLeft === idx;
                         const matchedValue = matches[idx];
                         const isCorrect = showSolution && matchedValue === pair.right;
-                        const isWrong = showSolution && matchedValue != null && matchedValue !== pair.right;
+                        const isWrong = showSolution && matchedValue !== undefined && matchedValue !== pair.right;
 
                         let style = 'bg-white border-2 border-gray-200';
                         if (isSelected) style = 'bg-primary/10 border-2 border-primary';

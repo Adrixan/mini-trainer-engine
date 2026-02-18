@@ -72,32 +72,6 @@
             "feedbackIncorrect": "Die Antwort ist 'zwanzig'. Übe weiter deine Zahlwörter!"
         },
         {
-            "id": "multiple-choice-001",
-            "type": "multiple-choice",
-            "areaId": "vocabulary",
-            "themeId": "everyday-life",
-            "level": 1,
-            "difficulty": 1,
-            "instruction": "Wähle die richtige Übersetzung.",
-            "content": {
-                "type": "multiple-choice",
-                "question": "What does 'Guten Morgen' mean?",
-                "options": [
-                    "Good night",
-                    "Good morning",
-                    "Good evening",
-                    "Goodbye"
-                ],
-                "correctIndex": 1
-            },
-            "hints": [
-                "Denke daran, wann du jemanden früh am Tag begrüßt.",
-                "Morgen bedeutet 'Morgen'."
-            ],
-            "feedbackCorrect": "Das ist richtig! 'Guten Morgen' bedeutet 'Guten Morgen'.",
-            "feedbackIncorrect": "'Guten Morgen' bedeutet 'Guten Morgen'. 'Morgen' bedeutet 'Morgen'."
-        },
-        {
             "id": "multiple-choice-002",
             "type": "multiple-choice",
             "areaId": "grammar",
@@ -148,42 +122,6 @@
             ],
             "feedbackCorrect": "Gut gemacht! Maria möchte ein Sandwich mit Käse und Tomaten.",
             "feedbackIncorrect": "Maria möchte 'ein Sandwich'. Der Satz sagt das klar aus."
-        },
-        {
-            "id": "matching-001",
-            "type": "matching",
-            "areaId": "vocabulary",
-            "themeId": "everyday-life",
-            "level": 1,
-            "difficulty": 1,
-            "instruction": "Ordne die deutschen Wörter ihren englischen Übersetzungen zu.",
-            "content": {
-                "type": "matching",
-                "pairs": [
-                    {
-                        "left": "Haus",
-                        "right": "house"
-                    },
-                    {
-                        "left": "Auto",
-                        "right": "car"
-                    },
-                    {
-                        "left": "Baum",
-                        "right": "tree"
-                    },
-                    {
-                        "left": "Blume",
-                        "right": "flower"
-                    }
-                ]
-            },
-            "hints": [
-                "Haus klingt wie 'house'.",
-                "Auto ist verwandt mit 'Automobil'."
-            ],
-            "feedbackCorrect": "Ausgezeichnetes Zuordnen! Du hast alle Wörter richtig zugeordnet.",
-            "feedbackIncorrect": "Einige Paare waren falsch. Überprüfe die richtigen Paare und versuche es erneut."
         },
         {
             "id": "matching-002",
@@ -899,7 +837,7 @@
             "themeId": "everyday-life",
             "level": 1,
             "difficulty": 1,
-            "instruction": "What is this? Type the German word.",
+            "instruction": "Was ist das? Schreibe das deutsche Wort.",
             "content": {
                 "type": "picture-vocabulary",
                 "picture": "🏠",
@@ -916,11 +854,11 @@
                 ]
             },
             "hints": [
-                "It's where people live.",
-                "The word starts with 'H'."
+                "Hier wohnen Menschen.",
+                "Das Wort beginnt mit H."
             ],
-            "feedbackCorrect": "Richtig! 'Haus' bedeutet 'Haus' auf Deutsch.",
-            "feedbackIncorrect": "Die richtige Antwort ist 'Haus'. Hier wohnen Menschen."
+            "feedbackCorrect": "Richtig! Das ist ein Haus.",
+            "feedbackIncorrect": "Die richtige Antwort ist Haus. Hier wohnen Menschen."
         },
         {
             "id": "picture-vocabulary-002",
@@ -981,8 +919,8 @@
                 "It's a common pet.",
                 "The word sounds similar to the English word."
             ],
-            "feedbackCorrect": "Wunderbar! 'Hund' bedeutet 'Hund' auf Deutsch.",
-            "feedbackIncorrect": "Das ist ein 'Hund'. Es ist ein häufiges Haustier."
+            "feedbackCorrect": "Wunderbar! Das ist ein Hund.",
+            "feedbackIncorrect": "Das ist ein Hund. Es ist ein häufiges Haustier."
         },
         {
             "id": "vpn-01",
