@@ -70,7 +70,7 @@ export function AchievementGrid({
         <div
             className={`grid ${COLUMN_CLASSES[columns]} gap-3 ${className}`}
             role="list"
-            aria-label="Achievements"
+            aria-label="Erfolge"
         >
             {/* Earned badges */}
             {badges.map((badge) => (
@@ -216,7 +216,7 @@ export function AchievementList({
         <div
             className={`space-y-3 ${className}`}
             role="list"
-            aria-label="Achievements"
+            aria-label="Erfolge"
         >
             {sortedBadges.map((badge) => (
                 <div
@@ -283,7 +283,7 @@ export function AchievementSummary({
     return (
         <div className={`bg-white rounded-xl p-4 shadow-sm ${className}`}>
             <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-gray-800">Achievements</h3>
+                <h3 className="font-semibold text-gray-800">Erfolge</h3>
                 <span className="text-sm text-gray-500">
                     {totalEarned}/{totalPossible}
                 </span>
