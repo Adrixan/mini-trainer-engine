@@ -203,7 +203,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                     <button
                         onClick={handleCheck}
                         disabled={!allMatched}
-                        className="flex-1 py-3 bg-accent text-white font-bold rounded-xl hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                        className="flex-1 py-3 bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
                     >
                         {t('exercises.check')}
                     </button>
