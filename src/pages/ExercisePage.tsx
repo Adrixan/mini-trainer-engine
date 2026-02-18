@@ -148,7 +148,7 @@ export function ExercisePage() {
                     <div className="h-12 bg-gray-200 rounded-xl" />
                 </div>
                 <p className="text-gray-500 mt-4">
-                    {t('exercise.loading', 'Loading exercises...')}
+                    {t('exercise.loading')}
                 </p>
             </div>
         );
@@ -159,16 +159,16 @@ export function ExercisePage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] p-4">
                 <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                    {t('exercise.complete', 'Session Complete!')}
+                    {t('exercise.complete')}
                 </h1>
                 <p className="text-gray-600 mb-8">
-                    {t('exercise.completedAll', 'You have completed all exercises.')}
+                    {t('exercise.completedAll')}
                 </p>
                 <button
                     onClick={handleFinish}
                     className="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                    {t('exercise.viewResults', 'View Results')}
+                    {t('exercise.viewResults')}
                 </button>
             </div>
         );
@@ -179,13 +179,13 @@ export function ExercisePage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] p-4">
                 <p className="text-gray-500">
-                    {t('exercise.noExercise', 'No exercise available.')}
+                    {t('exercise.noExercise')}
                 </p>
                 <button
                     onClick={() => navigate(ROUTES.HOME)}
                     className="mt-4 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                    {t('common.backHome', 'Back to Home')}
+                    {t('common.backHome')}
                 </button>
             </div>
         );
@@ -197,7 +197,7 @@ export function ExercisePage() {
             <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-600 mb-2">
                     <span>
-                        {t('exercise.progress', 'Exercise {{current}} of {{total}}', {
+                        {t('exercise.progress', {
                             current: progress.current,
                             total: progress.total,
                         })}
@@ -253,7 +253,7 @@ export function ExercisePage() {
                         onClick={handleShowSolution}
                         className="flex-1 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                        {t('exercise.showSolution', 'Show Solution')}
+                        {t('exercise.showSolution')}
                     </button>
                 )}
                 {(showSolution || isCompleted) && progress.current < progress.total && (
@@ -261,7 +261,7 @@ export function ExercisePage() {
                         onClick={handleNext}
                         className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                        {t('exercise.next', 'Next Exercise')}
+                        {t('exercise.next')}
                     </button>
                 )}
                 {(showSolution || isCompleted) && progress.current >= progress.total && (
@@ -269,7 +269,7 @@ export function ExercisePage() {
                         onClick={handleFinish}
                         className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
-                        {t('exercise.finish', 'Finish')}
+                        {t('exercise.finish')}
                     </button>
                 )}
             </div>
@@ -279,7 +279,7 @@ export function ExercisePage() {
                 onClick={() => navigate(ROUTES.HOME)}
                 className="mt-4 py-2 px-4 text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded"
             >
-                {t('common.backHome', 'Back to Home')}
+                {t('common.backHome')}
             </button>
 
             {/* Level Up Celebration */}

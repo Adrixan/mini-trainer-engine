@@ -273,7 +273,8 @@ describe('ExerciseRenderer', () => {
             );
 
             expect(screen.getByRole('status')).toBeInTheDocument();
-            expect(screen.getByLabelText('Übung wird geladen')).toBeInTheDocument();
+            // i18n returns the key when not initialized in test environment
+            expect(screen.getByLabelText('exercise.loading')).toBeInTheDocument();
         });
     });
 
@@ -292,7 +293,8 @@ describe('ExerciseRenderer', () => {
             );
 
             expect(screen.getByRole('alert')).toBeInTheDocument();
-            expect(screen.getByText(/Unbekannter Übungstyp/)).toBeInTheDocument();
+            // i18n returns the key when not initialized in test environment
+            expect(screen.getByText(/exercise.unknownType/)).toBeInTheDocument();
         });
 
         it('renders custom fallback for unknown exercise type', () => {

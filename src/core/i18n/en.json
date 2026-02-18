@@ -9,7 +9,11 @@
         "close": "Close",
         "loading": "Loading...",
         "error": "An error occurred",
-        "retry": "Try again"
+        "retry": "Try again",
+        "or": "or"
+    },
+    "app": {
+        "title": "Mini Trainer"
     },
     "home": {
         "welcome": "Welcome",
@@ -18,6 +22,20 @@
         "profile": "Profile",
         "settings": "Settings",
         "results": "Results"
+    },
+    "dashboard": {
+        "welcome": "Welcome back",
+        "streakActive": "Keep it up! Your streak is active.",
+        "startExercises": "Start Exercises",
+        "progress": "Progress",
+        "settings": "Settings",
+        "results": "Results"
+    },
+    "stats": {
+        "stars": "Stars",
+        "streak": "Streak",
+        "totalStars": "Total Stars",
+        "dayStreak": "Day Streak"
     },
     "exercise": {
         "title": "Exercise",
@@ -30,17 +48,35 @@
         "correct": "Correct!",
         "incorrect": "Incorrect",
         "tryAgain": "Try again",
-        "showSolution": "Show solution"
+        "showSolution": "Show solution",
+        "loading": "Loading exercises...",
+        "complete": "Session Complete!",
+        "completedAll": "You have completed all exercises.",
+        "viewResults": "View Results",
+        "noExercise": "No exercise available.",
+        "progress": "Exercise {{current}} of {{total}}",
+        "finish": "Finish",
+        "unknownType": "Unknown exercise type",
+        "contactSupport": "Please contact support if this problem persists."
     },
     "profile": {
         "title": "Profile",
         "placeholder": "Profile information and progress will be displayed here.",
         "nickname": "Nickname",
+        "nicknamePlaceholder": "Enter your name",
         "avatar": "Avatar",
+        "selectAvatar": "Choose your avatar",
+        "avatarLabel": "Avatar selection",
         "level": "Level",
         "stars": "Stars",
         "streak": "Streak",
-        "badges": "Badges"
+        "badges": "Badges",
+        "createSubtitle": "Create your profile to start learning",
+        "create": "Create Profile",
+        "loading": "Loading...",
+        "loadGame": "Load Game",
+        "importFailed": "Import failed",
+        "invalidFile": "Invalid file"
     },
     "settings": {
         "title": "Settings",
@@ -54,8 +90,25 @@
         "highContrast": "High Contrast",
         "animations": "Animations",
         "sound": "Sound",
+        "soundEffects": "Sound Effects",
+        "soundEffectsDescription": "Play sounds for correct/incorrect answers and achievements",
+        "toggleSound": "Toggle sound effects",
         "teacherPin": "Teacher PIN",
-        "resetProgress": "Reset Progress"
+        "resetProgress": "Reset Progress",
+        "saveGame": "Save Game",
+        "saveSuccess": "Game saved successfully!",
+        "saveFailed": "Could not save game",
+        "loadSuccess": "Game loaded successfully!",
+        "loadFailed": "Could not load game",
+        "invalidFile": "Invalid save file",
+        "saving": "Saving...",
+        "saveButton": "Save Game",
+        "loading": "Loading...",
+        "loadButton": "Load Game",
+        "saveDescription": "Save your progress to a file or load a previous save.",
+        "teacherArea": "Teacher Area",
+        "teacherAreaDescription": "Access the teacher dashboard for progress control and statistics.",
+        "openTeacherArea": "Open Teacher Area"
     },
     "results": {
         "title": "Results",
@@ -85,14 +138,190 @@
         "stars": "{{earned}}/{{max}} stars",
         "progressLabel": "{{percent}}% complete"
     },
+    "level": {
+        "themeNotFound": "Theme not found",
+        "themeNotFoundDesc": "The selected theme could not be found.",
+        "totalProgress": "Total Progress",
+        "exercises": "Exercises",
+        "selectPrompt": "Select a difficulty level to start practicing.",
+        "levelList": "Available difficulty levels",
+        "playAllLevels": "Play all levels",
+        "allLevels": "All Levels",
+        "noExercisesForTheme": "No exercises available for this theme yet.",
+        "beginner": "Beginner",
+        "beginnerDesc": "Simple exercises for beginners",
+        "elementary": "Elementary",
+        "elementaryDesc": "Basic exercises with more variety",
+        "intermediate": "Intermediate",
+        "intermediateDesc": "More challenging exercises",
+        "advanced": "Advanced",
+        "advancedDesc": "Complex exercises for experts",
+        "locked": "Locked",
+        "noExercises": "No exercises",
+        "notStarted": "Not started",
+        "completed": "Completed!",
+        "inProgress": "{{count}}/{{total}} exercises",
+        "lockedAria": "{{name}} level is locked. Earn more stars to unlock.",
+        "emptyAria": "{{name}} level has no exercises available.",
+        "selectAria": "Select {{name}} level with {{count}} exercises.",
+        "unlockAt": "Level {{level}} required",
+        "levelNumber": "Level {{level}}",
+        "exerciseCount": "{{count}} exercises",
+        "progressLabel": "{{percent}}% complete",
+        "noExercisesAvailable": "No exercises available"
+    },
     "navigation": {
         "back": "Back",
-        "backToHome": "Back to home"
+        "backToHome": "Back to home",
+        "backToThemes": "Back to themes"
     },
     "nav": {
         "home": "Home",
         "exercise": "Exercise",
         "profile": "Profile",
         "settings": "Settings"
+    },
+    "gamification": {
+        "levelUp": "Level Up!",
+        "newLevel": "You reached level {{level}}!",
+        "badgeEarned": "Badge earned!",
+        "continue": "Continue",
+        "starsEarned": "Stars earned",
+        "newBadge": "New badge!"
+    },
+    "accessibility": {
+        "title": "Accessibility",
+        "highContrast": "High Contrast",
+        "highContrastDesc": "Increases contrast for better visibility",
+        "fontSize": "Font Size",
+        "fontSizeNormal": "Normal",
+        "fontSizeLarge": "Large",
+        "fontSizeExtraLarge": "Extra Large",
+        "animations": "Animations",
+        "animationsDesc": "Enable or disable animations (respects system setting)",
+        "sound": "Sound Effects",
+        "soundDesc": "Enable or disable sound effects",
+        "screenReaderNote": "Screen Reader Information",
+        "screenReaderInfo": "This application is designed for use with screen readers. Use Tab to navigate between controls and Enter or Space to activate buttons."
+    },
+    "levelTitles": {
+        "beginner": "Beginner",
+        "risingStar": "Rising Star",
+        "achiever": "Achiever",
+        "champion": "Champion",
+        "expert": "Expert",
+        "grandMaster": "Grand Master"
+    },
+    "exercises": {
+        "instruction": "Task",
+        "exerciseArea": "Exercise area",
+        "check": "Check",
+        "next": "Next",
+        "hint": "Hint",
+        "hintNext": "Next hint ({{current}}/{{total}})",
+        "hintShow": "Show hint ({{total}} available)",
+        "correct": "Correct!",
+        "incorrect": "Incorrect",
+        "tryAgain": "Try again",
+        "attempts": "Attempt {{current}} of {{max}}",
+        "reset": "Reset",
+        "solved": "Solved!",
+        "multipleChoice": {
+            "question": "Question",
+            "options": "Answer options"
+        },
+        "fillBlank": {
+            "answerLabel": "Enter answer",
+            "wrongCase": "Watch out for capitalization!",
+            "followUp": "One more question:",
+            "followUpHint": "Tip: Pay attention to the ending",
+            "followUpLabel": "Enter follow-up answer",
+            "correctAnswer": "Correct answer:"
+        },
+        "matching": {
+            "instruction": "Connect the matching pairs",
+            "solution": "Solution:"
+        },
+        "wordOrder": {
+            "yourSentence": "Your sentence",
+            "placedWords": "Placed words",
+            "tapToPlace": "Tap a word to place it",
+            "availableWords": "Available words",
+            "allPlaced": "All words placed",
+            "correctOrder": "Correct order!"
+        },
+        "sorting": {
+            "itemPool": "Word pool",
+            "dragOrTap": "Drag or tap to assign words",
+            "allSorted": "All assigned",
+            "categories": "Categories",
+            "correctSorting": "Correct assignment!"
+        },
+        "pictureVocabulary": {
+            "whatIsThis": "What is this?",
+            "options": "Answer options",
+            "correctAnswer": "The correct answer is:"
+        },
+        "writing": {
+            "prompt": "Writing task",
+            "starterWords": "Starter words",
+            "addWord": "Add word",
+            "scaffoldHints": "Helpful hints",
+            "placeholder": "Write your text here...",
+            "wordCount": "{{count}} words",
+            "minLength": "At least {{count}} words",
+            "tooShort": "Your text is still too short. Write at least {{count}} words."
+        },
+        "connectorInsert": {
+            "instruction": "Select the appropriate connector",
+            "selectedConnector": "Selected: {{connector}}",
+            "noConnector": "No connector selected yet",
+            "solution": "Solution:"
+        },
+        "conjugationTable": {
+            "instruction": "Conjugate the verb in the correct form",
+            "verb": "Verb",
+            "tense": "Tense",
+            "person": "Person",
+            "form": "Form"
+        },
+        "sentenceBuilder": {
+            "instruction": "Build a meaningful sentence from the words",
+            "yourSentence": "Your sentence:",
+            "selectWord": "Select words"
+        }
+    },
+    "teacher": {
+        "pinTitle": "Teacher Login",
+        "pinSubtitle": "Enter your PIN to access the teacher area",
+        "pinSetup": "Create PIN",
+        "pinSetupHint": "Create a PIN to protect the teacher area",
+        "pinPlaceholder": "Enter PIN",
+        "pinConfirm": "Confirm PIN",
+        "pinSubmit": "Login",
+        "pinInvalid": "Invalid PIN",
+        "pinTooShort": "PIN must have at least 4 digits",
+        "pinMismatch": "PINs do not match",
+        "dashboardTitle": "Teacher Dashboard",
+        "logout": "Logout",
+        "totalProfiles": "Profiles",
+        "totalExercises": "Exercises",
+        "averageStars": "Avg. Stars",
+        "averageTime": "Avg. Time",
+        "seconds": "{{count}}s",
+        "profileOverview": "Profile Overview",
+        "noProfiles": "No profiles yet",
+        "exercisesCount": "{{count}} exercises",
+        "avgScore": "Avg. {{score}}",
+        "areaBreakdown": "Areas",
+        "backToChild": "Back to student mode"
+    },
+    "areas": {
+        "woerter-und-saetze": "Words and Sentences",
+        "klaenge-und-silben": "Sounds and Syllables",
+        "kommunikation": "Communication",
+        "textkompetenz": "Text Competence",
+        "sprachbetrachtung": "Language Analysis",
+        "rechtschreibung": "Spelling"
     }
 }

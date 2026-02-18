@@ -62,7 +62,7 @@ function ExerciseLoading() {
         <div
             className="animate-pulse space-y-4"
             role="status"
-            aria-label={t('exercise.loading', 'Übung wird geladen')}
+            aria-label={t('exercise.loading')}
         >
             <div className="h-16 bg-gray-200 rounded-xl" />
             <div className="h-12 bg-gray-200 rounded-xl" />
@@ -83,10 +83,10 @@ function ExerciseError({ type }: { type?: string }) {
             role="alert"
         >
             <p className="text-red-800 font-semibold">
-                {t('exercise.unknownType', 'Unbekannter Übungstyp')}: {type || 'undefined'}
+                {t('exercise.unknownType')}: {type || 'undefined'}
             </p>
             <p className="text-red-600 text-sm mt-1">
-                {t('exercise.contactSupport', 'Bitte kontaktiere den Support, falls dieses Problem weiterhin besteht.')}
+                {t('exercise.contactSupport')}
             </p>
         </div>
     );
