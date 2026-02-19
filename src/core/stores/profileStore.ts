@@ -200,7 +200,7 @@ export const useProfileStore = create<ProfileState>()(
             incrementStreak: () =>
                 set((state) => {
                     if (!state.activeProfile) return state;
-                    const today = new Date().toISOString().split('T')[0]!;
+                    const today = new Date().toISOString().split('T')[0] ?? '';
                     const lastActive = state.activeProfile.lastActiveDate;
 
                     // If already active today, no change
@@ -209,7 +209,7 @@ export const useProfileStore = create<ProfileState>()(
                     // Check if yesterday
                     const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
-                    const yesterdayStr = yesterday.toISOString().split('T')[0]!;
+                    const yesterdayStr = yesterday.toISOString().split('T')[0] ?? '';
 
                     const newStreak = lastActive === yesterdayStr
                         ? state.activeProfile.currentStreak + 1

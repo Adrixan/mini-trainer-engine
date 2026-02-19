@@ -149,8 +149,10 @@ export function trapFocus(
         const focusables = getFocusableElements(element);
         if (focusables.length === 0) return;
 
-        const first = focusables[0]!;
-        const last = focusables[focusables.length - 1]!;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (!first || !last) return;
 
         if (e.shiftKey) {
             // Shift + Tab: moving backwards

@@ -70,7 +70,7 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
 
     const handleFollowUpCheck = () => {
         if (!followUpAnswer.trim()) return;
-        const wordForm = content.numericWordForm!.toLowerCase();
+        const wordForm = (content.numericWordForm ?? '').toLowerCase();
         if (followUpAnswer.trim().toLowerCase() === wordForm) {
             // Child wrote the word form correctly → pass
             onSubmit(true);

@@ -116,11 +116,6 @@ export function LevelSelectPage() {
         navigate(ROUTES.EXERCISE_WITH_LEVEL(themeId ?? '', level));
     };
 
-    // Handle "All Levels" button click
-    const handleAllLevelsClick = () => {
-        navigate(ROUTES.EXERCISE(themeId ?? ''));
-    };
-
     // Loading state if theme not found
     if (!theme) {
         return (
@@ -252,25 +247,6 @@ export function LevelSelectPage() {
                     );
                 })}
             </div>
-
-            {/* All Levels button */}
-            {totalExercises > 0 && (
-                <div className="max-w-2xl mx-auto mt-6">
-                    <button
-                        onClick={handleAllLevelsClick}
-                        className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-600 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md"
-                        aria-label={t('level.playAllLevels', 'Play all levels')}
-                    >
-                        <span className="flex items-center justify-center gap-2">
-                            <span role="img" aria-hidden="true"> gaming </span>
-                            {t('level.allLevels', 'All Levels')}
-                            <span className="text-sm opacity-80">
-                                ({totalExercises} {t('level.exercises', 'exercises')})
-                            </span>
-                        </span>
-                    </button>
-                </div>
-            )}
 
             {/* No exercises message */}
             {totalExercises === 0 && (

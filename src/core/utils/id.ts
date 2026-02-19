@@ -41,7 +41,8 @@ export function generateShortId(length: number = 6): string {
         const values = new Uint32Array(length);
         crypto.getRandomValues(values);
         for (let i = 0; i < length; i++) {
-            result += chars[values[i]! % chars.length];
+            const value = values[i];
+            result += chars[(value ?? 0) % chars.length];
         }
     } else {
         // Fallback to Math.random

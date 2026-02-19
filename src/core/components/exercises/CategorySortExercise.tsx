@@ -14,9 +14,9 @@ function shuffle<T>(arr: T[]): T[] {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        const tmp = copy[i]!;
-        copy[i] = copy[j]!;
-        copy[j] = tmp;
+        const tmp = copy[i];
+        copy[i] = copy[j] as T;
+        copy[j] = tmp as T;
     }
     return copy;
 }
@@ -173,7 +173,8 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
 
     const handleTouchStart = (e: React.TouchEvent, data: DragData) => {
         if (showSolution) return;
-        const touch = e.touches[0]!;
+        const touch = e.touches[0];
+        if (!touch) return;
         // Create ghost element
         const ghost = document.createElement('div');
         ghost.textContent = data.item;
@@ -195,7 +196,8 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
 
     const handleTouchMove = useCallback((e: React.TouchEvent) => {
         if (!touchRef.current) return;
-        const touch = e.touches[0]!;
+        const touch = e.touches[0];
+        if (!touch) return;
         const dx = Math.abs(touch.clientX - touchRef.current.startX);
         const dy = Math.abs(touch.clientY - touchRef.current.startY);
         if (dx > 5 || dy > 5) {
@@ -282,7 +284,10 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
             res[catIdx] = {};
             (buckets[catIdx] || []).forEach((item) => {
                 const isCorrect = correctMap.get(item) === catIdx;
-                res[catIdx]![item] = isCorrect;
+                const bucket = res[catIdx];
+                if (bucket) {
+                    bucket[item] = isCorrect;
+                }
                 if (!isCorrect) allCorrect = false;
             });
         });

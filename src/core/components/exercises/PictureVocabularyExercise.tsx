@@ -83,13 +83,13 @@ export function PictureVocabularyExercise({ content, hints, onSubmit, showSoluti
             </div>
 
             {/* Multiple-choice options */}
-            {hasOptions && (
+            {hasOptions && content.options && (
                 <div
                     className="space-y-2"
                     role="radiogroup"
                     aria-label={t('exercises.pictureVocabulary.options')}
                 >
-                    {content.options!.map((option, idx) => {
+                    {content.options.map((option, idx) => {
                         const isSelected = selected === idx;
                         const isCorrect =
                             option === content.correctAnswer ||

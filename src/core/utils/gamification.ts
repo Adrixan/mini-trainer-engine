@@ -188,7 +188,7 @@ export function updateStreak(currentStreak: number, lastActivity: Date): StreakR
     const diffTime = today.getTime() - lastActive.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    const todayStr = today.toISOString().split('T')[0]!;
+    const todayStr = today.toISOString().split('T')[0] ?? '';
 
     // Same day - no change
     if (diffDays === 0) {
@@ -356,7 +356,7 @@ export function formatOrdinal(n: number): string {
     const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
     const idx = v < 20 ? v : (v - 20) % 10;
-    return n + (s[idx] ?? s[0]!);
+    return n + (s[idx] ?? 'th');
 }
 
 /**

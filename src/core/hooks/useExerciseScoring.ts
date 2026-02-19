@@ -130,7 +130,7 @@ function calculateGroupStats(
         if (!groups[key]) {
             groups[key] = [];
         }
-        groups[key]!.push(result);
+        groups[key]?.push(result);
     }
 
     const stats: Record<string, ExerciseTypeStats> = {};

@@ -15,8 +15,14 @@ import { ConfigProvider } from '@core/config';
 // Create the router instance
 const router = createRouter();
 
+// Get root element
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+    throw new Error('Root element not found');
+}
+
 // Render the application
-createRoot(document.getElementById('root')!).render(
+createRoot(rootElement).render(
     <StrictMode>
         <ConfigProvider>
             <RouterProvider router={router} />

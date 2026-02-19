@@ -91,7 +91,7 @@ export function LevelUpCelebration({
 
     // Generate confetti particles with randomized properties
     const confettiPieces = Array.from({ length: 40 }, (_, i) => {
-        const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length]!;
+        const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length] ?? CONFETTI_COLORS[0];
         const left = Math.random() * 100;
         const delay = Math.random() * 1.5;
         const animDuration = 2 + Math.random() * 2;

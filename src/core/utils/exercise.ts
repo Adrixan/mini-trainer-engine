@@ -100,7 +100,10 @@ export function validateSortingAnswer(
         const items = buckets[catIdx] || [];
         items.forEach((item) => {
             const isCorrect = correctMap.get(item) === catIdx;
-            results[catIdx]![item] = isCorrect;
+            const bucket = results[catIdx];
+            if (bucket) {
+                bucket[item] = isCorrect;
+            }
             if (!isCorrect) allCorrect = false;
         });
     });
@@ -246,7 +249,9 @@ export function shuffleArray<T>(arr: T[]): T[] {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j]!, copy[i]!];
+        const temp = copy[i];
+        copy[i] = copy[j] as T;
+        copy[j] = temp as T;
     }
     return copy;
 }
@@ -350,7 +355,7 @@ export function groupExercises<K extends string>(
         if (!groups[key]) {
             groups[key] = [];
         }
-        groups[key]!.push(exercise);
+        groups[key]?.push(exercise);
     }
     return groups;
 }

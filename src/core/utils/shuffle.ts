@@ -23,9 +23,9 @@ export function shuffle<T>(array: readonly T[]): T[] {
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         // Swap elements
-        const temp = result[i]!;
-        result[i] = result[j]!;
-        result[j] = temp;
+        const temp = result[i];
+        result[i] = result[j] as T;
+        result[j] = temp as T;
     }
 
     return result;
@@ -48,10 +48,11 @@ export function secureShuffle<T>(array: readonly T[]): T[] {
 
         // Fisher-Yates shuffle with crypto random
         for (let i = result.length - 1; i > 0; i--) {
-            const j = values[i]! % (i + 1);
-            const temp = result[i]!;
-            result[i] = result[j]!;
-            result[j] = temp;
+            const val = values[i];
+            const j = (val ?? 0) % (i + 1);
+            const temp = result[i];
+            result[i] = result[j] as T;
+            result[j] = temp as T;
         }
     } else {
         // Fallback to regular shuffle
@@ -72,9 +73,9 @@ export function shuffleInPlace<T>(array: T[]): T[] {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         // Swap elements
-        const temp = array[i]!;
-        array[i] = array[j]!;
-        array[j] = temp;
+        const temp = array[i];
+        array[i] = array[j] as T;
+        array[j] = temp as T;
     }
 
     return array;
@@ -184,9 +185,9 @@ export function seededShuffle<T>(array: readonly T[], seed: number): T[] {
 
     for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(random() * (i + 1));
-        const temp = result[i]!;
-        result[i] = result[j]!;
-        result[j] = temp;
+        const temp = result[i];
+        result[i] = result[j] as T;
+        result[j] = temp as T;
     }
 
     return result;

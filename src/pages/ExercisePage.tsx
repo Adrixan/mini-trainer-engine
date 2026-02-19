@@ -135,8 +135,13 @@ export function ExercisePage() {
 
     // Handle session complete
     const handleFinish = useCallback(() => {
-        navigate(ROUTES.RESULTS);
-    }, [navigate]);
+        // Navigate back to the level selection for this theme
+        if (themeId) {
+            navigate(ROUTES.LEVEL_SELECT(themeId));
+        } else {
+            navigate(ROUTES.HOME);
+        }
+    }, [navigate, themeId]);
 
     // Loading state
     if (exercises.length === 0) {
@@ -278,10 +283,10 @@ export function ExercisePage() {
 
             {/* Back button */}
             <button
-                onClick={() => navigate(ROUTES.HOME)}
+                onClick={() => themeId ? navigate(ROUTES.LEVEL_SELECT(themeId)) : navigate(ROUTES.HOME)}
                 className="mt-4 py-2 px-4 text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded"
             >
-                {t('common.backHome')}
+                {t('common.back')}
             </button>
 
             {/* Level Up Celebration */}
@@ -295,7 +300,7 @@ export function ExercisePage() {
             {/* Badge Earned Toast */}
             {earnedBadges.length > 0 && currentBadgeIndex < earnedBadges.length && earnedBadges[currentBadgeIndex] && (
                 <BadgeEarnedToast
-                    badge={earnedBadges[currentBadgeIndex]!}
+                    badge={earnedBadges[currentBadgeIndex]}
                     onDismiss={() => {
                         const nextIndex = currentBadgeIndex + 1;
                         if (nextIndex >= earnedBadges.length) {
