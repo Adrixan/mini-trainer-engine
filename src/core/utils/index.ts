@@ -139,3 +139,21 @@ export {
     type SoundEffect,
     type SoundManager,
 } from './sounds';
+
+// CVA (Class Variance Authority) for variant styling
+export {
+    cva,
+    type VariantProps,
+    buttonVariants,
+    type ButtonVariants,
+    cardVariants,
+    type CardVariants,
+    badgeVariants,
+    type BadgeVariants,
+    inputVariants,
+    type InputVariants,
+    progressVariants,
+    progressBarVariants,
+    type ProgressVariants,
+    type ProgressBarVariants,
+} from './cva';
