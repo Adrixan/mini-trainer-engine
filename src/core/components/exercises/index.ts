@@ -7,6 +7,14 @@ export { HintButton } from './HintButton';
 export { ExerciseWrapper, useExerciseState, useExerciseFocus, calculateStars } from './BaseExercise';
 export type { BaseExerciseProps, ExerciseWrapperProps } from './BaseExercise';
 
+// Exercise page components
+export { ExerciseHeader } from './ExerciseHeader';
+export type { ExerciseHeaderProps } from './ExerciseHeader';
+
+export { ExerciseFooter } from './ExerciseFooter';
+export type { ExerciseFooterProps } from './ExerciseFooter';
+
+// Exercise type components
 export { MultipleChoiceExercise } from './MultipleChoiceExercise';
 export { FillBlankExercise } from './FillBlankExercise';
 export { MatchingExercise } from './MatchingExercise';

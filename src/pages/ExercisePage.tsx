@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 import { ROUTES } from '@core/router';
-import { useExercisesByTheme, useExercisesByArea, useExercises } from '@core/config';
+import { useExercisesByTheme, useExercisesByArea, useExercises, useTheme } from '@core/config';
 import { useExerciseStore } from '@core/stores';
 import { useProfileStore } from '@core/stores/profileStore';
 import { useAppStore } from '@core/stores/appStore';
@@ -17,7 +17,9 @@ import { BadgeEarnedToast, LevelUpCelebration } from '@core/components/gamificat
 import { selectCurrentExercise, selectProgress, selectIsSessionActive } from '@core/stores/exerciseStore';
 import { useGamification } from '@core/hooks/useGamification';
 import { playCorrect, playIncorrect, playLevelUp, playBadge } from '@core/utils/sounds';
+import { saveExerciseResult } from '@core/storage';
 import type { Badge } from '@/types/profile';
+import type { ExerciseResult } from '@/types';
 
 /**
  * Exercise page component.
@@ -27,6 +29,9 @@ export function ExercisePage() {
     const { themeId, areaId, level } = useParams<{ themeId: string; areaId?: string; level?: string }>();
     const { t } = useTranslation();
     const navigate = useNavigate();
+
+    // Get theme info for display
+    const theme = useTheme(themeId ?? '');
 
     // Get exercises based on theme/area filters
     const allExercises = useExercises();
@@ -50,6 +55,7 @@ export function ExercisePage() {
 
     // Exercise store actions and state
     const startSession = useExerciseStore((s) => s.startSession);
+    const endSession = useExerciseStore((s) => s.endSession);
     const submitAnswer = useExerciseStore((s) => s.submitAnswer);
     const nextExercise = useExerciseStore((s) => s.nextExercise);
     const incrementAttempts = useExerciseStore((s) => s.incrementAttempts);
@@ -60,6 +66,8 @@ export function ExercisePage() {
     const showSolution = useExerciseStore((s) => s.showSolution);
     const isCompleted = useExerciseStore((s) => s.isCompleted);
     const answer = useExerciseStore((s) => s.answer);
+    const currentThemeId = useExerciseStore((s) => s.themeId);
+    const currentLevel = useExerciseStore((s) => s.currentExercise?.level);
 
     // Profile and gamification
     const activeProfile = useProfileStore((s) => s.activeProfile);
@@ -76,11 +84,19 @@ export function ExercisePage() {
     const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
 
     // Start session when exercises are loaded
+    // Reset session if level or theme changes
     useEffect(() => {
-        if (exercises.length > 0 && !isSessionActive) {
-            startSession(exercises, themeId ?? 'default', areaId);
+        if (exercises.length > 0) {
+            // Check if we need to reset the session (level or theme changed)
+            const levelChanged = currentLevel !== undefined && currentLevel !== Number(level);
+            const themeChanged = currentThemeId !== null && currentThemeId !== themeId;
+
+            if (levelChanged || themeChanged || !isSessionActive) {
+                endSession();
+                startSession(exercises, themeId ?? 'default', areaId);
+            }
         }
-    }, [exercises, isSessionActive, startSession, themeId, areaId]);
+    }, [exercises, isSessionActive, startSession, endSession, themeId, areaId, level, currentLevel, currentThemeId]);
 
     // Handle answer submission
     const handleSubmit = useCallback((correct: boolean) => {
@@ -102,9 +118,25 @@ export function ExercisePage() {
     // Handle next exercise with gamification processing
     const handleNext = useCallback(() => {
         // Process gamification if we have an answer
-        if (answer && activeProfile) {
+        if (answer && activeProfile && currentExercise) {
             const attempts = answer.attempts;
             const result = processExerciseCompletion(attempts);
+
+            // Save exercise result to IndexedDB for progress tracking
+            const exerciseResult: ExerciseResult = {
+                id: `result-${currentExercise.id}-${Date.now()}`,
+                childProfileId: activeProfile.id,
+                exerciseId: currentExercise.id,
+                areaId: currentExercise.areaId,
+                themeId: currentExercise.themeId,
+                level: currentExercise.level,
+                correct: answer.correct,
+                score: result.starsEarned,
+                attempts: attempts,
+                timeSpentSeconds: answer.timeSpentSeconds,
+                completedAt: new Date().toISOString(),
+            };
+            saveExerciseResult(exerciseResult).catch(console.error);
 
             // Check for level up
             if (result.leveledUp && result.newLevel) {
@@ -126,7 +158,7 @@ export function ExercisePage() {
         nextExercise();
         setHasAnswered(false);
         setShowSolution(false);
-    }, [answer, activeProfile, processExerciseCompletion, incrementStreak, nextExercise, setShowSolution, soundEnabled]);
+    }, [answer, activeProfile, currentExercise, processExerciseCompletion, incrementStreak, nextExercise, setShowSolution, soundEnabled]);
 
     // Handle show solution
     const handleShowSolution = useCallback(() => {
@@ -207,7 +239,7 @@ export function ExercisePage() {
                             total: progress.total,
                         })}
                     </span>
-                    <span>{themeId}</span>
+                    <span>{theme?.name ?? themeId}</span>
                 </div>
                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div

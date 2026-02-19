@@ -7,7 +7,7 @@
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { LevelCard } from '@core/components/level';
 import { useTheme, useExercisesByTheme } from '@core/config';
 import {
@@ -17,7 +17,8 @@ import {
 } from '@core/stores/profileStore';
 import { levelFromStars } from '@core/utils/gamification';
 import { ROUTES } from '@core/router';
-import type { Exercise } from '@/types';
+import { getExerciseResultsByTheme } from '@core/storage';
+import type { Exercise, ExerciseResult } from '@/types';
 
 // ============================================================================
 // Helper Functions
@@ -84,19 +85,29 @@ export function LevelSelectPage() {
     // Calculate vocabulary level
     const vocabularyLevel = levelFromStars(totalStars);
 
-    // Get completed exercise IDs from profile
-    const completedExerciseIds = useMemo(() => {
-        if (!profile) return new Set<string>();
+    // Get completed exercise IDs from IndexedDB
+    const [completedExerciseIds, setCompletedExerciseIds] = useState<Set<string>>(new Set());
 
-        // Get from theme progress or exercise results
-        // For now, we'll use a simple approach based on themeProgress
-        const themeProgress = profile.themeProgress[themeId ?? ''];
-        if (!themeProgress) return new Set<string>();
+    useEffect(() => {
+        if (!themeId || !profile) {
+            setCompletedExerciseIds(new Set());
+            return;
+        }
 
-        // In a real implementation, we'd fetch from IndexedDB
-        // For now, return empty set as completed tracking needs to be implemented
-        return new Set<string>();
-    }, [profile, themeId]);
+        // Fetch completed exercises from IndexedDB
+        getExerciseResultsByTheme(themeId)
+            .then((results: ExerciseResult[]) => {
+                const completedIds = new Set(
+                    results
+                        .filter((r) => r.correct)
+                        .map((r) => r.exerciseId)
+                );
+                setCompletedExerciseIds(completedIds);
+            })
+            .catch(() => {
+                setCompletedExerciseIds(new Set());
+            });
+    }, [themeId, profile]);
 
     // Count exercises per level
     const exerciseCounts = useMemo(

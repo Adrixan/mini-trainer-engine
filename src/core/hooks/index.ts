@@ -5,6 +5,9 @@ export type { ExerciseSession, ExerciseSessionState, UseExerciseSessionOptions }
 export { useExerciseScoring, calculateStarRating, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from './useExerciseScoring';
 export type { ExerciseTypeStats, ScoringStats, UseExerciseScoringOptions } from './useExerciseScoring';
 
+export { useExerciseLogic, useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise, calculateStarsFromAttempts, calculateStarsFromTime } from './useExerciseLogic';
+export type { UseExerciseLogicOptions, UseExerciseLogicReturn, ExerciseResult } from './useExerciseLogic';
+
 export { useFocusTrap, useFocusNavigation, useRovingTabIndex } from './useFocusTrap';
 export type { UseFocusTrapOptions } from './useFocusTrap';
 
