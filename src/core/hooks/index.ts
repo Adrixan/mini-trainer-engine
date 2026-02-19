@@ -1,6 +1,6 @@
 // Exercise hooks
 export { useExerciseSession } from './useExerciseSession';
-export type { ExerciseSession, ExerciseSessionState, UseExerciseSessionOptions } from './useExerciseSession';
+export type { UseExerciseSessionOptions, UseExerciseSessionReturn } from './useExerciseSession';
 
 export { useExerciseScoring, calculateStarRating, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from './useExerciseScoring';
 export type { ExerciseTypeStats, ScoringStats, UseExerciseScoringOptions } from './useExerciseScoring';

@@ -1,285 +1,248 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import type { Exercise, ExerciseResult, StarRating } from '@/types/exercise';
-import { calculateStars } from '@/core/components/exercises/BaseExercise';
-
 /**
- * State for a single exercise in a session.
+ * Custom hook for managing exercise sessions.
+ * 
+ * Encapsulates session lifecycle, answer submission, gamification processing,
+ * and navigation logic for exercise pages.
  */
-interface ExerciseSessionState {
-    /** The exercise being attempted */
-    exercise: Exercise;
-    /** Number of attempts made */
-    attempts: number;
-    /** Whether the answer was correct */
-    isCorrect: boolean | null;
-    /** Whether to show the solution */
-    showSolution: boolean;
-    /** Star rating earned (null if not completed) */
-    stars: StarRating | null;
-    /** Time spent on this exercise in seconds */
-    timeSpentSeconds: number;
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@core/router';
+import { useExerciseStore } from '@core/stores';
+import { useProfileStore } from '@core/stores/profileStore';
+import { useAppStore } from '@core/stores/appStore';
+import { useGamification } from '@core/hooks/useGamification';
+import { playCorrect, playIncorrect, playLevelUp, playBadge } from '@core/utils/sounds';
+import { saveExerciseResult } from '@core/storage';
+import { selectCurrentExercise, selectProgress, selectIsSessionActive } from '@core/stores/exerciseStore';
+import type { Badge } from '@/types/profile';
+import type { Exercise, ExerciseResult } from '@/types';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export interface UseExerciseSessionOptions {
+    /** Exercises to use in the session */
+    exercises: Exercise[];
+    /** Theme ID for the session */
+    themeId: string;
+    /** Optional area ID for filtering */
+    areaId?: string;
 }
 
-/**
- * State for the entire exercise session.
- */
-interface ExerciseSession {
-    /** All exercises in the session */
-    exercises: ExerciseSessionState[];
-    /** Index of the current exercise */
-    currentIndex: number;
+export interface UseExerciseSessionReturn {
+    /** Current exercise being displayed */
+    currentExercise: Exercise | null;
+    /** Progress information */
+    progress: { current: number; total: number };
     /** Whether the session is complete */
-    isComplete: boolean;
-    /** Total stars earned */
-    totalStars: number;
-    /** Maximum possible stars */
-    maxStars: number;
-    /** Session start time */
-    startTime: number;
+    isCompleted: boolean;
+    /** Whether solution is being shown */
+    showSolution: boolean;
+    /** Whether user has answered current exercise */
+    hasAnswered: boolean;
+    /** Handle answer submission */
+    handleSubmit: (correct: boolean) => void;
+    /** Handle show solution */
+    handleShowSolution: () => void;
+    /** Handle next exercise */
+    handleNext: () => void;
+    /** Handle session finish */
+    handleFinish: () => void;
+    /** Level up celebration state */
+    levelUpLevel: number | null;
+    /** Badges earned during session */
+    earnedBadges: Badge[];
+    /** Current badge index for display */
+    currentBadgeIndex: number;
+    /** Dismiss current badge */
+    dismissBadge: () => void;
+    /** Clear level up state */
+    clearLevelUp: () => void;
 }
 
-/**
- * Options for useExerciseSession hook.
- */
-interface UseExerciseSessionOptions {
-    /** Maximum attempts per exercise */
-    maxAttempts?: number;
-    /** Callback when session completes */
-    onComplete?: (results: ExerciseResult[]) => void;
-    /** Callback when an exercise is submitted */
-    onExerciseSubmit?: (exerciseId: string, correct: boolean, stars: StarRating | null) => void;
-}
+// ============================================================================
+// Hook
+// ============================================================================
 
 /**
- * Hook for managing an exercise session.
- * Handles loading exercises, tracking attempts, scoring, and navigation.
+ * Hook for managing exercise sessions.
+ * 
+ * @example
+ * ```tsx
+ * const {
+ *   currentExercise,
+ *   progress,
+ *   handleSubmit,
+ *   handleNext,
+ *   isCompleted,
+ * } = useExerciseSession({ exercises, themeId });
+ * ```
  */
-export function useExerciseSession(
-    exercises: Exercise[],
-    options: UseExerciseSessionOptions = {}
-) {
-    const { maxAttempts = 3, onComplete, onExerciseSubmit } = options;
+export function useExerciseSession({
+    exercises,
+    themeId,
+    areaId,
+}: UseExerciseSessionOptions): UseExerciseSessionReturn {
+    const navigate = useNavigate();
 
-    // Initialize session state
-    const [session, setSession] = useState<ExerciseSession>(() => ({
-        exercises: exercises.map((exercise) => ({
-            exercise,
-            attempts: 0,
-            isCorrect: null,
-            showSolution: false,
-            stars: null,
-            timeSpentSeconds: 0,
-        })),
-        currentIndex: 0,
-        isComplete: false,
-        totalStars: 0,
-        maxStars: exercises.length * 3,
-        startTime: Date.now(),
-    }));
+    // Exercise store actions and state
+    const startSession = useExerciseStore((s) => s.startSession);
+    const endSession = useExerciseStore((s) => s.endSession);
+    const submitAnswer = useExerciseStore((s) => s.submitAnswer);
+    const nextExercise = useExerciseStore((s) => s.nextExercise);
+    const incrementAttempts = useExerciseStore((s) => s.incrementAttempts);
+    const setShowSolution = useExerciseStore((s) => s.setShowSolution);
+    const isSessionActive = useExerciseStore(selectIsSessionActive);
+    const currentExercise = useExerciseStore(selectCurrentExercise);
+    const progress = useExerciseStore(selectProgress);
+    const showSolution = useExerciseStore((s) => s.showSolution);
+    const isCompleted = useExerciseStore((s) => s.isCompleted);
+    const answer = useExerciseStore((s) => s.answer);
+    const currentThemeId = useExerciseStore((s) => s.themeId);
+    const currentLevel = useExerciseStore((s) => s.currentExercise?.level);
 
-    // Timer for tracking time spent
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    // Profile and gamification
+    const activeProfile = useProfileStore((s) => s.activeProfile);
+    const incrementStreak = useProfileStore((s) => s.incrementStreak);
+    const soundEnabled = useAppStore((s) => s.settings.soundEnabled);
+    const { processExerciseCompletion } = useGamification();
 
-    // Start timer for current exercise
+    // Track answer state for current attempt
+    const [hasAnswered, setHasAnswered] = useState(false);
+
+    // Track gamification notifications
+    const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
+    const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
+    const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
+
+    // Track level for session reset detection
+    const levelRef = useRef<number | undefined>(undefined);
+
+    // Start session when exercises are loaded
+    // Reset session if level or theme changes
     useEffect(() => {
-        timerRef.current = setInterval(() => {
-            setSession((prev) => {
-                const updated = { ...prev };
-                const current = updated.exercises[updated.currentIndex];
-                if (current && !current.showSolution) {
-                    current.timeSpentSeconds += 1;
-                }
-                return updated;
-            });
-        }, 1000);
+        if (exercises.length > 0) {
+            // Check if we need to reset the session (level or theme changed)
+            const levelChanged = currentLevel !== undefined && currentLevel !== levelRef.current;
+            const themeChanged = currentThemeId !== null && currentThemeId !== themeId;
 
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
+            if (levelChanged || themeChanged || !isSessionActive) {
+                endSession();
+                startSession(exercises, themeId, areaId);
+                levelRef.current = currentLevel;
             }
-        };
-    }, []);
+        }
+    }, [exercises, isSessionActive, startSession, endSession, themeId, areaId, currentLevel, currentThemeId]);
 
-    // Get current exercise state
-    const currentExercise = session.exercises[session.currentIndex];
-    const hasNext = session.currentIndex < session.exercises.length - 1;
-    const hasPrevious = session.currentIndex > 0;
-
-    /**
-     * Handle submission of an exercise answer.
-     */
+    // Handle answer submission
     const handleSubmit = useCallback((correct: boolean) => {
-        setSession((prev) => {
-            const updated = { ...prev };
-            const current = updated.exercises[updated.currentIndex];
-            if (!current) return prev;
+        incrementAttempts();
 
-            const newAttempts = current.attempts + 1;
-            const isComplete = correct || newAttempts >= maxAttempts;
+        // Play sound based on answer
+        if (correct) {
+            playCorrect(soundEnabled);
+            submitAnswer(true);
+            setHasAnswered(true);
+        } else {
+            playIncorrect(soundEnabled);
+            // Allow retry if not correct
+            submitAnswer(false);
+            setHasAnswered(true);
+        }
+    }, [incrementAttempts, submitAnswer, soundEnabled]);
 
-            current.attempts = newAttempts;
-            current.isCorrect = correct;
-            current.showSolution = isComplete;
+    // Handle next exercise with gamification processing
+    const handleNext = useCallback(() => {
+        // Process gamification if we have an answer
+        if (answer && activeProfile && currentExercise) {
+            const attempts = answer.attempts;
+            const result = processExerciseCompletion(attempts);
 
-            if (correct) {
-                current.stars = calculateStars(newAttempts);
-                updated.totalStars += current.stars;
-            }
-
-            // Call callback
-            onExerciseSubmit?.(current.exercise.id, correct, current.stars);
-
-            return updated;
-        });
-    }, [maxAttempts, onExerciseSubmit]);
-
-    /**
-     * Move to the next exercise.
-     */
-    const nextExercise = useCallback(() => {
-        setSession((prev) => {
-            if (prev.currentIndex >= prev.exercises.length - 1) {
-                // Session complete
-                const isComplete = prev.exercises.every((e) => e.showSolution);
-                if (isComplete && !prev.isComplete) {
-                    // Generate results and call onComplete
-                    const results = generateResults(prev);
-                    onComplete?.(results);
-                }
-                return { ...prev, isComplete };
-            }
-
-            return {
-                ...prev,
-                currentIndex: prev.currentIndex + 1,
+            // Save exercise result to IndexedDB for progress tracking
+            const exerciseResult: ExerciseResult = {
+                id: `result-${currentExercise.id}-${Date.now()}`,
+                childProfileId: activeProfile.id,
+                exerciseId: currentExercise.id,
+                areaId: currentExercise.areaId,
+                themeId: currentExercise.themeId,
+                level: currentExercise.level,
+                correct: answer.correct,
+                score: result.starsEarned,
+                attempts: attempts,
+                timeSpentSeconds: answer.timeSpentSeconds,
+                completedAt: new Date().toISOString(),
             };
-        });
-    }, [onComplete]);
+            saveExerciseResult(exerciseResult).catch(console.error);
 
-    /**
-     * Move to the previous exercise.
-     */
-    const previousExercise = useCallback(() => {
-        setSession((prev) => ({
-            ...prev,
-            currentIndex: Math.max(0, prev.currentIndex - 1),
-        }));
-    }, []);
-
-    /**
-     * Go to a specific exercise by index.
-     */
-    const goToExercise = useCallback((index: number) => {
-        setSession((prev) => ({
-            ...prev,
-            currentIndex: Math.max(0, Math.min(index, prev.exercises.length - 1)),
-        }));
-    }, []);
-
-    /**
-     * Reset the current exercise.
-     */
-    const resetCurrentExercise = useCallback(() => {
-        setSession((prev) => {
-            const updated = { ...prev };
-            const current = updated.exercises[updated.currentIndex];
-            if (!current) return prev;
-
-            // Deduct stars if they were earned
-            if (current.stars) {
-                updated.totalStars -= current.stars;
+            // Check for level up
+            if (result.leveledUp && result.newLevel) {
+                setLevelUpLevel(result.newLevel);
+                playLevelUp(soundEnabled);
             }
 
-            current.attempts = 0;
-            current.isCorrect = null;
-            current.showSolution = false;
-            current.stars = null;
-            current.timeSpentSeconds = 0;
+            // Check for new badges
+            if (result.newBadges.length > 0) {
+                setEarnedBadges(result.newBadges);
+                setCurrentBadgeIndex(0);
+                playBadge(soundEnabled);
+            }
 
-            return updated;
-        });
+            // Update streak
+            incrementStreak();
+        }
+
+        nextExercise();
+        setHasAnswered(false);
+        setShowSolution(false);
+    }, [answer, activeProfile, currentExercise, processExerciseCompletion, incrementStreak, nextExercise, setShowSolution, soundEnabled]);
+
+    // Handle show solution
+    const handleShowSolution = useCallback(() => {
+        setShowSolution(true);
+    }, [setShowSolution]);
+
+    // Handle session complete
+    const handleFinish = useCallback(() => {
+        // Navigate back to the level selection for this theme
+        if (themeId) {
+            navigate(ROUTES.LEVEL_SELECT(themeId));
+        } else {
+            navigate(ROUTES.HOME);
+        }
+    }, [navigate, themeId]);
+
+    // Dismiss current badge
+    const dismissBadge = useCallback(() => {
+        const nextIndex = currentBadgeIndex + 1;
+        if (nextIndex >= earnedBadges.length) {
+            setEarnedBadges([]);
+            setCurrentBadgeIndex(0);
+        } else {
+            setCurrentBadgeIndex(nextIndex);
+        }
+    }, [currentBadgeIndex, earnedBadges.length]);
+
+    // Clear level up state
+    const clearLevelUp = useCallback(() => {
+        setLevelUpLevel(null);
     }, []);
-
-    /**
-     * Reset the entire session.
-     */
-    const resetSession = useCallback(() => {
-        setSession({
-            exercises: exercises.map((exercise) => ({
-                exercise,
-                attempts: 0,
-                isCorrect: null,
-                showSolution: false,
-                stars: null,
-                timeSpentSeconds: 0,
-            })),
-            currentIndex: 0,
-            isComplete: false,
-            totalStars: 0,
-            maxStars: exercises.length * 3,
-            startTime: Date.now(),
-        });
-    }, [exercises]);
-
-    /**
-     * Get results for all completed exercises.
-     */
-    const getResults = useCallback((): ExerciseResult[] => {
-        return generateResults(session);
-    }, [session]);
 
     return {
-        // Current exercise state
-        currentExercise: currentExercise?.exercise ?? null,
-        attempts: currentExercise?.attempts ?? 0,
-        isCorrect: currentExercise?.isCorrect ?? null,
-        showSolution: currentExercise?.showSolution ?? false,
-        stars: currentExercise?.stars ?? null,
-        timeSpentSeconds: currentExercise?.timeSpentSeconds ?? 0,
-
-        // Session state
-        currentIndex: session.currentIndex,
-        totalExercises: session.exercises.length,
-        totalStars: session.totalStars,
-        maxStars: session.maxStars,
-        isComplete: session.isComplete,
-        hasNext,
-        hasPrevious,
-
-        // Progress
-        progress: session.currentIndex / session.exercises.length,
-        completedCount: session.exercises.filter((e) => e.showSolution).length,
-
-        // Actions
+        currentExercise,
+        progress,
+        isCompleted,
+        showSolution,
+        hasAnswered,
         handleSubmit,
-        nextExercise,
-        previousExercise,
-        goToExercise,
-        resetCurrentExercise,
-        resetSession,
-        getResults,
+        handleShowSolution,
+        handleNext,
+        handleFinish,
+        levelUpLevel,
+        earnedBadges,
+        currentBadgeIndex,
+        dismissBadge,
+        clearLevelUp,
     };
 }
-
-/**
- * Generate ExerciseResult array from session state.
- */
-function generateResults(session: ExerciseSession): ExerciseResult[] {
-    return session.exercises
-        .filter((e) => e.showSolution)
-        .map((e) => ({
-            id: `${e.exercise.id}-${Date.now()}`,
-            childProfileId: '', // To be filled by caller
-            exerciseId: e.exercise.id,
-            areaId: e.exercise.areaId,
-            themeId: e.exercise.themeId,
-            level: e.exercise.level,
-            correct: e.isCorrect ?? false,
-            score: e.stars ?? 0,
-            attempts: e.attempts,
-            timeSpentSeconds: e.timeSpentSeconds,
-            completedAt: new Date().toISOString(),
-        }));
-}
-
-export type { ExerciseSession, ExerciseSessionState, UseExerciseSessionOptions };
