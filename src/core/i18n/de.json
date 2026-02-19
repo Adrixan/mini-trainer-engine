@@ -248,7 +248,8 @@
             "tapToPlace": "Tippe auf ein Wort, um es zu platzieren",
             "availableWords": "Verfügbare Wörter",
             "allPlaced": "Alle Wörter platziert",
-            "correctOrder": "Richtige Reihenfolge!"
+            "correctOrder": "Richtige Reihenfolge!",
+            "correctOrders": "Richtige Sätze:"
         },
         "sorting": {
             "itemPool": "Wörterpool",

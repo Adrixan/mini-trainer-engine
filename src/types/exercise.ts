@@ -174,8 +174,10 @@ export interface ConnectorInsertContent {
 export interface WordOrderContent {
     /** Discriminant for exercise content union */
     type: 'word-order';
-    /** The words in correct order */
+    /** The words in correct order (primary solution) */
     correctOrder: string[];
+    /** Additional valid word orders (alternate correct sentences) */
+    alternateOrders?: string[][];
     /** The words in scrambled order */
     scrambled: string[];
 }

@@ -249,7 +249,8 @@
             "tapToPlace": "Tap a word to place it",
             "availableWords": "Available words",
             "allPlaced": "All words placed",
-            "correctOrder": "Correct order!"
+            "correctOrder": "Correct order!",
+            "correctOrders": "Correct sentences:"
         },
         "sorting": {
             "itemPool": "Word pool",

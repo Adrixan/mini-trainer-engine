@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
 import type { WordOrderContent } from '@/types/exercise';
@@ -8,6 +8,40 @@ interface Props {
     hints?: string[];
     onSubmit: (correct: boolean) => void;
     showSolution: boolean;
+}
+
+/**
+ * Check if the placed words match any valid order.
+ */
+function checkAgainstAllOrders(placed: string[], content: WordOrderContent): boolean {
+    // Check primary order
+    if (placed.length === content.correctOrder.length &&
+        placed.every((w, i) => w === content.correctOrder[i])) {
+        return true;
+    }
+
+    // Check alternate orders
+    if (content.alternateOrders) {
+        for (const order of content.alternateOrders) {
+            if (placed.length === order.length &&
+                placed.every((w, i) => w === order[i])) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Get all valid orders for display.
+ */
+function getAllValidOrders(content: WordOrderContent): string[][] {
+    const orders = [content.correctOrder];
+    if (content.alternateOrders) {
+        orders.push(...content.alternateOrders);
+    }
+    return orders;
 }
 
 /**
@@ -21,6 +55,9 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
     // Words the child has placed in order
     const [placed, setPlaced] = useState<string[]>([]);
     const [result, setResult] = useState<boolean | null>(null);
+
+    // Get all valid orders for display
+    const allValidOrders = useMemo(() => getAllValidOrders(content), [content]);
 
     const handleTapWord = (word: string, idx: number) => {
         if (showSolution) return;
@@ -49,7 +86,7 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
 
     const handleCheck = () => {
         if (placed.length !== content.correctOrder.length) return;
-        const isCorrect = placed.every((w, i) => w === content.correctOrder[i]);
+        const isCorrect = checkAgainstAllOrders(placed, content);
         setResult(isCorrect);
         onSubmit(isCorrect);
     };
@@ -58,6 +95,27 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
         setAvailable([...content.scrambled]);
         setPlaced([]);
         setResult(null);
+    };
+
+    // Find which order matches the placed words for highlighting
+    const getMatchingOrder = (placedWords: string[]): string[] | null => {
+        if (placedWords.length === 0) return null;
+
+        // Check primary order
+        if (placedWords.every((w, i) => w === content.correctOrder[i])) {
+            return content.correctOrder;
+        }
+
+        // Check alternate orders
+        if (content.alternateOrders) {
+            for (const order of content.alternateOrders) {
+                if (placedWords.every((w, i) => w === order[i])) {
+                    return order;
+                }
+            }
+        }
+
+        return null;
     };
 
     return (
@@ -82,25 +140,32 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
                             {t('exercises.wordOrder.tapToPlace')}
                         </span>
                     ) : (
-                        placed.map((word, idx) => (
-                            <button
-                                key={`placed-${idx}`}
-                                onClick={() => handleTapPlaced(word, idx)}
-                                disabled={showSolution}
-                                role="listitem"
-                                aria-label={`${word}, position ${idx + 1}. Click to remove.`}
-                                className={`px-3 py-1.5 rounded-lg font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${showSolution
-                                    ? result
-                                        ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                                        : word === content.correctOrder[idx]
+                        placed.map((word, idx) => {
+                            const matchingOrder = getMatchingOrder(placed.slice(0, idx + 1));
+                            const isCorrectSoFar = matchingOrder !== null;
+
+                            return (
+                                <button
+                                    key={`placed-${idx}`}
+                                    onClick={() => handleTapPlaced(word, idx)}
+                                    disabled={showSolution}
+                                    role="listitem"
+                                    aria-label={`${word}, position ${idx + 1}. Click to remove.`}
+                                    className={`px-3 py-1.5 rounded-lg font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${showSolution
+                                        ? result
                                             ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                                            : 'bg-red-100 text-red-700 border-2 border-red-300'
-                                    : 'bg-primary/10 text-primary border-2 border-primary/30 hover:bg-primary/20 active:scale-95'
-                                    }`}
-                            >
-                                {word}
-                            </button>
-                        ))
+                                            : word === content.correctOrder[idx]
+                                                ? 'bg-green-100 text-green-800 border-2 border-green-300'
+                                                : 'bg-red-100 text-red-700 border-2 border-red-300'
+                                        : isCorrectSoFar
+                                            ? 'bg-primary/10 text-primary border-2 border-primary/30 hover:bg-primary/20 active:scale-95'
+                                            : 'bg-yellow-100 text-yellow-800 border-2 border-yellow-300 hover:bg-yellow-200 active:scale-95'
+                                        }`}
+                                >
+                                    {word}
+                                </button>
+                            );
+                        })
                     )}
                 </div>
             </div>
@@ -140,7 +205,7 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
                 </div>
             )}
 
-            {/* Show correct order when wrong */}
+            {/* Show all correct orders when wrong */}
             {showSolution && result === false && (
                 <div
                     className="bg-green-50 border border-green-200 rounded-xl p-3 animate-fadeIn"
@@ -148,11 +213,15 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
                     aria-live="polite"
                 >
                     <span className="text-xs text-green-600 font-semibold">
-                        {t('exercises.wordOrder.correctOrder')}
+                        {allValidOrders.length > 1
+                            ? t('exercises.wordOrder.correctOrders', 'Correct sentences:')
+                            : t('exercises.wordOrder.correctOrder')}
                     </span>
-                    <p className="mt-1 text-base font-bold text-green-800">
-                        {content.correctOrder.join(' ')}
-                    </p>
+                    {allValidOrders.map((order, idx) => (
+                        <p key={idx} className="mt-1 text-base font-bold text-green-800">
+                            {order.join(' ')}
+                        </p>
+                    ))}
                 </div>
             )}
 

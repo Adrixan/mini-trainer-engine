@@ -5,9 +5,9 @@
  * Shows locked/unlocked states based on vocabulary level.
  */
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useState, useCallback } from 'react';
 import { LevelCard } from '@core/components/level';
 import { useTheme, useExercisesByTheme } from '@core/config';
 import {
@@ -73,6 +73,7 @@ export function LevelSelectPage() {
     const { themeId } = useParams<{ themeId: string }>();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
 
     // Get theme and exercises
     const theme = useTheme(themeId ?? '');
@@ -88,7 +89,8 @@ export function LevelSelectPage() {
     // Get completed exercise IDs from IndexedDB
     const [completedExerciseIds, setCompletedExerciseIds] = useState<Set<string>>(new Set());
 
-    useEffect(() => {
+    // Fetch completed exercises - refreshes when location changes (navigation)
+    const fetchCompletedExercises = useCallback(() => {
         if (!themeId || !profile) {
             setCompletedExerciseIds(new Set());
             return;
@@ -108,6 +110,10 @@ export function LevelSelectPage() {
                 setCompletedExerciseIds(new Set());
             });
     }, [themeId, profile]);
+
+    useEffect(() => {
+        fetchCompletedExercises();
+    }, [fetchCompletedExercises, location.key]);
 
     // Count exercises per level
     const exerciseCounts = useMemo(
