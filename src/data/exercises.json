@@ -424,15 +424,15 @@
             "themeId": "everyday-life",
             "level": 2,
             "difficulty": 2,
-            "instruction": "Schreibe über deine Tagesroutine.",
+            "instruction": "Schreibe einen Satz über deine Tagesroutine.",
             "content": {
                 "type": "writing",
-                "prompt": "Describe your morning routine. What do you do after you wake up?",
+                "prompt": "Schreibe einen Satz über deine Morgenroutine. Was machst du nach dem Aufstehen?",
                 "scaffoldLevel": "medium",
                 "scaffoldHints": [
                     "Beginne mit 'Ich...'",
                     "Benutze Zeitangaben wie 'dann'",
-                    "Schreibe mindestens 3 Aktivitäten"
+                    "Schreibe einen vollständigen Satz"
                 ],
                 "starterWords": [
                     "Ich",
@@ -442,7 +442,7 @@
                     "frühstücke",
                     "ich"
                 ],
-                "minLength": 20
+                "minLength": 5
             },
             "hints": [
                 "Benutze Verben wie: aufstehen, frühstücken, anziehen",
@@ -458,15 +458,15 @@
             "themeId": "school",
             "level": 3,
             "difficulty": 3,
-            "instruction": "Schreibe über dein Lieblingsfach in der Schule.",
+            "instruction": "Schreibe einen Satz über dein Lieblingsfach.",
             "content": {
                 "type": "writing",
-                "prompt": "What is your favorite subject in school? Why do you like it?",
+                "prompt": "Was ist dein Lieblingsfach in der Schule? Warum magst du es?",
                 "scaffoldLevel": "low",
                 "scaffoldHints": [
                     "Nenne das Fach",
                     "Begründe mit 'weil'",
-                    "Beschreibe, was du in diesem Fach machst"
+                    "Schreibe einen vollständigen Satz"
                 ],
                 "starterWords": [
                     "Mein",
@@ -476,7 +476,7 @@
                     "mag",
                     "es"
                 ],
-                "minLength": 30
+                "minLength": 5
             },
             "hints": [
                 "Benutze 'weil', um Gründe zu geben",

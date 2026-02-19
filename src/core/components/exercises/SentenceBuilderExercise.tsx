@@ -19,6 +19,7 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
     const [selections, setSelections] = useState<(string | null)[]>(
         content.columns.map(() => null),
     );
+    const [wasCorrect, setWasCorrect] = useState(false);
 
     const builtSentence = selections.filter(Boolean).join(' ');
     const allSelected = selections.every((s) => s !== null);
@@ -36,6 +37,7 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
         const isCorrect = content.targetSentences.some(
             (target) => target.toLowerCase() === sentence.toLowerCase(),
         );
+        setWasCorrect(isCorrect);
         onSubmit(isCorrect);
     };
 
@@ -101,15 +103,20 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
                 </div>
             </div>
 
-            {/* Solution display */}
+            {/* Solution display - show all possible sentences */}
             {showSolution && (
                 <div
-                    className="bg-green-50 border border-green-200 rounded-xl p-4 animate-fadeIn"
+                    className={`rounded-xl p-4 animate-fadeIn ${wasCorrect
+                        ? 'bg-green-50 border border-green-200'
+                        : 'bg-green-50 border border-green-200'
+                        }`}
                     role="status"
                     aria-live="polite"
                 >
                     <div className="text-xs text-green-600 font-semibold mb-1">
-                        {t('exercises.solved')}
+                        {content.targetSentences.length > 1
+                            ? t('exercises.sentenceBuilder.possibleSentences', 'Mögliche Sätze:')
+                            : t('exercises.solved')}
                     </div>
                     {content.targetSentences.map((sentence, idx) => (
                         <div key={idx} className="text-lg font-bold text-green-800">
