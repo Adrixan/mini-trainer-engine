@@ -238,8 +238,8 @@
                 ]
             },
             "hints": [
-                "Start with the subject.",
-                "Make sure the verb matches the subject."
+                "Beginne mit dem Subjekt.",
+                "Achte darauf, dass das Verb zum Subjekt passt."
             ],
             "feedbackCorrect": "Perfekter Satzbau!",
             "feedbackIncorrect": "Erinnerung: Subjekt + Verb + Objekt. Das Verb muss zum Subjekt passen."
@@ -287,8 +287,8 @@
                 ]
             },
             "hints": [
-                "Watch out for verb conjugation.",
-                "'Meine Familie' is singular (it)."
+                "Achte auf die Verbkonjugation.",
+                "'Meine Familie' ist Singular (es)."
             ],
             "feedbackCorrect": "Ausgezeichnet! Du hast grammatikalisch richtige Sätze gebildet.",
             "feedbackIncorrect": "Überprüfe deine Verbkonjugationen. Jedes Subjekt braucht eine passende Verbform."
@@ -367,8 +367,8 @@
                 ]
             },
             "hints": [
-                "Most nouns ending in -in are feminine.",
-                "Most nouns ending in -er referring to people are masculine."
+                "Die meisten Nomen auf -in sind feminin.",
+                "Die meisten Nomen auf -er für Personen sind maskulin."
             ],
             "feedbackCorrect": "Perfekt! Du kennst die Geschlechter der Nomen gut.",
             "feedbackIncorrect": "Lerne die Geschlechter: der Tisch, der Stuhl, der Lehrer, die Tafel, die Tür, die Lehrerin, das Buch, das Fenster, das Heft."
@@ -411,8 +411,8 @@
                 ]
             },
             "hints": [
-                "Fisch lives in water.",
-                "Vogel can fly."
+                "Fisch lebt im Wasser.",
+                "Vogel kann fliegen."
             ],
             "feedbackCorrect": "Ausgezeichnete Kategorisierung der Tierlebensräume!",
             "feedbackIncorrect": "Erinnerung: Fisch, Wal, Delfin leben im Wasser; Hund, Katze, Pferd auf dem Land; Vogel, Schmetterling, Biene in der Luft."
@@ -430,9 +430,9 @@
                 "prompt": "Describe your morning routine. What do you do after you wake up?",
                 "scaffoldLevel": "medium",
                 "scaffoldHints": [
-                    "Start with 'Ich...' (I...)",
-                    "Use time expressions like 'dann' (then)",
-                    "Include at least 3 activities"
+                    "Beginne mit 'Ich...'",
+                    "Benutze Zeitangaben wie 'dann'",
+                    "Schreibe mindestens 3 Aktivitäten"
                 ],
                 "starterWords": [
                     "Ich",
@@ -445,8 +445,8 @@
                 "minLength": 20
             },
             "hints": [
-                "Use verbs like: aufstehen, frühstücken, anziehen",
-                "Time words: zuerst, dann, danach"
+                "Benutze Verben wie: aufstehen, frühstücken, anziehen",
+                "Zeitwörter: zuerst, dann, danach"
             ],
             "feedbackCorrect": "Tolles Schreiben! Deine Sätze sind klar und grammatikalisch richtig.",
             "feedbackIncorrect": "Gute Anstrengung! Versuche, vollständige Sätze mit Subjekt und Verb zu verwenden."
@@ -464,9 +464,9 @@
                 "prompt": "What is your favorite subject in school? Why do you like it?",
                 "scaffoldLevel": "low",
                 "scaffoldHints": [
-                    "Name the subject",
-                    "Give reasons using 'weil' (because)",
-                    "Describe what you do in this subject"
+                    "Nenne das Fach",
+                    "Begründe mit 'weil'",
+                    "Beschreibe, was du in diesem Fach machst"
                 ],
                 "starterWords": [
                     "Mein",
@@ -479,8 +479,8 @@
                 "minLength": 30
             },
             "hints": [
-                "Use 'weil' to give reasons",
-                "Include specific activities you do"
+                "Benutze 'weil', um Gründe zu geben",
+                "Beschreibe konkrete Aktivitäten"
             ],
             "feedbackCorrect": "Ausgezeichnete Zusammenstellung! Dein Schreiben zeigt gute Deutschkenntnisse.",
             "feedbackIncorrect": "Übe weiter! Versuche, längere Sätze mit Bindewörtern zu schreiben."
@@ -531,7 +531,7 @@
                 ]
             },
             "hints": [
-                "'sein' is an irregular verb",
+                "'sein' ist ein unregelmäßiges Verb",
                 "ich bin, du bist, er ist"
             ],
             "feedbackCorrect": "Perfekte Konjugation! Du kennst das Verb 'sein' gut.",
@@ -583,7 +583,7 @@
                 ]
             },
             "hints": [
-                "'haben' is irregular in du and er/sie/es forms",
+                "'haben' ist unregelmäßig bei du und er/sie/es",
                 "ich habe, du hast, er hat"
             ],
             "feedbackCorrect": "Ausgezeichnet! Du hast 'haben' richtig konjugiert.",
@@ -635,8 +635,8 @@
                 ]
             },
             "hints": [
-                "Regular verbs follow a pattern",
-                "Remove -en and add the ending: -e, -st, -t, -en, -t, -en"
+                "Regelmäßige Verben folgen einem Muster",
+                "Entferne -en und füge die Endung hinzu: -e, -st, -t, -en, -t, -en"
             ],
             "feedbackCorrect": "Perfekt! Du verstehst die Konjugation regelmäßiger Verben.",
             "feedbackIncorrect": "Regelmäßige Verben: ich lerne, du lernst, er/sie/es lernt, wir lernen, ihr lernt, sie/Sie lernen."
@@ -662,7 +662,7 @@
                 ]
             },
             "hints": [
-                "The second part gives a reason.",
+                "Der zweite Teil gibt einen Grund.",
                 "'Weil' bedeutet 'weil'."
             ],
             "feedbackCorrect": "Richtig! 'Weil' verbindet den Satz mit einem Grund.",
@@ -689,7 +689,7 @@
                 ]
             },
             "hints": [
-                "The two parts show contrast.",
+                "Die zwei Teile zeigen einen Gegensatz.",
                 "'Aber' bedeutet 'aber'."
             ],
             "feedbackCorrect": "Toll! 'Aber' zeigt den Kontrast zwischen deinen und den Vorlieben deines Bruders.",
@@ -716,7 +716,7 @@
                 ]
             },
             "hints": [
-                "Both activities are positive.",
+                "Beide Aktivitäten sind positiv.",
                 "'Und' bedeutet 'und'."
             ],
             "feedbackCorrect": "Richtig! 'Und' verbindet zwei ähnliche Aktivitäten.",
@@ -750,8 +750,8 @@
                 ]
             },
             "hints": [
-                "Start with the subject (Ich).",
-                "The verb usually comes second in German."
+                "Beginne mit dem Subjekt (Ich).",
+                "Das Verb steht im Deutschen meist an zweiter Stelle."
             ],
             "feedbackCorrect": "Perfekt! Im Deutschen steht das Verb normalerweise an zweiter Stelle in Hauptsätzen.",
             "feedbackIncorrect": "Die richtige Reihenfolge ist: Ich gehe jeden Tag zur Schule. Erinnerung: Subjekt + Verb + Zeit + Ort."
@@ -784,7 +784,7 @@
                 ]
             },
             "hints": [
-                "Questions often start with a question word.",
+                "Fragen beginnen oft mit einem Fragewort.",
                 "Was bedeutet 'was'."
             ],
             "feedbackCorrect": "Ausgezeichnet! Du hast die Frage richtig gebildet.",
@@ -824,8 +824,8 @@
                 ]
             },
             "hints": [
-                "The main clause comes first.",
-                "After 'weil', the verb goes to the end."
+                "Der Hauptsatz kommt zuerst.",
+                "Nach 'weil' steht das Verb am Ende."
             ],
             "feedbackCorrect": "Perfekt! In Nebensätzen mit 'weil' geht das Verb ans Ende.",
             "feedbackIncorrect": "Erinnerung: Ich lerne Deutsch, weil ich in Deutschland wohnen möchte. Das Verb 'möchte' geht ans Ende nach 'weil'."
@@ -885,8 +885,8 @@
                 ]
             },
             "hints": [
-                "It's red and round.",
-                "The word starts with 'A'."
+                "Es ist rot und rund.",
+                "Das Wort beginnt mit 'A'."
             ],
             "feedbackCorrect": "Sehr gut! 'Apfel' ist das deutsche Wort für 'Apfel'.",
             "feedbackIncorrect": "Das ist ein 'Apfel'. Erinnerung: der Apfel."
@@ -916,8 +916,8 @@
                 ]
             },
             "hints": [
-                "It's a common pet.",
-                "The word sounds similar to the English word."
+                "Es ist ein häufiges Haustier.",
+                "Das Wort klingt ähnlich wie das englische Wort."
             ],
             "feedbackCorrect": "Wunderbar! Das ist ein Hund.",
             "feedbackIncorrect": "Das ist ein Hund. Es ist ein häufiges Haustier."
