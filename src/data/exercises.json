@@ -442,7 +442,8 @@
                     "frühstücke",
                     "ich"
                 ],
-                "minLength": 5
+                "minLength": 5,
+                "correctSentence": "Ich stehe auf dann frühstücke ich"
             },
             "hints": [
                 "Benutze Verben wie: aufstehen, frühstücken, anziehen",
@@ -14600,6 +14601,988 @@
             ],
             "feedbackCorrect": "Super! Kurzer Vokal → Doppelkonsonant, langer Vokal → einfach. 🎉",
             "feedbackIncorrect": "Kurzer Vokal: Sonne, Klasse, Mutter. Langer Vokal: Name, Schule, Frage."
+        },
+        {
+            "id": "health-vocab-001",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 1,
+            "instruction": "Ordne die Körperteile den richtigen Bildern zu.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "der Kopf",
+                        "right": "Kopf"
+                    },
+                    {
+                        "left": "die Hand",
+                        "right": "Hand"
+                    },
+                    {
+                        "left": "der Fuß",
+                        "right": "Fuß"
+                    },
+                    {
+                        "left": "der Arm",
+                        "right": "Arm"
+                    },
+                    {
+                        "left": "das Bein",
+                        "right": "Bein"
+                    }
+                ]
+            },
+            "hints": [
+                "Der Kopf ist oben am Körper.",
+                "Mit den Händen können wir greifen."
+            ],
+            "feedbackCorrect": "Toll gemacht! Du kennst die Körperteile gut!",
+            "feedbackIncorrect": "Übe weiter: der Kopf, die Hand, der Fuß, der Arm, das Bein."
+        },
+        {
+            "id": "health-vocab-002",
+            "type": "multiple-choice",
+            "areaId": "vocabulary",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Was bedeutet dieses Wort? Wähle die richtige Bedeutung.",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Was ist 'die Kopfschmerzen'?",
+                "options": [
+                    "Schmerzen im Bauch",
+                    "Schmerzen im Kopf",
+                    "Schmerzen im Rücken",
+                    "Schmerzen in den Beinen"
+                ],
+                "correctIndex": 1
+            },
+            "hints": [
+                "'Kopf' bedeutet Kopf.",
+                "'Schmerzen' bedeutet Schmerzen."
+            ],
+            "feedbackCorrect": "Richtig! Kopfschmerzen sind Schmerzen im Kopf.",
+            "feedbackIncorrect": "'Kopfschmerzen' bedeutet Schmerzen im Kopf. 'Kopf' = Kopf."
+        },
+        {
+            "id": "health-vocab-003",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Sortiere die Wörter: Krankheit oder Symptom?",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Krankheit",
+                        "items": [
+                            "die Erkältung",
+                            "die Grippe",
+                            "der Schnupfen"
+                        ]
+                    },
+                    {
+                        "label": "Symptom",
+                        "items": [
+                            "das Fieber",
+                            "der Husten",
+                            "die Müdigkeit"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Eine Krankheit ist ein medizinischer Zustand.",
+                "Ein Symptom ist ein Anzeichen einer Krankheit."
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du kennst den Unterschied zwischen Krankheiten und Symptomen!",
+            "feedbackIncorrect": "Krankheiten: Erkältung, Grippe, Schnupfen. Symptome: Fieber, Husten, Müdigkeit."
+        },
+        {
+            "id": "health-grammar-001",
+            "type": "multiple-choice",
+            "areaId": "grammar",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Welcher Satz ist richtig?",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Ich habe ___ Kopfschmerzen.",
+                "options": [
+                    "keinen Artikel (Ich habe Kopfschmerzen)",
+                    "der",
+                    "die",
+                    "ein"
+                ],
+                "correctIndex": 0
+            },
+            "hints": [
+                "Kopfschmerzen ist ein Pluralwort.",
+                "Bei allgemeinen Beschwerden benutzt man oft keinen Artikel."
+            ],
+            "feedbackCorrect": "Richtig! Bei allgemeinen Beschwerden benutzt man oft keinen Artikel.",
+            "feedbackIncorrect": "Bei allgemeinen Beschwerden wie 'Kopfschmerzen' sagt man ohne Artikel: 'Ich habe Kopfschmerzen.'"
+        },
+        {
+            "id": "health-grammar-002",
+            "type": "conjugation-table",
+            "areaId": "grammar",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Konjugiere das Verb 'weh tun' (schmerzen) im Präsens.",
+            "content": {
+                "type": "conjugation-table",
+                "verb": "weh tun",
+                "tense": "Präsens",
+                "cells": [
+                    {
+                        "person": "ich",
+                        "correctForm": "tue weh",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "du",
+                        "correctForm": "tust weh",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "er/sie/es",
+                        "correctForm": "tut weh",
+                        "prefilled": true
+                    },
+                    {
+                        "person": "wir",
+                        "correctForm": "tun weh",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "ihr",
+                        "correctForm": "tut weh",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "sie/Sie",
+                        "correctForm": "tun weh",
+                        "prefilled": false
+                    }
+                ]
+            },
+            "hints": [
+                "'Weh tun' ist ein trennbares Verb.",
+                "'Weh' steht am Ende des Satzes."
+            ],
+            "feedbackCorrect": "Perfekt! Du kannst das trennbare Verb 'weh tun' richtig konjugieren!",
+            "feedbackIncorrect": "Erinnerung: ich tue weh, du tust weh, er/sie/es tut weh, wir tun weh, ihr tut weh, sie/Sie tun weh."
+        },
+        {
+            "id": "health-practical-001",
+            "type": "sentence-builder",
+            "areaId": "communication",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Bilde Sätze für einen Arztbesuch.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subjekt",
+                        "words": [
+                            "Ich",
+                            "Mein Kopf",
+                            "Mein Magen"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "habe",
+                            "tut",
+                            "fühle mich"
+                        ]
+                    },
+                    {
+                        "label": "Objekt/Zustand",
+                        "words": [
+                            "Schmerzen",
+                            "weh",
+                            "krank"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Ich habe Schmerzen",
+                    "Mein Kopf tut weh",
+                    "Ich fühle mich krank"
+                ]
+            },
+            "hints": [
+                "'Schmerzen haben' - etwas besitzen.",
+                "'Weh tun' - etwas schmerzt."
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du kannst deine Beschwerden beim Arzt ausdrücken!",
+            "feedbackIncorrect": "Übe diese Sätze: Ich habe Schmerzen. Mein Kopf tut weh. Ich fühle mich krank."
+        },
+        {
+            "id": "health-practical-002",
+            "type": "word-order",
+            "areaId": "communication",
+            "themeId": "health",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Bringe die Wörter in die richtige Reihenfolge für einen Satz beim Arzt.",
+            "content": {
+                "type": "word-order",
+                "correctOrder": [
+                    "Ich",
+                    "möchte",
+                    "einen",
+                    "Termin",
+                    "machen"
+                ],
+                "scrambled": [
+                    "Termin",
+                    "Ich",
+                    "einen",
+                    "machen",
+                    "möchte"
+                ]
+            },
+            "hints": [
+                "Beginne mit 'Ich'.",
+                "Das Verb 'möchte' steht an zweiter Stelle."
+            ],
+            "feedbackCorrect": "Perfekt! Dieser Satz ist wichtig für einen Arztbesuch!",
+            "feedbackIncorrect": "Die richtige Reihenfolge ist: Ich möchte einen Termin machen."
+        },
+        {
+            "id": "culture-vocab-001",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Ordne die Feiertage den richtigen Monaten zu.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "Weihnachten",
+                        "right": "Dezember"
+                    },
+                    {
+                        "left": "Ostern",
+                        "right": "März/April"
+                    },
+                    {
+                        "left": "Silvester",
+                        "right": "Dezember"
+                    },
+                    {
+                        "left": "Nationalfeiertag",
+                        "right": "Oktober"
+                    }
+                ]
+            },
+            "hints": [
+                "Weihnachten ist im Winter.",
+                "Ostern ist im Frühling."
+            ],
+            "feedbackCorrect": "Toll gemacht! Du kennst die deutschen und österreichischen Feiertage!",
+            "feedbackIncorrect": "Weihnachten: Dezember, Ostern: März/April, Silvester: Dezember, Nationalfeiertag: Oktober."
+        },
+        {
+            "id": "culture-vocab-002",
+            "type": "multiple-choice",
+            "areaId": "vocabulary",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Was ist typisch für Karneval in Deutschland?",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Was macht man beim Karneval?",
+                "options": [
+                    "Man trägt Kostüme und feiert.",
+                    "Man schenkt Ostereier.",
+                    "Man zündet Feuerwerke am Meer.",
+                    "Man isst nur Fisch."
+                ],
+                "correctIndex": 0
+            },
+            "hints": [
+                "Karneval ist eine Feier vor der Fastenzeit.",
+                "In Köln ist Karneval besonders wichtig."
+            ],
+            "feedbackCorrect": "Richtig! Beim Karneval trägt man Kostüme, feiert und sagt 'Helau!' oder 'Alaaf!'",
+            "feedbackIncorrect": "Beim Karneval trägt man Kostüme, feiert und hat Spaß!"
+        },
+        {
+            "id": "culture-vocab-003",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Sortiere: Deutsche oder Österreichische Tradition?",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Deutschland",
+                        "items": [
+                            "Oktoberfest",
+                            "Karneval in Köln",
+                            "Brandenburger Tor"
+                        ]
+                    },
+                    {
+                        "label": "Österreich",
+                        "items": [
+                            "Wiener Opernball",
+                            "Krampuslauf",
+                            "Stephansdom"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Das Oktoberfest ist in München.",
+                "Der Wiener Opernball ist in Wien."
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du kennst die Traditionen von Deutschland und Österreich!",
+            "feedbackIncorrect": "Deutschland: Oktoberfest, Karneval in Köln, Brandenburger Tor. Österreich: Wiener Opernball, Krampuslauf, Stephansdom."
+        },
+        {
+            "id": "culture-grammar-001",
+            "type": "fill-blank",
+            "areaId": "grammar",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Fülle die Lücke mit dem richtigen Pronomen ein.",
+            "content": {
+                "type": "fill-blank",
+                "sentence": "Wir feiern Weihnachten mit {{blank}} Familie.",
+                "correctAnswer": "unserer",
+                "acceptableAnswers": [
+                    "der"
+                ]
+            },
+            "hints": [
+                "Das Possessivpronomen von 'wir' ist 'unser'.",
+                "Familie ist feminin (die Familie)."
+            ],
+            "feedbackCorrect": "Richtig! 'Unserer' ist das Possessivpronomen im Dativ Feminin.",
+            "feedbackIncorrect": "Die richtige Antwort ist 'unserer' (Dativ Feminin von 'unser')."
+        },
+        {
+            "id": "culture-grammar-002",
+            "type": "connector-insert",
+            "areaId": "grammar",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Wähle das richtige Bindewort.",
+            "content": {
+                "type": "connector-insert",
+                "sentencePart1": "Ich gehe zum Oktoberfest,",
+                "sentencePart2": "ich mag bayerische Kultur.",
+                "correctConnector": "weil",
+                "options": [
+                    "und",
+                    "aber",
+                    "weil",
+                    "oder"
+                ]
+            },
+            "hints": [
+                "Der zweite Teil gibt einen Grund.",
+                "Das Bindewort 'weil' führt einen Grund ein."
+            ],
+            "feedbackCorrect": "Perfekt! 'Weil' gibt den Grund an.",
+            "feedbackIncorrect": "Das richtige Bindewort ist 'weil' - es gibt den Grund an, warum man zum Oktoberfest geht."
+        },
+        {
+            "id": "culture-practical-001",
+            "type": "sentence-builder",
+            "areaId": "communication",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 3,
+            "instruction": "Bilde Sätze über Feste und Feiern.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subjekt",
+                        "words": [
+                            "Wir",
+                            "Die Familie",
+                            "Meine Freunde"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "feiern",
+                            "machen",
+                            "gehen"
+                        ]
+                    },
+                    {
+                        "label": "Objekt/Ort",
+                        "words": [
+                            "Weihnachten",
+                            "eine Party",
+                            "zum Festival"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Wir feiern Weihnachten",
+                    "Die Familie macht eine Party",
+                    "Meine Freunde gehen zum Festival"
+                ]
+            },
+            "hints": [
+                "Achte auf die Verbkonjugation.",
+                "'Die Familie' ist Singular (es)."
+            ],
+            "feedbackCorrect": "Toll! Du kannst über Feste und Feiern sprechen!",
+            "feedbackIncorrect": "Übe diese Sätze: Wir feiern Weihnachten. Die Familie macht eine Party. Meine Freunde gehen zum Festival."
+        },
+        {
+            "id": "culture-practical-002",
+            "type": "writing",
+            "areaId": "writing",
+            "themeId": "culture",
+            "level": 4,
+            "difficulty": 3,
+            "instruction": "Schreibe über dein Lieblingsfest.",
+            "content": {
+                "type": "writing",
+                "prompt": "Was ist dein Lieblingsfest? Wie feierst du es?",
+                "scaffoldLevel": "medium",
+                "scaffoldHints": [
+                    "Nenne das Fest",
+                    "Beschreibe, was du machst",
+                    "Erzähle von Traditionen"
+                ],
+                "starterWords": [
+                    "Mein",
+                    "Lieblingsfest",
+                    "ist",
+                    "Ich",
+                    "feiere",
+                    "mit"
+                ],
+                "minLength": 5
+            },
+            "hints": [
+                "Benutze Zeitwörter wie: zuerst, dann, danach",
+                "Beschreibe Aktivitäten und Essen"
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du hast gut über dein Fest geschrieben!",
+            "feedbackIncorrect": "Versuche, vollständige Sätze zu schreiben: Mein Lieblingsfest ist... Ich feiere mit..."
+        },
+        {
+            "id": "work-vocab-001",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Ordne die Berufe den richtigen Arbeitsorten zu.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "der Arzt",
+                        "right": "im Krankenhaus"
+                    },
+                    {
+                        "left": "der Lehrer",
+                        "right": "in der Schule"
+                    },
+                    {
+                        "left": "der Koch",
+                        "right": "im Restaurant"
+                    },
+                    {
+                        "left": "der Verkäufer",
+                        "right": "im Geschäft"
+                    }
+                ]
+            },
+            "hints": [
+                "Ein Arzt hilft kranken Menschen.",
+                "Ein Lehrer unterrichtet Schüler."
+            ],
+            "feedbackCorrect": "Toll gemacht! Du kennst die Berufe und Arbeitsorte!",
+            "feedbackIncorrect": "Arzt: Krankenhaus, Lehrer: Schule, Koch: Restaurant, Verkäufer: Geschäft."
+        },
+        {
+            "id": "work-vocab-002",
+            "type": "multiple-choice",
+            "areaId": "vocabulary",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Was macht ein Mechaniker?",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Ein Mechaniker...",
+                "options": [
+                    "repariert Autos und Maschinen",
+                    "unterrichtet Schüler",
+                    "backt Brot",
+                    "behandelt Patienten"
+                ],
+                "correctIndex": 0
+            },
+            "hints": [
+                "Ein Mechaniker arbeitet mit Werkzeugen.",
+                "Mechaniker reparieren Fahrzeuge."
+            ],
+            "feedbackCorrect": "Richtig! Ein Mechaniker repariert Autos und Maschinen.",
+            "feedbackIncorrect": "Ein Mechaniker repariert Autos und Maschinen. Er arbeitet oft in einer Werkstatt."
+        },
+        {
+            "id": "work-vocab-003",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Sortiere die Berufe: Mit Menschen oder mit Technik?",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Mit Menschen",
+                        "items": [
+                            "der Arzt",
+                            "der Lehrer",
+                            "der Verkäufer"
+                        ]
+                    },
+                    {
+                        "label": "Mit Technik",
+                        "items": [
+                            "der Mechaniker",
+                            "der Programmierer",
+                            "der Ingenieur"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Ärzte und Lehrer arbeiten direkt mit Menschen.",
+                "Programmierer arbeiten mit Computern."
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du verstehst die verschiedenen Arbeitsbereiche!",
+            "feedbackIncorrect": "Mit Menschen: Arzt, Lehrer, Verkäufer. Mit Technik: Mechaniker, Programmierer, Ingenieur."
+        },
+        {
+            "id": "work-grammar-001",
+            "type": "multiple-choice",
+            "areaId": "grammar",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Welcher Satz ist richtig?",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Ich arbeite als ___ Ingenieur.",
+                "options": [
+                    "keinen Artikel (Ich arbeite als Ingenieur)",
+                    "ein",
+                    "der",
+                    "einen"
+                ],
+                "correctIndex": 0
+            },
+            "hints": [
+                "Nach 'als' steht oft kein Artikel bei Berufsbezeichnungen.",
+                "Man sagt: Ich bin Ingenieur (ohne Artikel)."
+            ],
+            "feedbackCorrect": "Richtig! Nach 'als' bei Berufsbezeichnungen steht oft kein Artikel.",
+            "feedbackIncorrect": "Nach 'als' bei Berufsbezeichnungen steht oft kein Artikel: Ich arbeite als Ingenieur."
+        },
+        {
+            "id": "work-grammar-002",
+            "type": "conjugation-table",
+            "areaId": "grammar",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 3,
+            "instruction": "Konjugiere das Verb 'arbeiten' im Präsens.",
+            "content": {
+                "type": "conjugation-table",
+                "verb": "arbeiten",
+                "tense": "Präsens",
+                "cells": [
+                    {
+                        "person": "ich",
+                        "correctForm": "arbeite",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "du",
+                        "correctForm": "arbeitest",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "er/sie/es",
+                        "correctForm": "arbeitet",
+                        "prefilled": true
+                    },
+                    {
+                        "person": "wir",
+                        "correctForm": "arbeiten",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "ihr",
+                        "correctForm": "arbeitet",
+                        "prefilled": false
+                    },
+                    {
+                        "person": "sie/Sie",
+                        "correctForm": "arbeiten",
+                        "prefilled": false
+                    }
+                ]
+            },
+            "hints": [
+                "'Arbeiten' ist ein regelmäßiges Verb.",
+                "Achte auf die Endungen: -e, -est, -et, -en, -et, -en"
+            ],
+            "feedbackCorrect": "Perfekt! Du kannst 'arbeiten' richtig konjugieren!",
+            "feedbackIncorrect": "Erinnerung: ich arbeite, du arbeitest, er/sie/es arbeitet, wir arbeiten, ihr arbeitet, sie/Sie arbeiten."
+        },
+        {
+            "id": "work-practical-001",
+            "type": "sentence-builder",
+            "areaId": "communication",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Bilde Sätze über Berufe.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subjekt",
+                        "words": [
+                            "Ich",
+                            "Mein Vater",
+                            "Meine Mutter"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "bin",
+                            "ist",
+                            "arbeite"
+                        ]
+                    },
+                    {
+                        "label": "Beruf/Ort",
+                        "words": [
+                            "Arzt",
+                            "als Lehrerin",
+                            "im Büro"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Ich bin Arzt",
+                    "Mein Vater ist als Lehrerin",
+                    "Meine Mutter arbeitet im Büro"
+                ]
+            },
+            "hints": [
+                "Achte auf die Konjugation von 'sein'.",
+                "'Arbeiten als' + Berufsbezeichnung."
+            ],
+            "feedbackCorrect": "Toll! Du kannst über Berufe sprechen!",
+            "feedbackIncorrect": "Übe: Ich bin Arzt. Mein Vater ist Lehrer. Meine Mutter arbeitet im Büro."
+        },
+        {
+            "id": "work-practical-002",
+            "type": "word-order",
+            "areaId": "communication",
+            "themeId": "work",
+            "level": 3,
+            "difficulty": 2,
+            "instruction": "Bringe die Wörter in die richtige Reihenfolge.",
+            "content": {
+                "type": "word-order",
+                "correctOrder": [
+                    "Ich",
+                    "suche",
+                    "eine",
+                    "Stelle",
+                    "als",
+                    "Koch"
+                ],
+                "scrambled": [
+                    "Koch",
+                    "Ich",
+                    "eine",
+                    "als",
+                    "suche",
+                    "Stelle"
+                ]
+            },
+            "hints": [
+                "Beginne mit 'Ich'.",
+                "'Suchen' ist das Verb."
+            ],
+            "feedbackCorrect": "Perfekt! Dieser Satz ist wichtig für die Jobsuche!",
+            "feedbackIncorrect": "Die richtige Reihenfolge ist: Ich suche eine Stelle als Koch."
+        },
+        {
+            "id": "technology-vocab-001",
+            "type": "matching",
+            "areaId": "vocabulary",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Ordne die Geräte ihren Funktionen zu.",
+            "content": {
+                "type": "matching",
+                "pairs": [
+                    {
+                        "left": "der Computer",
+                        "right": "Daten verarbeiten"
+                    },
+                    {
+                        "left": "das Smartphone",
+                        "right": "telefonieren und surfen"
+                    },
+                    {
+                        "left": "der Drucker",
+                        "right": "Dokumente drucken"
+                    },
+                    {
+                        "left": "die Kamera",
+                        "right": "Fotos machen"
+                    }
+                ]
+            },
+            "hints": [
+                "Ein Computer verarbeitet Daten.",
+                "Ein Smartphone ist wie ein kleiner Computer."
+            ],
+            "feedbackCorrect": "Toll gemacht! Du kennst die technischen Geräte!",
+            "feedbackIncorrect": "Computer: Daten verarbeiten, Smartphone: telefonieren und surfen, Drucker: Dokumente drucken, Kamera: Fotos machen."
+        },
+        {
+            "id": "technology-vocab-002",
+            "type": "multiple-choice",
+            "areaId": "vocabulary",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Was ist 'das Internet'?",
+            "content": {
+                "type": "multiple-choice",
+                "question": "Was ist das Internet?",
+                "options": [
+                    "Ein weltweites Netzwerk von Computern",
+                    "Ein Programm zum Schreiben",
+                    "Ein technisches Gerät",
+                    "Eine Art Kamera"
+                ],
+                "correctIndex": 0
+            },
+            "hints": [
+                "Das Internet verbindet Computer weltweit.",
+                "Man kann im Internet surfen."
+            ],
+            "feedbackCorrect": "Richtig! Das Internet ist ein weltweites Netzwerk von Computern.",
+            "feedbackIncorrect": "Das Internet ist ein weltweites Netzwerk von Computern. Man kann dort Informationen finden."
+        },
+        {
+            "id": "technology-vocab-003",
+            "type": "sorting",
+            "areaId": "vocabulary",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Sortiere: Hardware oder Software?",
+            "content": {
+                "type": "sorting",
+                "categories": [
+                    {
+                        "label": "Hardware",
+                        "items": [
+                            "der Monitor",
+                            "die Tastatur",
+                            "die Maus"
+                        ]
+                    },
+                    {
+                        "label": "Software",
+                        "items": [
+                            "der Browser",
+                            "die App",
+                            "das Betriebssystem"
+                        ]
+                    }
+                ]
+            },
+            "hints": [
+                "Hardware sind physische Geräte.",
+                "Software sind Programme."
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du kennst den Unterschied zwischen Hardware und Software!",
+            "feedbackIncorrect": "Hardware: Monitor, Tastatur, Maus. Software: Browser, App, Betriebssystem."
+        },
+        {
+            "id": "technology-grammar-001",
+            "type": "fill-blank",
+            "areaId": "grammar",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Fülle die Lücke mit dem richtigen Pronomen ein.",
+            "content": {
+                "type": "fill-blank",
+                "sentence": "Ich habe ein neues Handy. {{blank}} ist sehr schnell.",
+                "correctAnswer": "Es",
+                "acceptableAnswers": [
+                    "es"
+                ]
+            },
+            "hints": [
+                "Handy ist sächlich (das Handy).",
+                "Das Pronomen für sächliche Nomen ist 'es'."
+            ],
+            "feedbackCorrect": "Richtig! 'Es' bezieht sich auf 'das Handy'.",
+            "feedbackIncorrect": "Die richtige Antwort ist 'Es' - das Pronomen für 'das Handy' (sächlich)."
+        },
+        {
+            "id": "technology-grammar-002",
+            "type": "connector-insert",
+            "areaId": "grammar",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 2,
+            "instruction": "Wähle das richtige Bindewort.",
+            "content": {
+                "type": "connector-insert",
+                "sentencePart1": "Ich benutze das Internet,",
+                "sentencePart2": "ich Informationen suche.",
+                "correctConnector": "wenn",
+                "options": [
+                    "und",
+                    "wenn",
+                    "weil",
+                    "aber"
+                ]
+            },
+            "hints": [
+                "'Wenn' bedeutet 'wenn' oder 'als'.",
+                "Es zeigt eine Bedingung oder einen Zeitpunkt."
+            ],
+            "feedbackCorrect": "Perfekt! 'Wenn' zeigt den Zeitpunkt oder die Bedingung.",
+            "feedbackIncorrect": "Das richtige Bindewort ist 'wenn' - es zeigt, wann etwas passiert."
+        },
+        {
+            "id": "technology-practical-001",
+            "type": "sentence-builder",
+            "areaId": "communication",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 3,
+            "instruction": "Bilde Sätze über Technologie.",
+            "content": {
+                "type": "sentence-builder",
+                "columns": [
+                    {
+                        "label": "Subjekt",
+                        "words": [
+                            "Ich",
+                            "Mein Computer",
+                            "Das Internet"
+                        ]
+                    },
+                    {
+                        "label": "Verb",
+                        "words": [
+                            "benutze",
+                            "funktioniert",
+                            "ist"
+                        ]
+                    },
+                    {
+                        "label": "Objekt/Zustand",
+                        "words": [
+                            "jeden Tag",
+                            "nicht",
+                            "sehr nützlich"
+                        ]
+                    }
+                ],
+                "targetSentences": [
+                    "Ich benutze jeden Tag",
+                    "Mein Computer funktioniert nicht",
+                    "Das Internet ist sehr nützlich"
+                ]
+            },
+            "hints": [
+                "Achte auf die Verbkonjugation.",
+                "'Jeden Tag' ist eine Zeitangabe."
+            ],
+            "feedbackCorrect": "Toll! Du kannst über Technologie sprechen!",
+            "feedbackIncorrect": "Übe: Ich benutze jeden Tag. Mein Computer funktioniert nicht. Das Internet ist sehr nützlich."
+        },
+        {
+            "id": "technology-practical-002",
+            "type": "writing",
+            "areaId": "writing",
+            "themeId": "technology",
+            "level": 4,
+            "difficulty": 3,
+            "instruction": "Schreibe über dein Lieblingsgerät.",
+            "content": {
+                "type": "writing",
+                "prompt": "Was ist dein Lieblingsgerät? Warum ist es wichtig für dich?",
+                "scaffoldLevel": "medium",
+                "scaffoldHints": [
+                    "Nenne das Gerät",
+                    "Beschreibe, was du damit machst",
+                    "Erkläre, warum es wichtig ist"
+                ],
+                "starterWords": [
+                    "Mein",
+                    "Lieblingsgerät",
+                    "ist",
+                    "Ich",
+                    "benutze",
+                    "es"
+                ],
+                "minLength": 5
+            },
+            "hints": [
+                "Benutze Verben wie: benutzen, funktionieren, helfen",
+                "Beschreibe Funktionen und Vorteile"
+            ],
+            "feedbackCorrect": "Ausgezeichnet! Du hast gut über dein Gerät geschrieben!",
+            "feedbackIncorrect": "Versuche, vollständige Sätze zu schreiben: Mein Lieblingsgerät ist... Ich benutze es für..."
         }
     ]
 }

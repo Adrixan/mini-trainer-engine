@@ -10,7 +10,11 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { calculateStars } from '@core/utils/gamification';
 import type { Score, StarRating } from '@/types/gamification';
+
+// Re-export for backward compatibility
+export { calculateStars as calculateStarsFromAttempts } from '@core/utils/gamification';
 
 // ============================================================================
 // Types
@@ -85,16 +89,6 @@ export interface UseExerciseLogicReturn<T> {
 // ============================================================================
 
 /**
- * Calculate star rating based on attempts.
- * 1 attempt = 3 stars, 2 attempts = 2 stars, 3+ attempts = 1 star
- */
-export function calculateStarsFromAttempts(attempts: number): StarRating {
-    if (attempts === 1) return 3;
-    if (attempts === 2) return 2;
-    return 1;
-}
-
-/**
  * Calculate star rating based on time (for timed exercises).
  * Under 10s = 3 stars, under 20s = 2 stars, over 20s = 1 star
  */
@@ -167,7 +161,7 @@ export function useExerciseLogic<T = unknown>(
 
     // Calculate derived state
     const canRetry = !showSolution && attempts < maxAttempts;
-    const stars = showSolution && isCorrect ? calculateStarsFromAttempts(attempts) : null;
+    const stars = showSolution && isCorrect ? calculateStars(attempts) : null;
     const totalHints = 0; // Will be set by the component using hints
 
     // Update time spent
@@ -203,7 +197,7 @@ export function useExerciseLogic<T = unknown>(
             const result: ExerciseResult = {
                 correct: true,
                 attempts: newAttempts,
-                stars: calculateStarsFromAttempts(newAttempts),
+                stars: calculateStars(newAttempts),
                 timeSpentSeconds: Math.floor((Date.now() - startTime) / 1000),
             };
             onComplete?.(result);

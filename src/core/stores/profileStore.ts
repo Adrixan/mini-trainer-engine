@@ -49,6 +49,9 @@ export const MAX_NICKNAME_LENGTH = 20;
  */
 export const SAVE_GAME_VERSION = 2;
 
+/** Debug flag for storage logging - only enabled in development */
+const DEBUG_STORAGE = import.meta.env.DEV;
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -89,6 +92,8 @@ export interface ProfileState {
     resetStreak: () => void;
     /** Update theme progress */
     updateThemeProgress: (themeId: ThemeId, progress: Partial<ThemeProgress>) => void;
+    /** Update theme level (highest completed level for a theme) */
+    updateThemeLevel: (themeId: ThemeId, level: number) => void;
     /** Earn a badge */
     earnBadge: (badge: Badge) => void;
     /** Clear the active profile */
@@ -141,6 +146,7 @@ export const useProfileStore = create<ProfileState>()(
                     longestStreak: 0,
                     lastActiveDate: '',
                     themeProgress: {},
+                    themeLevels: {},
                     badges: [],
                 };
                 set({ activeProfile: profile });
@@ -189,6 +195,8 @@ export const useProfileStore = create<ProfileState>()(
             addStars: (count) =>
                 set((state) => {
                     if (!state.activeProfile) return state;
+                    // Validate count is positive (Issue #7 fix)
+                    if (count <= 0) return state;
                     return {
                         activeProfile: {
                             ...state.activeProfile,
@@ -252,6 +260,23 @@ export const useProfileStore = create<ProfileState>()(
                             themeProgress: {
                                 ...state.activeProfile.themeProgress,
                                 [themeId]: { ...existing, ...progress },
+                            },
+                        },
+                    };
+                }),
+
+            updateThemeLevel: (themeId, level) =>
+                set((state) => {
+                    if (!state.activeProfile) return state;
+                    const current = state.activeProfile.themeLevels?.[themeId] ?? 0;
+                    // Only keep highest level (no downgrade)
+                    if (level <= current) return state;
+                    return {
+                        activeProfile: {
+                            ...state.activeProfile,
+                            themeLevels: {
+                                ...state.activeProfile.themeLevels,
+                                [themeId]: level,
                             },
                         },
                     };
@@ -329,6 +354,17 @@ export const useProfileStore = create<ProfileState>()(
         {
             name: 'mini-trainer-profile',
             version: 1,
+            onRehydrateStorage: () => (state) => {
+                if (DEBUG_STORAGE) {
+                    console.log('[Storage] Zustand rehydrated profile from localStorage:', {
+                        hasProfile: !!state?.activeProfile,
+                        profileId: state?.activeProfile?.id,
+                        nickname: state?.activeProfile?.nickname,
+                        totalStars: state?.activeProfile?.totalStars,
+                        themeLevels: state?.activeProfile?.themeLevels,
+                    });
+                }
+            },
         },
     ),
 );
@@ -343,7 +379,23 @@ export const useProfileStore = create<ProfileState>()(
  */
 useProfileStore.subscribe((state, prevState) => {
     if (state.activeProfile && state.activeProfile !== prevState.activeProfile) {
-        void saveProfile(state.activeProfile);
+        if (DEBUG_STORAGE) {
+            console.log('[Storage] Syncing profile to IndexedDB:', {
+                profileId: state.activeProfile.id,
+                nickname: state.activeProfile.nickname,
+                totalStars: state.activeProfile.totalStars,
+                themeLevels: state.activeProfile.themeLevels,
+            });
+        }
+        saveProfile(state.activeProfile)
+            .then(() => {
+                if (DEBUG_STORAGE) {
+                    console.log('[Storage] ✅ Profile saved to IndexedDB successfully');
+                }
+            })
+            .catch((error) => {
+                console.error('[Storage] ❌ Failed to save profile to IndexedDB:', error);
+            });
     }
 });
 
@@ -397,6 +449,18 @@ export const selectThemeProgress = (themeId: ThemeId) => (state: ProfileState) =
  */
 export const selectLevel = (areaId: ObservationAreaId) => (state: ProfileState) =>
     state.activeProfile?.currentLevels[areaId] ?? 1;
+
+/**
+ * Selector for theme levels (highest completed level per theme).
+ */
+export const selectThemeLevels = (state: ProfileState) =>
+    state.activeProfile?.themeLevels ?? {};
+
+/**
+ * Selector for a specific theme's completed level.
+ */
+export const selectThemeLevel = (themeId: ThemeId) => (state: ProfileState) =>
+    state.activeProfile?.themeLevels?.[themeId] ?? 0;
 
 // ============================================================================
 // Save Game Utilities

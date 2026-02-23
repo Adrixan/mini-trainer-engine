@@ -7,10 +7,53 @@ import { renderHook, act } from '@testing-library/react';
 import { useGamification, useLevelProgress, useStreak, useBadges } from '../useGamification';
 import { useProfileStore } from '@core/stores/profileStore';
 import type { UserProfile, Badge } from '@/types/profile';
+import type { ExerciseResult } from '@/types/exercise';
+
+// Helper to create mock profile
+function createMockProfile(overrides: Partial<UserProfile> = {}): UserProfile {
+    return {
+        id: 'profile-1',
+        nickname: 'Test User',
+        avatarId: 'avatar-1',
+        totalStars: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        lastActiveDate: new Date().toISOString().split('T')[0]!,
+        currentLevels: {},
+        themeProgress: {},
+        themeLevels: {},
+        badges: [],
+        createdAt: '2024-01-01T00:00:00Z',
+        ...overrides,
+    };
+}
+
+// Mock store state - defined at module level for access in mock
+const mockStoreState: {
+    activeProfile: UserProfile | null;
+    addStars: ReturnType<typeof vi.fn>;
+    incrementStreak: ReturnType<typeof vi.fn>;
+    earnBadge: ReturnType<typeof vi.fn>;
+} = {
+    activeProfile: null,
+    addStars: vi.fn(),
+    incrementStreak: vi.fn(),
+    earnBadge: vi.fn(),
+};
 
 // Mock the profile store
 vi.mock('@core/stores/profileStore', () => ({
-    useProfileStore: vi.fn(),
+    useProfileStore: Object.assign(
+        vi.fn((selector: (state: typeof mockStoreState) => unknown) => {
+            if (typeof selector === 'function') {
+                return selector(mockStoreState);
+            }
+            return mockStoreState;
+        }),
+        {
+            getState: () => mockStoreState,
+        }
+    ),
 }));
 
 // Mock the gamification utils
@@ -18,7 +61,8 @@ vi.mock('@core/utils/gamification', () => ({
     calculateStars: (attempts: number) => {
         if (attempts === 1) return 3;
         if (attempts === 2) return 2;
-        return 1;
+        if (attempts === 3) return 1;
+        return 0;
     },
     calculateLevel: (stars: number, starsPerLevel: number = 10) => {
         return Math.floor(stars / starsPerLevel) + 1;
@@ -48,48 +92,20 @@ vi.mock('@core/utils/badges', () => ({
     DEFAULT_BADGES: [],
 }));
 
-// Helper to create mock profile
-function createMockProfile(overrides: Partial<UserProfile> = {}): UserProfile {
-    return {
-        id: 'profile-1',
-        nickname: 'Test User',
-        avatarId: 'avatar-1',
-        totalStars: 0,
-        currentStreak: 0,
-        longestStreak: 0,
-        lastActiveDate: new Date().toISOString().split('T')[0]!,
-        currentLevels: {},
-        themeProgress: {},
-        badges: [],
-        createdAt: '2024-01-01T00:00:00Z',
-        ...overrides,
-    };
-}
+// Mock storage module
+const mockExerciseResults: ExerciseResult[] = [];
+vi.mock('@core/storage', () => ({
+    getExerciseResultsByArea: vi.fn(async (areaId: string) => {
+        return mockExerciseResults.filter(result => result.areaId === areaId);
+    }),
+}));
 
 describe('useGamification', () => {
-    let mockStoreState: {
-        activeProfile: UserProfile | null;
-        addStars: ReturnType<typeof vi.fn>;
-        incrementStreak: ReturnType<typeof vi.fn>;
-        earnBadge: ReturnType<typeof vi.fn>;
-    };
-
     beforeEach(() => {
-        mockStoreState = {
-            activeProfile: createMockProfile(),
-            addStars: vi.fn(),
-            incrementStreak: vi.fn(),
-            earnBadge: vi.fn(),
-        };
-
-        (useProfileStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-            (selector: (state: typeof mockStoreState) => unknown) => {
-                if (typeof selector === 'function') {
-                    return selector(mockStoreState);
-                }
-                return mockStoreState;
-            }
-        );
+        mockStoreState.activeProfile = createMockProfile();
+        mockStoreState.addStars = vi.fn();
+        mockStoreState.incrementStreak = vi.fn();
+        mockStoreState.earnBadge = vi.fn();
 
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2024-01-15T12:00:00Z'));
@@ -162,7 +178,8 @@ describe('useGamification', () => {
                 completionResult = result.current.processExerciseCompletion(1);
             });
 
-            expect(completionResult?.starsEarned).toBe(1);
+            // Issue #10: Return 0 stars when no profile (not 1)
+            expect(completionResult?.starsEarned).toBe(0);
             expect(completionResult?.leveledUp).toBe(false);
             expect(completionResult?.newBadges).toEqual([]);
         });
@@ -253,25 +270,104 @@ describe('useGamification', () => {
     });
 
     describe('getAreaStars', () => {
-        it('returns 0 when no active profile', () => {
+        it('returns 0 when no active profile', async () => {
             mockStoreState.activeProfile = null;
 
             const { result } = renderHook(() => useGamification());
 
-            expect(result.current.getAreaStars('area-1')).toBe(0);
+            await expect(result.current.getAreaStars('area-1')).resolves.toBe(0);
         });
 
-        it('returns sum of theme progress stars', () => {
-            mockStoreState.activeProfile = createMockProfile({
-                themeProgress: {
-                    'theme-1': { starsEarned: 5, unlocked: true, exercisesCompleted: 5, exercisesTotal: 10, maxStars: 30 },
-                    'theme-2': { starsEarned: 3, unlocked: true, exercisesCompleted: 3, exercisesTotal: 10, maxStars: 30 },
+        it('returns sum of scores from exercise results filtered by area', async () => {
+            mockStoreState.activeProfile = createMockProfile();
+
+            // Setup mock exercise results
+            mockExerciseResults.length = 0;
+            mockExerciseResults.push(
+                {
+                    id: 'result-1',
+                    childProfileId: 'profile-1',
+                    exerciseId: 'ex-1',
+                    areaId: 'area-1',
+                    themeId: 'theme-1',
+                    level: 1,
+                    correct: true,
+                    score: 3,
+                    attempts: 1,
+                    timeSpentSeconds: 30,
+                    completedAt: '2024-01-15T10:00:00Z',
                 },
-            });
+                {
+                    id: 'result-2',
+                    childProfileId: 'profile-1',
+                    exerciseId: 'ex-2',
+                    areaId: 'area-1',
+                    themeId: 'theme-1',
+                    level: 1,
+                    correct: true,
+                    score: 2,
+                    attempts: 2,
+                    timeSpentSeconds: 45,
+                    completedAt: '2024-01-15T10:05:00Z',
+                },
+                {
+                    id: 'result-3',
+                    childProfileId: 'profile-1',
+                    exerciseId: 'ex-3',
+                    areaId: 'area-2', // Different area
+                    themeId: 'theme-2',
+                    level: 1,
+                    correct: true,
+                    score: 3,
+                    attempts: 1,
+                    timeSpentSeconds: 20,
+                    completedAt: '2024-01-15T10:10:00Z',
+                },
+                {
+                    id: 'result-4',
+                    childProfileId: 'profile-1',
+                    exerciseId: 'ex-4',
+                    areaId: 'area-1',
+                    themeId: 'theme-1',
+                    level: 1,
+                    correct: false, // Incorrect - should not count
+                    score: 0,
+                    attempts: 3,
+                    timeSpentSeconds: 60,
+                    completedAt: '2024-01-15T10:15:00Z',
+                },
+                {
+                    id: 'result-5',
+                    childProfileId: 'other-profile', // Different profile
+                    exerciseId: 'ex-5',
+                    areaId: 'area-1',
+                    themeId: 'theme-1',
+                    level: 1,
+                    correct: true,
+                    score: 3,
+                    attempts: 1,
+                    timeSpentSeconds: 25,
+                    completedAt: '2024-01-15T10:20:00Z',
+                }
+            );
 
             const { result } = renderHook(() => useGamification());
 
-            expect(result.current.getAreaStars('any-area')).toBe(8);
+            // area-1 should have 3 + 2 = 5 stars (only correct results for profile-1)
+            await expect(result.current.getAreaStars('area-1')).resolves.toBe(5);
+            // area-2 should have 3 stars
+            await expect(result.current.getAreaStars('area-2')).resolves.toBe(3);
+            // area-3 should have 0 stars (no results)
+            await expect(result.current.getAreaStars('area-3')).resolves.toBe(0);
+        });
+
+        it('returns 0 when no results exist for area', async () => {
+            mockStoreState.activeProfile = createMockProfile();
+            mockExerciseResults.length = 0;
+
+            const { result } = renderHook(() => useGamification());
+
+            await expect(result.current.getAreaStars('nonexistent-area')).resolves.toBe(0);
         });
     });
 

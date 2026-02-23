@@ -9,8 +9,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@core/router';
-import { useProfileStore, selectActiveProfile, selectTotalStars, selectCurrentStreak } from '@core/stores/profileStore';
+import { useProfileStore, selectActiveProfile, selectTotalStars, selectCurrentStreak, selectThemeLevels } from '@core/stores/profileStore';
 import { ProfileCreation } from '@core/components/profile';
+import { useThemes } from '@core/config';
+import { calculateGlobalLevel } from '@core/utils/gamification';
 
 /**
  * Get fire emoji count based on streak length.
@@ -31,8 +33,14 @@ function Dashboard() {
     const profile = useProfileStore(selectActiveProfile);
     const totalStars = useProfileStore(selectTotalStars);
     const currentStreak = useProfileStore(selectCurrentStreak);
+    const themeLevels = useProfileStore(selectThemeLevels);
     const exportSaveGame = useProfileStore((state) => state.exportSaveGame);
     const [isSaving, setIsSaving] = useState(false);
+
+    // Get all themes for global level calculation
+    const themes = useThemes();
+    const allThemeIds = themes.map(t => t.id);
+    const globalLevel = calculateGlobalLevel(themeLevels, allThemeIds);
 
     const fireCount = getFireCount(currentStreak);
     const fires = '🔥'.repeat(fireCount);
@@ -71,7 +79,16 @@ function Dashboard() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-6">
+            <div className="grid grid-cols-3 gap-3 w-full max-w-sm mb-6">
+                {/* Global Level Card */}
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                    <div className="text-3xl mb-1" role="img" aria-label={t('stats.level', 'Level')}>
+                        🎯
+                    </div>
+                    <div className="text-2xl font-bold text-blue-700">{globalLevel}</div>
+                    <div className="text-sm text-blue-600">{t('stats.level', 'Level')}</div>
+                </div>
+
                 {/* Total Stars Card */}
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
                     <div className="text-3xl mb-1" role="img" aria-label={t('stats.stars', 'Stars')}>

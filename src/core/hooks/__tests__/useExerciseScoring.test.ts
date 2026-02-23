@@ -174,10 +174,10 @@ describe('calculateStarRating', () => {
         expect(calculateStarRating(2)).toBe(2);
     });
 
-    it('returns 1 star for 3 or more attempts', () => {
+    it('returns 1 star for 3 attempts, 0 for more', () => {
         expect(calculateStarRating(3)).toBe(1);
-        expect(calculateStarRating(4)).toBe(1);
-        expect(calculateStarRating(10)).toBe(1);
+        expect(calculateStarRating(4)).toBe(0);
+        expect(calculateStarRating(10)).toBe(0);
     });
 });
 

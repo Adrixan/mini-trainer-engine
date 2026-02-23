@@ -28,7 +28,10 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 // Mock saveProfile
 vi.mock('@core/storage', () => ({
-    saveProfile: vi.fn(),
+    saveProfile: vi.fn().mockResolvedValue(undefined),
+    clearAllExerciseResults: vi.fn().mockResolvedValue(undefined),
+    saveExerciseResult: vi.fn().mockResolvedValue(undefined),
+    getAllExerciseResults: vi.fn().mockResolvedValue([]),
 }));
 
 // Helper to create a mock profile
@@ -43,6 +46,7 @@ function createMockProfile(overrides: Partial<UserProfile> = {}): UserProfile {
         lastActiveDate: new Date().toISOString().split('T')[0]!,
         currentLevels: {},
         themeProgress: {},
+        themeLevels: {},
         badges: [],
         createdAt: '2024-01-01T00:00:00Z',
         ...overrides,

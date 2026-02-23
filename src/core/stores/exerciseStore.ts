@@ -6,6 +6,8 @@
  */
 
 import { create } from 'zustand';
+import { calculateStars } from '@core/utils/gamification';
+import { saveExerciseResult } from '@core/storage';
 import type {
     Exercise,
     ExerciseResult,
@@ -14,6 +16,15 @@ import type {
     ObservationAreaId,
     ThemeId,
 } from '@/types';
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+/**
+ * Maximum number of attempts allowed per exercise.
+ */
+export const MAX_ATTEMPTS_PER_EXERCISE = 3;
 
 // ============================================================================
 // Types
@@ -48,6 +59,20 @@ export interface SessionStats {
 }
 
 /**
+ * Result of a submit answer operation.
+ */
+export interface SubmitAnswerResult {
+    /** Whether the submission was successful */
+    success: boolean;
+    /** Reason for failure if success is false */
+    reason?: 'duplicate' | 'no_exercise';
+}
+
+/**
+ * Exercise session state interface.
+ */
+
+/**
  * Exercise session state interface.
  */
 export interface ExerciseSessionState {
@@ -65,6 +90,8 @@ export interface ExerciseSessionState {
     isCompleted: boolean;
     /** Whether to show the solution */
     showSolution: boolean;
+    /** Whether the level has been failed (max attempts reached) */
+    levelFailed: boolean;
     /** Session statistics */
     stats: SessionStats;
     /** Results for completed exercises */
@@ -75,42 +102,35 @@ export interface ExerciseSessionState {
     themeId: ThemeId | null;
     /** Current area ID (optional) */
     areaId: ObservationAreaId | null;
+    /** Set of completed exercise IDs for deduplication (Issue #3) */
+    completedExerciseIds: Set<string>;
+    /** Current child profile ID for persisting results */
+    childProfileId: string | null;
 
     // Actions
     /** Initialize a new session with exercises */
-    startSession: (exercises: Exercise[], themeId: ThemeId, areaId?: ObservationAreaId) => void;
+    startSession: (exercises: Exercise[], themeId: ThemeId, areaId?: ObservationAreaId, childProfileId?: string) => void;
     /** Move to the next exercise */
     nextExercise: () => void;
-    /** Submit an answer */
-    submitAnswer: (correct: boolean) => void;
+    /** Submit an answer, returns result indicating success/failure */
+    submitAnswer: (correct: boolean) => SubmitAnswerResult;
     /** Increment attempts */
     incrementAttempts: () => void;
     /** Show the solution */
     setShowSolution: (show: boolean) => void;
     /** Record time spent */
     recordTime: (seconds: number) => void;
-    /** End the session */
-    endSession: () => void;
+    /** End the session and persist results to IndexedDB */
+    endSession: () => Promise<void>;
     /** Reset the current exercise */
     resetCurrentExercise: () => void;
+    /** Restart the level from the first exercise */
+    restartLevel: () => void;
 }
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
-
-/**
- * Calculate star rating based on attempts.
- * 
- * @param attempts - Number of attempts made
- * @returns Star rating (0-3)
- */
-function calculateStars(attempts: number): Score {
-    if (attempts === 1) return 3 as StarRating;
-    if (attempts === 2) return 2 as StarRating;
-    if (attempts === 3) return 1 as StarRating;
-    return 0;
-}
 
 /**
  * Generate a unique ID for exercise results.
@@ -136,6 +156,7 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
     answer: null,
     isCompleted: false,
     showSolution: false,
+    levelFailed: false,
     stats: {
         exercisesCompleted: 0,
         correctAnswers: 0,
@@ -146,8 +167,10 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
     sessionStartTime: null,
     themeId: null,
     areaId: null,
+    completedExerciseIds: new Set<string>(),
+    childProfileId: null,
 
-    startSession: (exercises, themeId, areaId) => {
+    startSession: (exercises, themeId, areaId, childProfileId) => {
         if (exercises.length === 0) return;
 
         set({
@@ -158,6 +181,7 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             answer: null,
             isCompleted: false,
             showSolution: false,
+            levelFailed: false,
             stats: {
                 exercisesCompleted: 0,
                 correctAnswers: 0,
@@ -168,6 +192,8 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             sessionStartTime: Date.now(),
             themeId,
             areaId: areaId ?? null,
+            completedExerciseIds: new Set<string>(),
+            childProfileId: childProfileId ?? null,
         });
     },
 
@@ -190,51 +216,90 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             answer: null,
             isCompleted: false,
             showSolution: false,
+            levelFailed: false,
         });
     },
 
     submitAnswer: (correct) => {
         const state = get();
-        if (!state.currentExercise || !state.answer) return;
+        if (!state.currentExercise) {
+            return { success: false, reason: 'no_exercise' as const };
+        }
 
-        const stars = correct ? calculateStars(state.answer.attempts) : 0;
+        // Check for duplicate completion (Issue #3 fix)
+        const exerciseId = state.currentExercise.id;
+        if (state.completedExerciseIds.has(exerciseId)) {
+            console.warn(`Exercise ${exerciseId} already completed, ignoring duplicate submission`);
+            return { success: false, reason: 'duplicate' as const };
+        }
+
+        // Use existing answer or create a default one if not yet set
+        const currentAnswer = state.answer ?? { correct: false, attempts: 1, timeSpentSeconds: 0, stars: 0 };
+        const stars = correct ? calculateStars(currentAnswer.attempts) : 0;
 
         // Update answer with result
         const finalAnswer: ExerciseAnswer = {
-            ...state.answer,
+            ...currentAnswer,
             correct,
             stars,
         };
 
-        // Create result record
-        const result: ExerciseResult = {
-            id: generateResultId(),
-            childProfileId: '', // Will be filled by the caller
-            exerciseId: state.currentExercise.id,
-            areaId: state.currentExercise.areaId,
-            themeId: state.currentExercise.themeId,
-            level: state.currentExercise.level,
-            correct,
-            score: stars as StarRating,
-            attempts: state.answer.attempts,
-            timeSpentSeconds: state.answer.timeSpentSeconds,
-            completedAt: new Date().toISOString(),
-        };
+        // Only mark as completed and update stats when answer is correct
+        // This allows retry when the answer is wrong
+        if (correct) {
+            // Mark exercise as completed to prevent duplicate awards
+            const newCompletedIds = new Set(state.completedExerciseIds);
+            newCompletedIds.add(exerciseId);
 
-        // Update stats
-        const newStats: SessionStats = {
-            exercisesCompleted: state.stats.exercisesCompleted + 1,
-            correctAnswers: state.stats.correctAnswers + (correct ? 1 : 0),
-            totalStars: state.stats.totalStars + stars,
-            totalTimeSeconds: state.stats.totalTimeSeconds + state.answer.timeSpentSeconds,
-        };
+            // Create result record with childProfileId from session state
+            const result: ExerciseResult = {
+                id: generateResultId(),
+                childProfileId: state.childProfileId ?? '',
+                exerciseId: state.currentExercise.id,
+                areaId: state.currentExercise.areaId,
+                themeId: state.currentExercise.themeId,
+                level: state.currentExercise.level,
+                correct,
+                score: stars as StarRating,
+                attempts: currentAnswer.attempts,
+                timeSpentSeconds: currentAnswer.timeSpentSeconds,
+                completedAt: new Date().toISOString(),
+            };
 
-        set({
-            answer: finalAnswer,
-            isCompleted: true,
-            stats: newStats,
-            results: [...state.results, result],
-        });
+            // Update stats
+            const newStats: SessionStats = {
+                exercisesCompleted: state.stats.exercisesCompleted + 1,
+                correctAnswers: state.stats.correctAnswers + 1,
+                totalStars: state.stats.totalStars + stars,
+                totalTimeSeconds: state.stats.totalTimeSeconds + currentAnswer.timeSpentSeconds,
+            };
+
+            set({
+                answer: finalAnswer,
+                isCompleted: true,
+                stats: newStats,
+                results: [...state.results, result],
+                completedExerciseIds: newCompletedIds,
+            });
+        } else {
+            // For wrong answers, check if max attempts reached
+            const attempts = currentAnswer.attempts;
+            if (attempts >= MAX_ATTEMPTS_PER_EXERCISE) {
+                // Max attempts reached - level failed
+                set({
+                    answer: finalAnswer,
+                    showSolution: true,
+                    levelFailed: true,
+                });
+            } else {
+                // Still have attempts left - allow retry
+                set({
+                    answer: finalAnswer,
+                });
+            }
+        }
+
+        return { success: true };
     },
 
     incrementAttempts: () => {
@@ -259,7 +324,27 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
         });
     },
 
-    endSession: () => {
+    endSession: async () => {
+        const state = get();
+
+        // Persist results to IndexedDB before clearing state
+        if (state.results.length > 0 && state.childProfileId) {
+            // Save each result, handling errors gracefully
+            for (const result of state.results) {
+                try {
+                    // Update the result with the correct childProfileId
+                    const resultToSave: ExerciseResult = {
+                        ...result,
+                        childProfileId: state.childProfileId,
+                    };
+                    await saveExerciseResult(resultToSave);
+                } catch (error) {
+                    // Log error but don't throw - continue saving other results
+                    console.error('Failed to save exercise result:', error);
+                }
+            }
+        }
+
         set({
             currentExercise: null,
             currentIndex: 0,
@@ -268,6 +353,7 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             answer: null,
             isCompleted: false,
             showSolution: false,
+            levelFailed: false,
             stats: {
                 exercisesCompleted: 0,
                 correctAnswers: 0,
@@ -278,6 +364,8 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             sessionStartTime: null,
             themeId: null,
             areaId: null,
+            completedExerciseIds: new Set<string>(),
+            childProfileId: null,
         });
     },
 
@@ -286,6 +374,29 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             answer: null,
             isCompleted: false,
             showSolution: false,
+        });
+    },
+
+    restartLevel: () => {
+        const state = get();
+        if (state.exerciseQueue.length === 0) return;
+
+        set({
+            currentExercise: state.exerciseQueue[0] ?? null,
+            currentIndex: 0,
+            answer: null,
+            isCompleted: false,
+            showSolution: false,
+            levelFailed: false,
+            stats: {
+                exercisesCompleted: 0,
+                correctAnswers: 0,
+                totalStars: 0,
+                totalTimeSeconds: 0,
+            },
+            results: [],
+            sessionStartTime: Date.now(),
+            completedExerciseIds: new Set<string>(),
         });
     },
 }));

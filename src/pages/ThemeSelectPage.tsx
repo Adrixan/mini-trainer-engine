@@ -5,18 +5,20 @@
  * Shows locked/unlocked states based on vocabulary level.
  */
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 import { ThemeCard } from '@core/components/theme';
 import { useThemes, useConfig } from '@core/config';
 import {
     useProfileStore,
     selectActiveProfile,
-    selectTotalStars,
+    selectThemeLevels,
 } from '@core/stores/profileStore';
-import { levelFromStars } from '@core/utils/gamification';
+import { calculateGlobalLevel, getAccessibleLevelForTheme } from '@core/utils/gamification';
 import { ROUTES } from '@core/router';
-import type { Theme, ThemeProgress } from '@/types';
+import { getAllExerciseResults } from '@core/storage';
+import type { Theme, ThemeProgress, ExerciseResult } from '@/types';
 
 // ============================================================================
 // Level Display Component
@@ -63,6 +65,7 @@ function LevelIndicator({ level }: { level: number }) {
 export function ThemeSelectPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
 
     // Get themes and exercises from config
     const themes = useThemes();
@@ -70,31 +73,62 @@ export function ThemeSelectPage() {
 
     // Get profile data
     const profile = useProfileStore(selectActiveProfile);
-    const totalStars = useProfileStore(selectTotalStars);
+    const themeLevels = useProfileStore(selectThemeLevels);
 
-    // Calculate vocabulary level
-    const vocabularyLevel = levelFromStars(totalStars);
+    // Calculate global level and per-theme accessible levels
+    const allThemeIds = themes.map(t => t.id);
+    const globalLevel = calculateGlobalLevel(themeLevels, allThemeIds);
 
-    // Get theme progress from profile
-    const getThemeProgress = (themeId: string): ThemeProgress | undefined => {
-        return profile?.themeProgress[themeId];
-    };
+    // Track completed exercise IDs and stars per theme from IndexedDB
+    const [completedByTheme, setCompletedByTheme] = useState<Record<string, { exerciseIds: Set<string>; stars: number }>>({});
 
-    // Calculate theme progress from exercises if not in profile
-    const calculateThemeProgress = (theme: Theme): ThemeProgress => {
-        const exercises = getExercisesByTheme(theme.id);
-        const storedProgress = getThemeProgress(theme.id);
-
-        if (storedProgress) {
-            return storedProgress;
+    // Fetch completed exercises from IndexedDB - refreshes when location changes
+    const fetchCompletedExercises = useCallback(() => {
+        if (!profile) {
+            setCompletedByTheme({});
+            return;
         }
 
-        // Return default progress based on exercise count
+        getAllExerciseResults()
+            .then((results: ExerciseResult[]) => {
+                // Group results by theme, tracking unique exercise IDs and best stars
+                const byTheme: Record<string, { exerciseIds: Set<string>; stars: number }> = {};
+
+                for (const result of results) {
+                    if (!result.correct) continue; // Only count correct answers
+
+                    const themeId = result.themeId;
+                    if (!byTheme[themeId]) {
+                        byTheme[themeId] = { exerciseIds: new Set(), stars: 0 };
+                    }
+                    // Track unique exercise IDs
+                    byTheme[themeId].exerciseIds.add(result.exerciseId);
+                    // Add stars (this will sum all attempts, but we could track max per exercise if needed)
+                    byTheme[themeId].stars += result.score;
+                }
+
+                setCompletedByTheme(byTheme);
+            })
+            .catch(() => {
+                setCompletedByTheme({});
+            });
+    }, [profile]);
+
+    useEffect(() => {
+        fetchCompletedExercises();
+    }, [fetchCompletedExercises, location.key]);
+
+    // Calculate theme progress from IndexedDB data
+    const calculateThemeProgress = (theme: Theme): ThemeProgress => {
+        const exercises = getExercisesByTheme(theme.id);
+        const themeStats = completedByTheme[theme.id];
+        const accessibleLevel = getAccessibleLevelForTheme(theme.id, themeLevels, allThemeIds);
+
         return {
-            unlocked: vocabularyLevel >= theme.minLevel,
-            exercisesCompleted: 0,
+            unlocked: accessibleLevel >= theme.minLevel,
+            exercisesCompleted: themeStats?.exerciseIds.size ?? 0,
             exercisesTotal: exercises.length,
-            starsEarned: 0,
+            starsEarned: themeStats?.stars ?? 0,
             maxStars: exercises.length * 3,
         };
     };
@@ -121,7 +155,7 @@ export function ThemeSelectPage() {
                 </h1>
 
                 {/* Level indicator */}
-                <LevelIndicator level={vocabularyLevel} />
+                <LevelIndicator level={globalLevel} />
 
                 <p className="text-gray-600">
                     {t('theme.subtitle', 'Select a theme to practice. Complete exercises to earn stars and unlock new themes!')}
@@ -135,7 +169,8 @@ export function ThemeSelectPage() {
                 aria-label={t('theme.themeList', 'Available themes')}
             >
                 {themes.map((theme) => {
-                    const isUnlocked = vocabularyLevel >= theme.minLevel;
+                    const accessibleLevel = getAccessibleLevelForTheme(theme.id, themeLevels, allThemeIds);
+                    const isUnlocked = accessibleLevel >= theme.minLevel;
                     const progress = calculateThemeProgress(theme);
 
                     return (
@@ -144,7 +179,7 @@ export function ThemeSelectPage() {
                                 theme={theme}
                                 progress={progress}
                                 isUnlocked={isUnlocked}
-                                vocabularyLevel={vocabularyLevel}
+                                vocabularyLevel={globalLevel}
                                 onClick={() => handleThemeClick(theme)}
                             />
                         </div>

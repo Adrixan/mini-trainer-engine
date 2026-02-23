@@ -18,8 +18,9 @@ import {
     DEFAULT_BADGES,
     type BadgeDefinitionWithMeta,
 } from '@core/utils/badges';
+import { getExerciseResultsByArea } from '@core/storage';
 import type { Badge } from '@/types/profile';
-import type { StarRating, LevelProgress } from '@/types/gamification';
+import type { LevelProgress, Score } from '@/types/gamification';
 import type { BadgeDefinition } from '@/types/config';
 
 // ============================================================================
@@ -30,8 +31,8 @@ import type { BadgeDefinition } from '@/types/config';
  * Result of processing an exercise completion.
  */
 export interface ExerciseCompletionResult {
-    /** Stars earned for this exercise */
-    starsEarned: StarRating;
+    /** Stars earned for this exercise (0-3, where 0 means failed) */
+    starsEarned: Score;
     /** Whether a level up occurred */
     leveledUp: boolean;
     /** New level if leveled up */
@@ -70,8 +71,8 @@ export interface GamificationActions {
     processExerciseCompletion: (attempts: number) => ExerciseCompletionResult;
     /** Manually check for new badges */
     checkForBadges: () => Badge[];
-    /** Get stars for a specific area */
-    getAreaStars: (areaId: string) => number;
+    /** Get stars for a specific area (async, reads from storage) */
+    getAreaStars: (areaId: string) => Promise<number>;
     /** Get level for a specific area */
     getAreaLevel: (areaId: string) => number;
 }
@@ -110,9 +111,6 @@ export function useGamification(
 
     // Profile store
     const activeProfile = useProfileStore((state) => state.activeProfile);
-    const addStars = useProfileStore((state) => state.addStars);
-    const incrementStreak = useProfileStore((state) => state.incrementStreak);
-    const earnBadge = useProfileStore((state) => state.earnBadge);
 
     // Local state for tracking level changes
     const [previousLevel, setPreviousLevel] = useState<number | null>(null);
@@ -150,12 +148,21 @@ export function useGamification(
     }, [activeProfile, starsPerLevel, previousLevel, badgeDefinitions]);
 
     // Process exercise completion
+    // Note: We use useProfileStore.getState() instead of the activeProfile from the selector
+    // to ensure we always have the latest state when processing. This is necessary because
+    // the callback might be called after state changes from other sources.
+    // This pattern is safe with Zustand stores as getState() returns the current state.
     const processExerciseCompletion = useCallback((
         attempts: number
     ): ExerciseCompletionResult => {
-        if (!activeProfile) {
+        // Get fresh profile state to avoid stale references (Issue #4)
+        // Using getState() is the recommended Zustand pattern for getting latest state in callbacks
+        const currentProfile = useProfileStore.getState().activeProfile;
+
+        if (!currentProfile) {
+            // Issue #10: Return 0 stars when no profile (not 1)
             return {
-                starsEarned: 1 as StarRating,
+                starsEarned: 0 as Score,
                 leveledUp: false,
                 newLevel: undefined,
                 newBadges: [],
@@ -167,13 +174,15 @@ export function useGamification(
         const starsEarned = calculateStars(attempts);
 
         // Get previous level
-        const prevLevel = calculateLevel(activeProfile.totalStars, starsPerLevel);
+        const prevLevel = calculateLevel(currentProfile.totalStars, starsPerLevel);
 
-        // Add stars to profile
-        addStars(starsEarned);
+        // Issue #1: Add stars to profile via store action
+        // Note: exerciseStore also tracks stars in results, but that's for session stats
+        // The profile's totalStars is the source of truth for progression
+        useProfileStore.getState().addStars(starsEarned);
 
         // Calculate new level
-        const newTotalStars = activeProfile.totalStars + starsEarned;
+        const newTotalStars = currentProfile.totalStars + starsEarned;
         const newLevel = calculateLevel(newTotalStars, starsPerLevel);
         const leveledUp = newLevel > prevLevel;
 
@@ -183,24 +192,27 @@ export function useGamification(
         }
 
         // Update streak
-        incrementStreak();
+        useProfileStore.getState().incrementStreak();
         const streakUpdate = updateStreak(
-            activeProfile.currentStreak,
-            new Date(activeProfile.lastActiveDate)
+            currentProfile.currentStreak,
+            new Date(currentProfile.lastActiveDate)
         );
 
-        // Check for new badges
-        const updatedProfile = {
-            ...activeProfile,
+        // Issue #5: Get fresh profile after updates for badge checking
+        const updatedProfileAfterChanges = useProfileStore.getState().activeProfile;
+
+        // Check for new badges with fresh profile data
+        const profileForBadgeCheck = updatedProfileAfterChanges || {
+            ...currentProfile,
             totalStars: newTotalStars,
             currentStreak: streakUpdate.currentStreak,
             longestStreak: streakUpdate.longestStreak,
         };
-        const newBadges = checkAllBadges(updatedProfile, badgeDefinitions);
+        const newBadges = checkAllBadges(profileForBadgeCheck, badgeDefinitions);
 
         // Earn new badges
         for (const badge of newBadges) {
-            earnBadge(badge);
+            useProfileStore.getState().earnBadge(badge);
         }
 
         return {
@@ -210,7 +222,7 @@ export function useGamification(
             newBadges,
             streakUpdate,
         };
-    }, [activeProfile, starsPerLevel, addStars, incrementStreak, earnBadge, badgeDefinitions]);
+    }, [starsPerLevel, badgeDefinitions]);
 
     // Check for new badges manually
     const checkForBadges = useCallback((): Badge[] => {
@@ -218,17 +230,17 @@ export function useGamification(
         return checkAllBadges(activeProfile, badgeDefinitions);
     }, [activeProfile, badgeDefinitions]);
 
-    // Get stars for a specific area (from theme progress)
-    const getAreaStars = useCallback((_areaId: string): number => {
+    // Get stars for a specific area (from exercise results in storage)
+    const getAreaStars = useCallback(async (areaId: string): Promise<number> => {
         if (!activeProfile) return 0;
 
-        // Sum stars from all themes in this area
-        let areaStars = 0;
-        for (const progress of Object.values(activeProfile.themeProgress)) {
-            // This is a simplified version - in a real app, you'd filter by area
-            areaStars += progress.starsEarned;
-        }
-        return areaStars;
+        // Get exercise results filtered by area from storage
+        const results = await getExerciseResultsByArea(areaId);
+
+        // Filter by profile and correct answers, then sum scores
+        return results
+            .filter(result => result.childProfileId === activeProfile.id && result.correct)
+            .reduce((sum, result) => sum + result.score, 0);
     }, [activeProfile]);
 
     // Get level for a specific area

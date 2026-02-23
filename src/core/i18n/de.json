@@ -56,7 +56,12 @@
         "viewResults": "Ergebnisse ansehen",
         "noExercise": "Keine Übung verfügbar.",
         "progress": "Übung {{current}} von {{total}}",
-        "finish": "Beenden"
+        "finish": "Beenden",
+        "attemptsRemaining": "Noch {{count}} Versuche",
+        "levelFailed": "Level fehlgeschlagen",
+        "levelFailedDescription": "Du hast alle 3 Versuche verbraucht. Du musst von vorne beginnen.",
+        "restartLevel": "Level neu starten",
+        "exitLevel": "Beenden"
     },
     "profile": {
         "title": "Profil",
@@ -271,7 +276,17 @@
             "placeholder": "Schreibe deinen Text hier...",
             "wordCount": "{{count}} Wörter",
             "minLength": "Mindestens {{count}} Wörter",
-            "tooShort": "Dein Text ist noch zu kurz. Schreibe mindestens {{count}} Wörter."
+            "tooShort": "Dein Text ist noch zu kurz. Schreibe mindestens {{count}} Wörter.",
+            "yourSentence": "Dein Satz",
+            "clickWordsPrompt": "Klicke auf die Wörter, um einen Satz zu bilden",
+            "correctSentence": "Der Satz ist richtig!",
+            "tryAgain": "Der Satz ist noch nicht ganz richtig. Versuch es nochmal!",
+            "useAllWords": "Benutze alle Wörter, um den richtigen Satz zu bilden.",
+            "removeLastWord": "Letztes Wort entfernen",
+            "backspace": "Zurück",
+            "clearAll": "Alles löschen",
+            "clear": "Löschen",
+            "correctAnswer": "Richtige Antwort"
         },
         "connectorInsert": {
             "instruction": "Wähle den passenden Connector",

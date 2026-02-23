@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { isValidSubjectVerbAgreement, findSubjectVerbColumns } from '@/core/data';
 import type { SentenceBuilderContent } from '@/types/exercise';
 
 interface Props {
@@ -24,6 +25,9 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
     const builtSentence = selections.filter(Boolean).join(' ');
     const allSelected = selections.every((s) => s !== null);
 
+    // Detect subject and verb columns for grammatical validation
+    const subjectVerbColumns = useMemo(() => findSubjectVerbColumns(content.columns), [content.columns]);
+
     const handleSelectWord = (colIndex: number, word: string) => {
         if (showSolution) return;
         const next = [...selections];
@@ -34,9 +38,32 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
     const handleCheck = () => {
         if (!allSelected) return;
         const sentence = selections.join(' ').trim();
-        const isCorrect = content.targetSentences.some(
+
+        // First check if the sentence matches any target sentence exactly
+        const matchesTarget = content.targetSentences.some(
             (target) => target.toLowerCase() === sentence.toLowerCase(),
         );
+
+        let isCorrect = matchesTarget;
+
+        // If no exact match, check grammatical validity for subject-verb agreement
+        if (!isCorrect && subjectVerbColumns) {
+            const subject = selections[subjectVerbColumns.subjectIdx];
+            const verb = selections[subjectVerbColumns.verbIdx];
+
+            if (subject && verb) {
+                // Check if subject-verb agreement is valid
+                const hasValidAgreement = isValidSubjectVerbAgreement(subject, verb);
+
+                // For a valid sentence, we need:
+                // 1. Valid subject-verb agreement
+                // 2. All columns filled (already checked by allSelected)
+                if (hasValidAgreement) {
+                    isCorrect = true;
+                }
+            }
+        }
+
         setWasCorrect(isCorrect);
         onSubmit(isCorrect);
     };

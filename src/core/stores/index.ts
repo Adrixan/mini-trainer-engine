@@ -50,10 +50,12 @@ export {
     selectAnswer,
     selectIsSessionActive,
     selectCorrectRate,
+    MAX_ATTEMPTS_PER_EXERCISE,
 } from './exerciseStore';
 
 export type {
     ExerciseAnswer,
     SessionStats,
     ExerciseSessionState,
+    SubmitAnswerResult,
 } from './exerciseStore';

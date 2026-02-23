@@ -4,7 +4,7 @@
  * Provides core calculations for stars, levels, streaks, and progress.
  */
 
-import type { StarRating, Streak, LevelProgress } from '@/types/gamification';
+import type { Streak, LevelProgress, Score } from '@/types/gamification';
 import type { UserProfile } from '@/types/profile';
 import type { BadgeDefinition } from '@/types/config';
 
@@ -14,12 +14,17 @@ import type { BadgeDefinition } from '@/types/config';
 
 /**
  * Calculate star rating from number of attempts.
- * 1st attempt = 3 stars, 2nd attempt = 2 stars, 3rd+ attempt = 1 star.
+ * 1st attempt = 3 stars, 2nd attempt = 2 stars, 3rd attempt = 1 star.
+ * Returns 0 if attempts exceed maxAttempts or are invalid (<= 0).
  * 
- * @param attempts - Number of attempts made
- * @returns Star rating (1-3)
+ * @param attempts - Number of attempts made (must be positive)
+ * @param maxAttempts - Maximum allowed attempts (default: 3)
+ * @returns Score (0-3), where 0 means exceeded max attempts or invalid input
  */
-export function calculateStars(attempts: number): StarRating {
+export function calculateStars(attempts: number, maxAttempts: number = 3): Score {
+    // Invalid attempts (0 or negative) should not award stars
+    if (attempts <= 0) return 0;
+    if (attempts > maxAttempts) return 0;
     if (attempts === 1) return 3;
     if (attempts === 2) return 2;
     return 1;
@@ -394,4 +399,150 @@ export function getMotivationalMessage(stars: number, streak?: number): string {
  */
 export function calculateMaxStars(exerciseCount: number, maxStarsPerExercise: number = 3): number {
     return exerciseCount * maxStarsPerExercise;
+}
+
+// ============================================================================
+// Theme Level Progression
+// ============================================================================
+
+/**
+ * Maximum level per theme.
+ */
+export const MAX_THEME_LEVEL = 4;
+
+/**
+ * Calculate the highest level that is accessible across ALL themes.
+ * 
+ * This represents the "global progression level" - the highest level number
+ * that a user can access in every theme. It's determined by the theme with
+ * the lowest completed level (the "weakest link" principle).
+ * 
+ * The global level determines what new level the user can unlock next.
+ * To unlock level N globally, the user must have completed level N-1 in ALL themes.
+ * 
+ * @example
+ * // User has completed:
+ * // - Theme A: level 2
+ * // - Theme B: level 1
+ * // - Theme C: level 3
+ * // Global level = min(2, 1, 3) + 1 = 2
+ * // User can access level 2 in all themes, but level 3 only in themes A and C
+ * 
+ * @param themeLevels - Record of theme ID to highest completed level (0 if not started)
+ * @param allThemeIds - All available theme IDs
+ * @returns Global accessible level (1-4), where 1 means "can access level 1 in all themes"
+ */
+export function calculateGlobalLevel(
+    themeLevels: Record<string, number>,
+    allThemeIds: string[]
+): number {
+    if (allThemeIds.length === 0) return 1;
+
+    // Get the minimum completed level across all themes
+    const minCompletedLevel = Math.min(
+        ...allThemeIds.map(themeId => themeLevels[themeId] ?? 0)
+    );
+
+    // Global level is min completed + 1 (capped at MAX_THEME_LEVEL)
+    return Math.min(minCompletedLevel + 1, MAX_THEME_LEVEL);
+}
+
+/**
+ * Calculate the highest accessible level for a specific theme.
+ * A user can access level N in a theme if:
+ * - N is 1 (always accessible)
+ * - N <= their completed level for that theme + 1
+ * - N <= global level
+ * 
+ * @param themeId - The theme to check
+ * @param themeLevels - Record of theme ID to highest completed level
+ * @param allThemeIds - All available theme IDs
+ * @returns Highest accessible level for this theme (1-4)
+ */
+export function getAccessibleLevelForTheme(
+    themeId: string,
+    themeLevels: Record<string, number>,
+    allThemeIds: string[]
+): number {
+    const globalLevel = calculateGlobalLevel(themeLevels, allThemeIds);
+    const themeCompletedLevel = themeLevels[themeId] ?? 0;
+
+    // Can access up to completed + 1, but not more than global level
+    return Math.min(themeCompletedLevel + 1, globalLevel);
+}
+
+/**
+ * Check if a specific level in a theme is accessible.
+ * 
+ * @param themeId - The theme to check
+ * @param level - The level to check (1-4)
+ * @param themeLevels - Record of theme ID to highest completed level
+ * @param allThemeIds - All available theme IDs
+ * @returns Whether the level is accessible
+ */
+export function isLevelAccessible(
+    themeId: string,
+    level: number,
+    themeLevels: Record<string, number>,
+    allThemeIds: string[]
+): boolean {
+    const accessibleLevel = getAccessibleLevelForTheme(themeId, themeLevels, allThemeIds);
+    return level <= accessibleLevel;
+}
+
+/**
+ * Check if a level is completed for a theme.
+ * 
+ * @param themeId - The theme to check
+ * @param level - The level to check (1-4)
+ * @param themeLevels - Record of theme ID to highest completed level
+ * @returns Whether the level is completed
+ */
+export function isLevelCompleted(
+    themeId: string,
+    level: number,
+    themeLevels: Record<string, number>
+): boolean {
+    const completedLevel = themeLevels[themeId] ?? 0;
+    return level <= completedLevel;
+}
+
+/**
+ * Get a description of what needs to be done to unlock the next global level.
+ * 
+ * @param themeLevels - Record of theme ID to highest completed level
+ * @param allThemeIds - All available theme IDs
+ * @param themeNames - Record of theme ID to theme name for display
+ * @returns Description of requirements or null if at max level
+ */
+export function getNextLevelRequirement(
+    themeLevels: Record<string, number>,
+    allThemeIds: string[],
+    themeNames: Record<string, string>
+): string | null {
+    const globalLevel = calculateGlobalLevel(themeLevels, allThemeIds);
+
+    if (globalLevel >= MAX_THEME_LEVEL) {
+        return null; // Already at max level
+    }
+
+    // Find themes that need level N completed to unlock level N+1
+    const targetLevel = globalLevel;
+    const incompleteThemes = allThemeIds.filter(
+        themeId => (themeLevels[themeId] ?? 0) < targetLevel
+    );
+
+    if (incompleteThemes.length === 0) {
+        return null;
+    }
+
+    const themeNamesList = incompleteThemes
+        .map(id => themeNames[id] ?? id)
+        .join(', ');
+
+    if (targetLevel === 1) {
+        return `Complete Level 1 in all themes to unlock Level 2. Missing: ${themeNamesList}`;
+    }
+
+    return `Complete Level ${targetLevel} in: ${themeNamesList} to unlock Level ${globalLevel + 1}`;
 }

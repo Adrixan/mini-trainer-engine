@@ -6,6 +6,9 @@
  */
 
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
+
+/** Debug flag for storage logging - only enabled in development */
+const DEBUG_STORAGE = import.meta.env.DEV;
 import type {
     UserProfile,
     ExerciseResult,
@@ -91,8 +94,14 @@ let dbPromise: Promise<IDBPDatabase<TrainerDB>> | null = null;
  */
 function getDB(): Promise<IDBPDatabase<TrainerDB>> {
     if (!dbPromise) {
+        if (DEBUG_STORAGE) {
+            console.log('[Storage] Opening IndexedDB connection:', { DB_NAME, DB_VERSION });
+        }
         dbPromise = openDB<TrainerDB>(DB_NAME, DB_VERSION, {
             upgrade(db, oldVersion) {
+                if (DEBUG_STORAGE) {
+                    console.log('[Storage] IndexedDB upgrade:', { oldVersion, newVersion: DB_VERSION });
+                }
                 // Version 1: Initial schema
                 if (oldVersion < 1) {
                     // User profiles store
@@ -148,6 +157,9 @@ export function resetDBConnection(): void {
  * @param profile - The profile to save
  */
 export async function saveProfile(profile: UserProfile): Promise<void> {
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] saveProfile called:', { id: profile.id, nickname: profile.nickname });
+    }
     const db = await getDB();
     const storedProfile = {
         ...profile,
@@ -155,6 +167,9 @@ export async function saveProfile(profile: UserProfile): Promise<void> {
         _updatedAt: new Date().toISOString(),
     };
     await db.put('profiles', storedProfile);
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] ✅ Profile saved to IndexedDB:', profile.id);
+    }
 }
 
 /**
@@ -164,12 +179,23 @@ export async function saveProfile(profile: UserProfile): Promise<void> {
  * @returns The profile, or undefined if not found
  */
 export async function getProfile(id: string): Promise<UserProfile | undefined> {
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] getProfile called:', { id });
+    }
     const db = await getDB();
     const stored = await db.get('profiles', id);
-    if (!stored) return undefined;
+    if (!stored) {
+        if (DEBUG_STORAGE) {
+            console.log('[Storage] ⚠️ Profile not found:', { id });
+        }
+        return undefined;
+    }
 
     // Remove internal fields before returning
     const { _version, _updatedAt, ...profile } = stored;
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] ✅ Profile loaded from IndexedDB:', { id, nickname: profile.nickname });
+    }
     return profile;
 }
 
@@ -179,8 +205,14 @@ export async function getProfile(id: string): Promise<UserProfile | undefined> {
  * @returns Array of all profiles
  */
 export async function getAllProfiles(): Promise<UserProfile[]> {
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] getAllProfiles called');
+    }
     const db = await getDB();
     const stored = await db.getAll('profiles');
+    if (DEBUG_STORAGE) {
+        console.log('[Storage] ✅ Loaded profiles from IndexedDB:', { count: stored.length });
+    }
     return stored.map(({ _version, _updatedAt, ...profile }) => profile);
 }
 
@@ -265,6 +297,38 @@ export async function getAllExerciseResults(): Promise<ExerciseResult[]> {
     const db = await getDB();
     const stored = await db.getAll('results');
     return stored.map(({ _version, ...result }) => result);
+}
+
+/**
+ * Check if an exercise has been previously completed by a profile.
+ * 
+ * @param profileId - The profile ID
+ * @param exerciseId - The exercise ID
+ * @returns True if the exercise was previously completed correctly
+ */
+export async function hasExerciseBeenCompleted(
+    profileId: string,
+    exerciseId: string
+): Promise<boolean> {
+    const results = await getExerciseResultsByProfile(profileId);
+    return results.some(result =>
+        result.exerciseId === exerciseId && result.correct
+    );
+}
+
+/**
+ * Get all completed exercise IDs for a profile.
+ * 
+ * @param profileId - The profile ID
+ * @returns Set of completed exercise IDs
+ */
+export async function getCompletedExerciseIds(profileId: string): Promise<Set<string>> {
+    const results = await getExerciseResultsByProfile(profileId);
+    return new Set(
+        results
+            .filter(result => result.correct)
+            .map(result => result.exerciseId)
+    );
 }
 
 /**

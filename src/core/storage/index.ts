@@ -39,6 +39,8 @@ export {
     getExerciseResultsByTheme,
     getAllExerciseResults,
     clearAllExerciseResults,
+    hasExerciseBeenCompleted,
+    getCompletedExerciseIds,
 
     // Observation record operations
     saveObservationRecord,

@@ -187,8 +187,8 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
                 </div>
             )}
 
-            {/* Hints */}
-            {hints && hints.length > 0 && !showSolution && (
+            {/* Hints - only show after 3 failed attempts (when showSolution is true) */}
+            {hints && hints.length > 0 && showSolution && (
                 <HintButton hints={hints} />
             )}
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ExerciseResult, StarRating } from '@/types/exercise';
+import type { ExerciseResult } from '@/types/exercise';
 
 /**
  * Statistics for a single exercise type.
@@ -156,15 +156,8 @@ function calculateGroupStats(
     return stats;
 }
 
-/**
- * Calculate star rating from attempts.
- * 1 attempt = 3 stars, 2 attempts = 2 stars, 3+ attempts = 1 star.
- */
-export function calculateStarRating(attempts: number, _maxAttempts: number = 3): StarRating {
-    if (attempts === 1) return 3;
-    if (attempts === 2) return 2;
-    return 1;
-}
+// Re-export calculateStars from gamification.ts for backward compatibility
+export { calculateStars as calculateStarRating } from '@core/utils/gamification';
 
 /**
  * Get star display string.

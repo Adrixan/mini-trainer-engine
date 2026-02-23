@@ -126,6 +126,8 @@ export interface WritingContent {
     starterWords: string[];
     /** Minimum required length for the response */
     minLength: number;
+    /** The correct sentence that must be formed (required for strict mode) */
+    correctSentence?: string;
 }
 
 /**

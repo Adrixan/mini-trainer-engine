@@ -57,7 +57,12 @@
         "progress": "Exercise {{current}} of {{total}}",
         "finish": "Finish",
         "unknownType": "Unknown exercise type",
-        "contactSupport": "Please contact support if this problem persists."
+        "contactSupport": "Please contact support if this problem persists.",
+        "attemptsRemaining": "{{count}} attempts remaining",
+        "levelFailed": "Level Failed",
+        "levelFailedDescription": "You've used all 3 attempts. You need to restart from the beginning.",
+        "restartLevel": "Restart Level",
+        "exitLevel": "Exit"
     },
     "profile": {
         "title": "Profile",
@@ -272,7 +277,17 @@
             "placeholder": "Write your text here...",
             "wordCount": "{{count}} words",
             "minLength": "At least {{count}} words",
-            "tooShort": "Your text is still too short. Write at least {{count}} words."
+            "tooShort": "Your text is still too short. Write at least {{count}} words.",
+            "yourSentence": "Your sentence",
+            "clickWordsPrompt": "Click on the words to form a sentence",
+            "correctSentence": "The sentence is correct!",
+            "tryAgain": "The sentence is not quite right. Try again!",
+            "useAllWords": "Use all the words to form the correct sentence.",
+            "removeLastWord": "Remove last word",
+            "backspace": "Back",
+            "clearAll": "Clear all",
+            "clear": "Clear",
+            "correctAnswer": "Correct answer"
         },
         "connectorInsert": {
             "instruction": "Select the appropriate connector",

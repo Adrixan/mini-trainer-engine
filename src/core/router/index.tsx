@@ -7,55 +7,63 @@
  */
 
 import { createHashRouter, type RouteObject } from 'react-router-dom';
+import { Layout } from '@core/components/layout';
 
 /**
  * Route definitions for the application.
  * These routes map to the main pages of the trainer.
+ * All routes are wrapped in the Layout component which provides
+ * the persistent GameHeader with gamification stats.
  */
 export const routes: RouteObject[] = [
     {
-        path: '/',
-        lazy: () => import('@/pages/HomePage').then((m) => ({ Component: m.HomePage })),
-    },
-    {
-        path: '/themes',
-        lazy: () => import('@/pages/ThemeSelectPage').then((m) => ({ Component: m.ThemeSelectPage })),
-    },
-    {
-        path: '/themes/:themeId/levels',
-        lazy: () => import('@/pages/LevelSelectPage').then((m) => ({ Component: m.LevelSelectPage })),
-    },
-    {
-        path: '/exercise/:themeId',
-        lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
-    },
-    {
-        path: '/exercise/:themeId/level/:level',
-        lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
-    },
-    {
-        path: '/exercise/:themeId/:areaId',
-        lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
-    },
-    {
-        path: '/profile',
-        lazy: () => import('@/pages/ProfilePage').then((m) => ({ Component: m.ProfilePage })),
-    },
-    {
-        path: '/settings',
-        lazy: () => import('@/pages/SettingsPage').then((m) => ({ Component: m.SettingsPage })),
-    },
-    {
-        path: '/results',
-        lazy: () => import('@/pages/ResultsPage').then((m) => ({ Component: m.ResultsPage })),
-    },
-    {
-        path: '/teacher/pin',
-        lazy: () => import('@/pages/TeacherPinPage').then((m) => ({ Component: m.TeacherPinPage })),
-    },
-    {
-        path: '/teacher/dashboard',
-        lazy: () => import('@/pages/TeacherDashboardPage').then((m) => ({ Component: m.TeacherDashboardPage })),
+        element: <Layout />,
+        children: [
+            {
+                path: '/',
+                lazy: () => import('@/pages/HomePage').then((m) => ({ Component: m.HomePage })),
+            },
+            {
+                path: '/themes',
+                lazy: () => import('@/pages/ThemeSelectPage').then((m) => ({ Component: m.ThemeSelectPage })),
+            },
+            {
+                path: '/themes/:themeId/levels',
+                lazy: () => import('@/pages/LevelSelectPage').then((m) => ({ Component: m.LevelSelectPage })),
+            },
+            {
+                path: '/exercise/:themeId',
+                lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
+            },
+            {
+                path: '/exercise/:themeId/level/:level',
+                lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
+            },
+            {
+                path: '/exercise/:themeId/:areaId',
+                lazy: () => import('@/pages/ExercisePage').then((m) => ({ Component: m.ExercisePage })),
+            },
+            {
+                path: '/profile',
+                lazy: () => import('@/pages/ProfilePage').then((m) => ({ Component: m.ProfilePage })),
+            },
+            {
+                path: '/settings',
+                lazy: () => import('@/pages/SettingsPage').then((m) => ({ Component: m.SettingsPage })),
+            },
+            {
+                path: '/results',
+                lazy: () => import('@/pages/ResultsPage').then((m) => ({ Component: m.ResultsPage })),
+            },
+            {
+                path: '/teacher/pin',
+                lazy: () => import('@/pages/TeacherPinPage').then((m) => ({ Component: m.TeacherPinPage })),
+            },
+            {
+                path: '/teacher/dashboard',
+                lazy: () => import('@/pages/TeacherDashboardPage').then((m) => ({ Component: m.TeacherDashboardPage })),
+            },
+        ],
     },
 ];
 

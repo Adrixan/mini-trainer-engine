@@ -2,20 +2,20 @@
  * Level selection page component.
  * 
  * Displays difficulty levels for a selected theme.
- * Shows locked/unlocked states based on vocabulary level.
+ * Shows locked/unlocked states based on global level progression.
  */
 
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useEffect, useState, useCallback } from 'react';
 import { LevelCard } from '@core/components/level';
-import { useTheme, useExercisesByTheme } from '@core/config';
+import { useTheme, useExercisesByTheme, useThemes } from '@core/config';
 import {
     useProfileStore,
     selectActiveProfile,
-    selectTotalStars,
+    selectThemeLevels,
 } from '@core/stores/profileStore';
-import { levelFromStars } from '@core/utils/gamification';
+import { isLevelAccessible, getAccessibleLevelForTheme } from '@core/utils/gamification';
 import { ROUTES } from '@core/router';
 import { getExerciseResultsByTheme } from '@core/storage';
 import type { Exercise, ExerciseResult } from '@/types';
@@ -78,13 +78,15 @@ export function LevelSelectPage() {
     // Get theme and exercises
     const theme = useTheme(themeId ?? '');
     const exercises = useExercisesByTheme(themeId ?? '');
+    const allThemes = useThemes();
 
     // Get profile data
     const profile = useProfileStore(selectActiveProfile);
-    const totalStars = useProfileStore(selectTotalStars);
+    const themeLevels = useProfileStore(selectThemeLevels);
 
-    // Calculate vocabulary level
-    const vocabularyLevel = levelFromStars(totalStars);
+    // Calculate accessible level for this theme
+    const allThemeIds = allThemes.map(t => t.id);
+    const accessibleLevel = getAccessibleLevelForTheme(themeId ?? '', themeLevels, allThemeIds);
 
     // Get completed exercise IDs from IndexedDB
     const [completedExerciseIds, setCompletedExerciseIds] = useState<Set<string>>(new Set());
@@ -129,6 +131,10 @@ export function LevelSelectPage() {
 
     // Handle level card click
     const handleLevelClick = (level: number) => {
+        // Check if level is accessible
+        if (!isLevelAccessible(themeId ?? '', level, themeLevels, allThemeIds)) {
+            return; // Don't navigate if level is locked
+        }
         // Navigate to exercise page with level filter
         navigate(ROUTES.EXERCISE_WITH_LEVEL(themeId ?? '', level));
     };
@@ -245,7 +251,7 @@ export function LevelSelectPage() {
                 aria-label={t('level.levelList', 'Available difficulty levels')}
             >
                 {[1, 2, 3, 4].map((level) => {
-                    const isUnlocked = level <= vocabularyLevel;
+                    const isUnlocked = level <= accessibleLevel;
                     const exerciseCount = exerciseCounts[level] ?? 0;
                     const completedCount = completedCounts[level] ?? 0;
                     const isStarted = completedCount > 0;

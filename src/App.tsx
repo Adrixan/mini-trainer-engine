@@ -10,7 +10,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@core/stores';
-import { SkipToContent, LiveRegionProvider } from '@core/components/accessibility';
+import { SkipToContent } from '@core/components/accessibility';
 
 /**
  * App component that sets up global application state.
@@ -19,7 +19,6 @@ import { SkipToContent, LiveRegionProvider } from '@core/components/accessibilit
  * - Syncing accessibility settings to DOM attributes
  * - Setting up document direction for i18n
  * - Providing skip-to-content link for keyboard navigation
- * - Providing live region for screen reader announcements
  */
 function App() {
     const { i18n } = useTranslation();
@@ -48,11 +47,8 @@ function App() {
 
     // This component provides accessibility wrappers but doesn't render main content
     // Routing is handled by the router in @core/router
-    return (
-        <LiveRegionProvider>
-            <SkipToContent />
-        </LiveRegionProvider>
-    );
+    // LiveRegionProvider is now in the Layout component
+    return <SkipToContent />;
 }
 
 export default App;

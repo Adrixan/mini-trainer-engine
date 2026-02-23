@@ -69,6 +69,8 @@ export interface UserProfile {
     lastActiveDate: string;
     /** Progress in each theme */
     themeProgress: Record<ThemeId, ThemeProgress>;
+    /** Highest completed level per theme (1-4). Tracks which level user has finished per theme. */
+    themeLevels?: Record<ThemeId, number>;
     /** Badges earned by this user */
     badges: Badge[];
 }
