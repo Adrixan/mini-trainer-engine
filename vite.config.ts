@@ -8,8 +8,9 @@ import { fileURLToPath, URL } from 'node:url';
  * When the app is opened directly via file:// protocol (e.g., from a local file),
  * ES modules don't work properly. This plugin transforms the built HTML to:
  * - Strip type="module" from script tags
- * - Remove crossorigin attributes
+ * - Remove crossorigin attributes (with or without quotes)
  * - Convert scripts to defer instead of async
+ * - Convert absolute paths to relative paths for file:// protocol
  * 
  * This enables the app to work when opened as a local file.
  */
@@ -24,8 +25,16 @@ function fileProtocolPlugin(): Plugin {
             // Transform script tags for file:// protocol compatibility
             return html
                 .replace(/type="module"\s*/g, '')
-                .replace(/crossorigin\s*=\s*"[^"]*"\s*/g, '')
-                .replace(/<script\s+src=/g, '<script defer src=');
+                // Remove crossorigin with quotes: crossorigin="anonymous"
+                .replace(/crossorigin\s*=\s*"[^"]*"\s*/g, ' ')
+                // Remove crossorigin without quotes: crossorigin
+                .replace(/\s+crossorigin(?=\s|>)/g, '')
+                .replace(/<script\s+src=/g, '<script defer src=')
+                // Convert absolute paths to relative paths for file:// protocol
+                .replace(/href="\/([^"]*)"/g, 'href="./$1"')
+                .replace(/src="\/([^"]*)"/g, 'src="./$1"')
+                // Fix service worker path in inline script
+                .replace(/register\('\/sw\.js'\)/g, "register('./sw.js')");
         },
     };
 }
