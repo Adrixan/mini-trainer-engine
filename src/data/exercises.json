@@ -14785,7 +14785,7 @@
         {
             "id": "health-practical-001",
             "type": "sentence-builder",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "health",
             "level": 3,
             "difficulty": 2,
@@ -14834,7 +14834,7 @@
         {
             "id": "health-practical-002",
             "type": "word-order",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "health",
             "level": 3,
             "difficulty": 2,
@@ -15014,7 +15014,7 @@
         {
             "id": "culture-practical-001",
             "type": "sentence-builder",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "culture",
             "level": 4,
             "difficulty": 3,
@@ -15273,7 +15273,7 @@
         {
             "id": "work-practical-001",
             "type": "sentence-builder",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "work",
             "level": 3,
             "difficulty": 2,
@@ -15322,7 +15322,7 @@
         {
             "id": "work-practical-002",
             "type": "word-order",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "work",
             "level": 3,
             "difficulty": 2,
@@ -15504,7 +15504,7 @@
         {
             "id": "technology-practical-001",
             "type": "sentence-builder",
-            "areaId": "communication",
+            "areaId": "muendliche-sprachhandlung",
             "themeId": "technology",
             "level": 4,
             "difficulty": 3,
