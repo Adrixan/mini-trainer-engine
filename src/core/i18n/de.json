@@ -30,7 +30,38 @@
         "startExercises": "Übungen starten",
         "progress": "Fortschritt",
         "settings": "Einstellungen",
-        "results": "Ergebnisse"
+        "results": "Ergebnisse",
+        "loadGame": "Spiel laden",
+        "loadWarning": "Warnung",
+        "loadWarningMessage": "Dein aktueller Spielstand wird überschrieben. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "selectFile": "Spielstand-Datei auswählen",
+        "fileHelp": "Wähle eine zuvor exportierte Spielstand-Datei (.json)",
+        "fileValid": "Gültige Spielstand-Datei ausgewählt",
+        "loadConfirm": "Spiel laden"
+    },
+    "progress": {
+        "title": "Fortschritt",
+        "noProfile": "Bitte erstelle ein Profil, um deinen Fortschritt zu sehen.",
+        "totalExercises": "Übungen",
+        "totalStars": "Sterne",
+        "accuracy": "Genauigkeit",
+        "timeSpent": "Zeit",
+        "graphTab": "Fortschrittsgrafik",
+        "tableTab": "Übungsergebnisse",
+        "last30Days": "Letzte 30 Tage",
+        "exercisesCompleted": "Abgeschlossene Übungen",
+        "noData": "Noch keine Übungsdaten. Beginne zu üben, um deinen Fortschritt zu sehen!",
+        "noResults": "Noch keine Ergebnisse. Schließe einige Übungen ab, um deine Ergebnisse zu sehen!",
+        "table": {
+            "theme": "Thema",
+            "area": "Bereich",
+            "level": "Level",
+            "result": "Ergebnis",
+            "stars": "Sterne",
+            "attempts": "Versuche",
+            "time": "Zeit",
+            "date": "Datum"
+        }
     },
     "stats": {
         "stars": "Sterne",

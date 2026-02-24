@@ -277,6 +277,7 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
             set({
                 answer: finalAnswer,
                 isCompleted: true,
+                showSolution: true, // Show solution when correct so exercise displays solution state
                 stats: newStats,
                 results: [...state.results, result],
                 completedExerciseIds: newCompletedIds,

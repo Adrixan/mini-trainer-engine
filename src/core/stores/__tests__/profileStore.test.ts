@@ -26,7 +26,20 @@ const localStorageMock = (() => {
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-// Mock saveProfile
+// Mock profilePersistence module
+vi.mock('../profilePersistence', () => ({
+    exportSaveGame: vi.fn().mockResolvedValue({
+        version: 2,
+        savedAt: '2024-01-15T12:00:00Z',
+        profile: { id: 'test', nickname: 'Test' },
+        exerciseResults: [],
+    }),
+    importSaveGame: vi.fn().mockResolvedValue({ success: true }),
+    syncProfileToIndexedDB: vi.fn().mockResolvedValue(undefined),
+    SAVE_GAME_VERSION: 2,
+}));
+
+// Mock @core/storage (used by profilePersistence)
 vi.mock('@core/storage', () => ({
     saveProfile: vi.fn().mockResolvedValue(undefined),
     clearAllExerciseResults: vi.fn().mockResolvedValue(undefined),

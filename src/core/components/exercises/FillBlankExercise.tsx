@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
+import { inputFieldStyles } from '@core/utils/exerciseStyles';
 import type { FillBlankContent } from '@/types/exercise';
 
 interface Props {
@@ -99,15 +101,24 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
         }
     };
 
-    const inputBorderClass = showSolution
-        ? isAnswerExactCorrect(answer)
-            ? 'border-green-400 bg-green-50 text-green-800'
-            : 'border-red-400 bg-red-50 text-red-700'
-        : caseWrong
-            ? 'border-amber-400 bg-amber-50 text-amber-800'
-            : followUpActive
-                ? 'border-green-400 bg-green-50 text-green-800'
-                : 'border-primary/40 focus:border-primary bg-primary/5';
+    // Determine input field state for styling
+    const getInputState = (): 'neutral' | 'correct' | 'incorrect' | 'focused' => {
+        if (showSolution) {
+            return isAnswerExactCorrect(answer) ? 'correct' : 'incorrect';
+        }
+        if (caseWrong) {
+            return 'focused'; // Amber/warning state - use focused with custom override
+        }
+        if (followUpActive) {
+            return 'correct';
+        }
+        return 'neutral';
+    };
+
+    // Custom styling for case-wrong state (amber)
+    const caseWrongOverride = caseWrong && !showSolution && !followUpActive
+        ? 'border-amber-400 bg-amber-50 text-amber-800'
+        : '';
 
     return (
         <div className="space-y-4">
@@ -124,7 +135,7 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                             disabled={showSolution || followUpActive}
                             autoFocus
                             aria-label={t('exercises.fillBlank.answerLabel')}
-                            className={`inline-block w-40 px-3 py-1.5 text-base font-bold border-b-4 rounded-lg text-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${inputBorderClass}`}
+                            className={`inline-block w-40 px-3 py-1.5 text-base font-bold border-b-4 rounded-lg text-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${inputFieldStyles({ state: getInputState() })} ${caseWrongOverride}`}
                             placeholder="..."
                         />
                     </span>
@@ -133,17 +144,12 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
             </div>
 
             {/* Case-wrong feedback */}
-            {caseWrong && !showSolution && !followUpActive && (
-                <div
-                    className="bg-amber-50 border border-amber-200 rounded-xl p-3 animate-bounceIn"
-                    role="alert"
-                    aria-live="polite"
-                >
-                    <p className="text-sm font-semibold text-amber-800">
-                        {t('exercises.fillBlank.wrongCase')}
-                    </p>
-                </div>
-            )}
+            <ExerciseFeedback
+                show={caseWrong && !showSolution && !followUpActive}
+                type="warning"
+                message={t('exercises.fillBlank.wrongCase')}
+                className="animate-bounceIn"
+            />
 
             {/* Follow-up: write the number as a word */}
             {followUpActive && !showSolution && (
@@ -162,20 +168,17 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                             onChange={(e) => setFollowUpAnswer(e.target.value)}
                             onKeyDown={handleFollowUpKeyDown}
                             aria-label={t('exercises.fillBlank.followUpLabel')}
-                            className={`flex-1 px-3 py-1.5 text-base font-bold border-b-4 rounded-lg text-center transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 ${followUpWrong
-                                ? 'border-red-400 bg-red-50 text-red-700'
-                                : 'border-amber-300 focus:border-amber-500 bg-white'
-                                }`}
+                            className={`flex-1 px-3 py-1.5 text-base font-bold border-b-4 rounded-lg text-center transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 ${inputFieldStyles({ state: followUpWrong ? 'incorrect' : 'neutral' })}`}
                             placeholder={content.numericWordForm ? '...' : ''}
                         />
                     </div>
                     {followUpWrong && (
-                        <p
-                            className="text-xs text-red-600 font-medium animate-bounceIn"
-                            role="alert"
-                        >
-                            {t('exercises.incorrect')}
-                        </p>
+                        <ExerciseFeedback
+                            show={true}
+                            type="error"
+                            message={t('exercises.incorrect')}
+                            className="animate-bounceIn"
+                        />
                     )}
                     <button
                         onClick={handleFollowUpCheck}
@@ -188,20 +191,13 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
             )}
 
             {/* Show correct answer when wrong */}
-            {showSolution && !isAnswerExactCorrect(answer) && (
-                <div
-                    className="bg-green-50 border border-green-200 rounded-xl p-3 animate-fadeIn"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <span className="text-xs text-green-600 font-semibold">
-                        {t('exercises.fillBlank.correctAnswer')}
-                    </span>
-                    <span className="ml-2 text-base font-bold text-green-800">
-                        {content.correctAnswer}
-                    </span>
-                </div>
-            )}
+            <ExerciseFeedback
+                show={showSolution && !isAnswerExactCorrect(answer)}
+                type="success"
+                message={t('exercises.fillBlank.correctAnswer')}
+                explanation={content.correctAnswer}
+                className="animate-fadeIn"
+            />
 
             {/* Hint button + hint text */}
             {hints && hints.length > 0 && !showSolution && !followUpActive && (

@@ -14,6 +14,10 @@ export type { ExerciseHeaderProps } from './ExerciseHeader';
 export { ExerciseFooter } from './ExerciseFooter';
 export type { ExerciseFooterProps } from './ExerciseFooter';
 
+// Exercise feedback component
+export { ExerciseFeedback } from './ExerciseFeedback';
+export type { ExerciseFeedbackProps, FeedbackType } from './ExerciseFeedback';
+
 // Exercise type components
 export { MultipleChoiceExercise } from './MultipleChoiceExercise';
 export { FillBlankExercise } from './FillBlankExercise';

@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { optionStyles, type OptionVariant } from '@core/utils/exerciseStyles';
+import { useKeyboardNavigation } from '@core/hooks/useKeyboardNavigation';
+import { ExerciseFeedback } from './ExerciseFeedback';
 import { HintButton } from './HintButton';
 import type { MultipleChoiceContent } from '@/types/exercise';
 
@@ -13,48 +16,50 @@ interface Props {
 /**
  * Multiple choice exercise: select one correct answer from options.
  * Supports keyboard navigation and screen readers.
+ * 
+ * The onSubmit callback is called with the correctness of the answer.
+ * The parent component handles attempt tracking and solution display.
  */
 export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution }: Props) {
     const { t } = useTranslation();
     const [selected, setSelected] = useState<number | null>(null);
 
-    const handleSelect = (index: number) => {
+    const handleSelect = useCallback((index: number) => {
         if (showSolution) return;
         setSelected(index);
-    };
+    }, [showSolution]);
 
-    const handleCheck = () => {
+    const handleCheck = useCallback(() => {
         if (selected === null) return;
+        // Submit the answer - parent handles attempts and feedback
         onSubmit(selected === content.correctIndex);
-    };
+    }, [selected, content.correctIndex, onSubmit]);
 
-    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-        if (showSolution) return;
+    // Keyboard navigation hook
+    const { focusedIndex, containerRef } = useKeyboardNavigation({
+        items: content.options,
+        onSelect: (_option, index) => handleSelect(index),
+        enabled: !showSolution,
+        wrap: true,
+    });
 
-        switch (e.key) {
-            case 'Enter':
-            case ' ':
-                e.preventDefault();
-                handleSelect(index);
-                break;
-            case 'ArrowDown':
-            case 'ArrowRight':
-                e.preventDefault();
-                if (index < content.options.length - 1) {
-                    const nextButton = document.getElementById(`option-${index + 1}`);
-                    nextButton?.focus();
-                }
-                break;
-            case 'ArrowUp':
-            case 'ArrowLeft':
-                e.preventDefault();
-                if (index > 0) {
-                    const prevButton = document.getElementById(`option-${index - 1}`);
-                    prevButton?.focus();
-                }
-                break;
+    // Determine option variant for styling
+    const getOptionVariant = (idx: number): OptionVariant => {
+        const isSelected = selected === idx;
+        const isCorrectOption = idx === content.correctIndex;
+
+        if (showSolution) {
+            if (isCorrectOption) return 'correct';
+            if (isSelected && !isCorrectOption) return 'incorrect';
+            return 'disabled';
         }
+        if (isSelected) return 'selected';
+        return 'default';
     };
+
+    // Determine if answer is correct for feedback
+    const answerIsCorrect = selected === content.correctIndex;
+    const showFeedback = showSolution && selected !== null;
 
     return (
         <div className="space-y-4">
@@ -68,35 +73,28 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
             </div>
 
             {/* Options */}
-            <div className="space-y-2" role="radiogroup" aria-label={t('exercises.multipleChoice.options')}>
+            <div
+                ref={containerRef}
+                className="space-y-2"
+                role="radiogroup"
+                aria-label={t('exercises.multipleChoice.options')}
+                tabIndex={-1}
+            >
                 {content.options.map((option, idx) => {
                     const isSelected = selected === idx;
-                    const isCorrect = idx === content.correctIndex;
-
-                    let style = 'bg-white border-2 border-gray-200 text-gray-700';
-                    if (showSolution) {
-                        if (isCorrect) {
-                            style = 'bg-green-50 border-2 border-green-400 text-green-800';
-                        } else if (isSelected && !isCorrect) {
-                            style = 'bg-red-50 border-2 border-red-400 text-red-700';
-                        } else {
-                            style = 'bg-gray-50 border-2 border-gray-200 text-gray-400';
-                        }
-                    } else if (isSelected) {
-                        style = 'bg-primary/10 border-2 border-primary text-primary';
-                    }
+                    const isCorrectOption = idx === content.correctIndex;
+                    const variant = getOptionVariant(idx);
+                    const isFocused = focusedIndex === idx;
 
                     return (
                         <button
                             key={idx}
-                            id={`option-${idx}`}
                             onClick={() => handleSelect(idx)}
-                            onKeyDown={(e) => handleKeyDown(e, idx)}
                             disabled={showSolution}
                             role="radio"
                             aria-checked={isSelected}
                             aria-label={`${String.fromCharCode(65 + idx)}: ${option}`}
-                            className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${style} ${showSolution ? 'cursor-default' : 'hover:border-primary/50'}`}
+                            className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${optionStyles({ variant })} ${showSolution ? 'cursor-default' : 'hover:border-primary/50'} ${isFocused ? 'ring-2 ring-primary ring-offset-2' : ''}`}
                         >
                             <span className="inline-flex items-center gap-3">
                                 <span
@@ -106,17 +104,24 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
                                     {String.fromCharCode(65 + idx)}
                                 </span>
                                 <span>{option}</span>
-                                {showSolution && isCorrect && (
-                                    <span className="ml-auto" aria-label={t('exercises.correct')}>✓</span>
+                                {showSolution && isCorrectOption && (
+                                    <span className="ml-auto" aria-label={t('exercises.correct')}>&#10003;</span>
                                 )}
-                                {showSolution && isSelected && !isCorrect && (
-                                    <span className="ml-auto" aria-label={t('exercises.incorrect')}>✗</span>
+                                {showSolution && isSelected && !isCorrectOption && (
+                                    <span className="ml-auto" aria-label={t('exercises.incorrect')}>&#10007;</span>
                                 )}
                             </span>
                         </button>
                     );
                 })}
             </div>
+
+            {/* Feedback */}
+            <ExerciseFeedback
+                show={showFeedback}
+                type={answerIsCorrect ? 'success' : 'error'}
+                message={answerIsCorrect ? t('exercises.correct') : t('exercises.incorrect')}
+            />
 
             {/* Hints */}
             {hints && hints.length > 0 && !showSolution && (

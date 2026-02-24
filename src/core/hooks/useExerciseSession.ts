@@ -1,8 +1,15 @@
 /**
  * Custom hook for managing exercise sessions.
  * 
- * Encapsulates session lifecycle, answer submission, gamification processing,
- * and navigation logic for exercise pages.
+ * Encapsulates session lifecycle, answer submission, and navigation logic.
+ * 
+ * Responsibilities:
+ * - Session lifecycle management (start/end)
+ * - Exercise state and progression
+ * - Answer submission handling
+ * - Navigation between exercises
+ * 
+ * Note: Gamification (stars, levels, badges) is handled by useGamification hook.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -11,11 +18,9 @@ import { ROUTES } from '@core/router';
 import { useExerciseStore } from '@core/stores';
 import { useProfileStore } from '@core/stores/profileStore';
 import { useAppStore } from '@core/stores/appStore';
-import { useGamification } from '@core/hooks/useGamification';
-import { playCorrect, playIncorrect, playLevelUp, playBadge } from '@core/utils/sounds';
+import { playCorrect, playIncorrect } from '@core/utils/sounds';
 import { saveExerciseResult } from '@core/storage';
 import { selectCurrentExercise, selectProgress, selectIsSessionActive } from '@core/stores/exerciseStore';
-import type { Badge } from '@/types/profile';
 import type { Exercise, ExerciseResult } from '@/types';
 
 // ============================================================================
@@ -50,16 +55,6 @@ export interface UseExerciseSessionReturn {
     handleNext: () => void;
     /** Handle session finish */
     handleFinish: () => void;
-    /** Level up celebration state */
-    levelUpLevel: number | null;
-    /** Badges earned during session */
-    earnedBadges: Badge[];
-    /** Current badge index for display */
-    currentBadgeIndex: number;
-    /** Dismiss current badge */
-    dismissBadge: () => void;
-    /** Clear level up state */
-    clearLevelUp: () => void;
 }
 
 // ============================================================================
@@ -103,19 +98,12 @@ export function useExerciseSession({
     const currentThemeId = useExerciseStore((s) => s.themeId);
     const currentLevel = useExerciseStore((s) => s.currentExercise?.level);
 
-    // Profile and gamification
+    // Profile and app settings
     const activeProfile = useProfileStore((s) => s.activeProfile);
-    const incrementStreak = useProfileStore((s) => s.incrementStreak);
     const soundEnabled = useAppStore((s) => s.settings.soundEnabled);
-    const { processExerciseCompletion } = useGamification();
 
     // Track answer state for current attempt
     const [hasAnswered, setHasAnswered] = useState(false);
-
-    // Track gamification notifications
-    const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
-    const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
-    const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
 
     // Track level for session reset detection
     const levelRef = useRef<number | undefined>(undefined);
@@ -153,14 +141,12 @@ export function useExerciseSession({
         }
     }, [incrementAttempts, submitAnswer, soundEnabled]);
 
-    // Handle next exercise with gamification processing
+    // Handle next exercise - saves result to storage
     const handleNext = useCallback(() => {
-        // Process gamification if we have an answer
+        // Save exercise result to IndexedDB for progress tracking
         if (answer && activeProfile && currentExercise) {
             const attempts = answer.attempts;
-            const result = processExerciseCompletion(attempts);
 
-            // Save exercise result to IndexedDB for progress tracking
             const exerciseResult: ExerciseResult = {
                 id: `result-${currentExercise.id}-${Date.now()}`,
                 childProfileId: activeProfile.id,
@@ -169,34 +155,18 @@ export function useExerciseSession({
                 themeId: currentExercise.themeId,
                 level: currentExercise.level,
                 correct: answer.correct,
-                score: result.starsEarned,
+                score: answer.correct ? (attempts === 1 ? 3 : attempts === 2 ? 2 : 1) : 0,
                 attempts: attempts,
                 timeSpentSeconds: answer.timeSpentSeconds,
                 completedAt: new Date().toISOString(),
             };
             saveExerciseResult(exerciseResult).catch(console.error);
-
-            // Check for level up
-            if (result.leveledUp && result.newLevel) {
-                setLevelUpLevel(result.newLevel);
-                playLevelUp(soundEnabled);
-            }
-
-            // Check for new badges
-            if (result.newBadges.length > 0) {
-                setEarnedBadges(result.newBadges);
-                setCurrentBadgeIndex(0);
-                playBadge(soundEnabled);
-            }
-
-            // Update streak
-            incrementStreak();
         }
 
         nextExercise();
         setHasAnswered(false);
         setShowSolution(false);
-    }, [answer, activeProfile, currentExercise, processExerciseCompletion, incrementStreak, nextExercise, setShowSolution, soundEnabled]);
+    }, [answer, activeProfile, currentExercise, nextExercise, setShowSolution]);
 
     // Handle show solution
     const handleShowSolution = useCallback(() => {
@@ -213,22 +183,6 @@ export function useExerciseSession({
         }
     }, [navigate, themeId]);
 
-    // Dismiss current badge
-    const dismissBadge = useCallback(() => {
-        const nextIndex = currentBadgeIndex + 1;
-        if (nextIndex >= earnedBadges.length) {
-            setEarnedBadges([]);
-            setCurrentBadgeIndex(0);
-        } else {
-            setCurrentBadgeIndex(nextIndex);
-        }
-    }, [currentBadgeIndex, earnedBadges.length]);
-
-    // Clear level up state
-    const clearLevelUp = useCallback(() => {
-        setLevelUpLevel(null);
-    }, []);
-
     return {
         currentExercise,
         progress,
@@ -239,10 +193,5 @@ export function useExerciseSession({
         handleShowSolution,
         handleNext,
         handleFinish,
-        levelUpLevel,
-        earnedBadges,
-        currentBadgeIndex,
-        dismissBadge,
-        clearLevelUp,
     };
 }

@@ -5,6 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import type { DragData } from './useCategorySort';
 
 // ============================================================================
 // Types
@@ -23,18 +24,18 @@ export interface DraggableItemProps {
     isCorrect?: boolean | null;
     /** Source identifier ('pool' or category index) */
     source: 'pool' | number;
-    /** Callback when drag starts */
-    onDragStart?: (e: React.DragEvent, item: string, source: 'pool' | number) => void | undefined;
+    /** Callback when drag starts - receives DragData object */
+    onDragStart?: (e: React.DragEvent, data: DragData) => void;
     /** Callback when drag ends */
-    onDragEnd?: (() => void) | undefined;
-    /** Callback when touch starts */
-    onTouchStart?: (e: React.TouchEvent, item: string, source: 'pool' | number) => void | undefined;
+    onDragEnd?: () => void;
+    /** Callback when touch starts - receives DragData object */
+    onTouchStart?: (e: React.TouchEvent, data: DragData) => void;
     /** Callback when touch moves */
-    onTouchMove?: ((e: React.TouchEvent) => void) | undefined;
+    onTouchMove?: (e: React.TouchEvent) => void;
     /** Callback when touch ends */
-    onTouchEnd?: (() => void) | undefined;
+    onTouchEnd?: () => void;
     /** Callback when item is tapped/clicked */
-    onTap?: ((item: string) => void) | undefined;
+    onTap?: (item: string) => void;
 }
 
 // ============================================================================
@@ -95,12 +96,12 @@ export function DraggableItem({
 
     const handleDragStart = (e: React.DragEvent) => {
         if (disabled) return;
-        onDragStart?.(e, item, source);
+        onDragStart?.(e, { item, source });
     };
 
     const handleTouchStart = (e: React.TouchEvent) => {
         if (disabled) return;
-        onTouchStart?.(e, item, source);
+        onTouchStart?.(e, { item, source });
     };
 
     const handleClick = () => {

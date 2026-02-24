@@ -15,13 +15,13 @@ import {
     selectActiveProfile,
     downloadSaveGame,
     parseSaveGameFile,
-} from '@core/stores/profileStore';
+} from '@core/stores';
+import type { SaveGamePayload } from '@core/stores';
 import {
     useAppStore,
     selectSoundEnabled,
 } from '@core/stores/appStore';
 import { playCorrect } from '@core/utils/sounds';
-import type { SaveGamePayload } from '@core/stores/profileStore';
 
 /**
  * Settings page component.

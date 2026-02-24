@@ -5,14 +5,16 @@
  * Shows profile creation if no active profile, otherwise shows dashboard.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@core/router';
 import { useProfileStore, selectActiveProfile, selectTotalStars, selectCurrentStreak, selectThemeLevels } from '@core/stores/profileStore';
 import { ProfileCreation } from '@core/components/profile';
+import { Modal } from '@core/components/ui';
 import { useThemes } from '@core/config';
 import { calculateGlobalLevel } from '@core/utils/gamification';
+import { parseSaveGameFile, validateSaveGame, type SaveGamePayload } from '@core/stores/profilePersistence';
 
 /**
  * Get fire emoji count based on streak length.
@@ -35,7 +37,13 @@ function Dashboard() {
     const currentStreak = useProfileStore(selectCurrentStreak);
     const themeLevels = useProfileStore(selectThemeLevels);
     const exportSaveGame = useProfileStore((state) => state.exportSaveGame);
+    const importSaveGameFromStore = useProfileStore((state) => state.importSaveGame);
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showLoadDialog, setShowLoadDialog] = useState(false);
+    const [loadError, setLoadError] = useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Get all themes for global level calculation
     const themes = useThemes();
@@ -57,6 +65,78 @@ function Dashboard() {
             }
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    /**
+     * Open the load game dialog.
+     */
+    const handleOpenLoadDialog = () => {
+        setLoadError(null);
+        setSelectedFile(null);
+        setShowLoadDialog(true);
+    };
+
+    /**
+     * Handle file selection from input.
+     */
+    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setLoadError(null);
+        setIsLoading(true);
+
+        try {
+            // Parse and validate the file
+            const data = await parseSaveGameFile(file);
+            const validation = validateSaveGame(data);
+
+            if (!validation.valid) {
+                setLoadError(validation.error ?? t('profile.invalidFile', 'Invalid file'));
+                return;
+            }
+
+            setSelectedFile(file);
+        } catch (error) {
+            setLoadError(
+                error instanceof Error
+                    ? error.message
+                    : t('profile.invalidFile', 'Invalid file')
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    /**
+     * Confirm and execute the game load.
+     */
+    const handleConfirmLoad = async () => {
+        if (!selectedFile) return;
+
+        setIsLoading(true);
+        setLoadError(null);
+
+        try {
+            const data = await parseSaveGameFile(selectedFile);
+            const result = await importSaveGameFromStore(data as SaveGamePayload);
+
+            if (result.success) {
+                setShowLoadDialog(false);
+                // Reload the page to reflect the new profile
+                window.location.reload();
+            } else {
+                setLoadError(result.error ?? t('profile.importFailed', 'Import failed'));
+            }
+        } catch (error) {
+            setLoadError(
+                error instanceof Error
+                    ? error.message
+                    : t('profile.importFailed', 'Import failed')
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -124,27 +204,19 @@ function Dashboard() {
                     {t('dashboard.startExercises', 'Start Exercises')}
                 </button>
 
+                <button
+                    onClick={() => navigate(ROUTES.PROGRESS)}
+                    className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                >
+                    {t('dashboard.progress', 'Progress')}
+                </button>
+
                 <div className="grid grid-cols-2 gap-3">
-                    <button
-                        onClick={() => navigate(ROUTES.PROFILE)}
-                        className="py-3 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    >
-                        {t('dashboard.progress', 'Progress')}
-                    </button>
                     <button
                         onClick={() => navigate(ROUTES.SETTINGS)}
                         className="py-3 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
                         {t('dashboard.settings', 'Settings')}
-                    </button>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                    <button
-                        onClick={() => navigate(ROUTES.RESULTS)}
-                        className="py-3 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    >
-                        {t('dashboard.results', 'Results')}
                     </button>
                     <button
                         onClick={handleSaveGame}
@@ -154,7 +226,99 @@ function Dashboard() {
                         {isSaving ? t('settings.saving', 'Saving...') : t('settings.saveButton', 'Save Game')}
                     </button>
                 </div>
+
+                {/* Load Game Button */}
+                <button
+                    onClick={handleOpenLoadDialog}
+                    className="w-full py-3 px-4 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
+                >
+                    {t('dashboard.loadGame', 'Load Game')}
+                </button>
             </div>
+
+            {/* Load Game Modal */}
+            <Modal
+                isOpen={showLoadDialog}
+                onClose={() => setShowLoadDialog(false)}
+                title={t('dashboard.loadGame', 'Load Game')}
+                size="md"
+            >
+                <div className="space-y-4">
+                    {/* Warning Message */}
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                        <div className="flex items-start gap-3">
+                            <span className="text-2xl" role="img" aria-label={t('common.warning', 'Warning')}>
+                                ⚠️
+                            </span>
+                            <div>
+                                <p className="font-medium text-amber-800">
+                                    {t('dashboard.loadWarning', 'Warning')}
+                                </p>
+                                <p className="text-sm text-amber-700 mt-1">
+                                    {t('dashboard.loadWarningMessage', 'Your current game state will be overwritten. This action cannot be undone.')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* File Input */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            {t('dashboard.selectFile', 'Select save file')}
+                        </label>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".json"
+                            onChange={handleFileSelect}
+                            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-describedby="file-help"
+                        />
+                        <p id="file-help" className="mt-1 text-xs text-gray-500">
+                            {t('dashboard.fileHelp', 'Select a previously exported save game file (.json)')}
+                        </p>
+                    </div>
+
+                    {/* Selected File Info */}
+                    {selectedFile && (
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-600">✓</span>
+                                <span className="text-sm text-green-700">
+                                    {t('dashboard.fileValid', 'Valid save file selected')}: {selectedFile.name}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Error Message */}
+                    {loadError && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                            <div className="flex items-center gap-2">
+                                <span className="text-red-600">✗</span>
+                                <span className="text-sm text-red-700">{loadError}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-2">
+                        <button
+                            onClick={() => setShowLoadDialog(false)}
+                            className="flex-1 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        >
+                            {t('common.cancel', 'Cancel')}
+                        </button>
+                        <button
+                            onClick={handleConfirmLoad}
+                            disabled={!selectedFile || isLoading}
+                            className="flex-1 py-2 px-4 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? t('common.loading', 'Loading...') : t('dashboard.loadConfirm', 'Load Game')}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

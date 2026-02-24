@@ -4,9 +4,11 @@
  * Consolidates shared behavior across exercise types including:
  * - Answer state management
  * - Attempt tracking
- * - Hint progression
+ * - Hint progression and management
  * - Solution display
  * - Star calculation
+ * - Feedback state management
+ * - Keyboard submission handling
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
@@ -19,6 +21,25 @@ export { calculateStars as calculateStarsFromAttempts } from '@core/utils/gamifi
 // ============================================================================
 // Types
 // ============================================================================
+
+/**
+ * Feedback type for exercise responses.
+ */
+export type FeedbackType = 'success' | 'error' | 'warning' | 'info';
+
+/**
+ * Feedback state for exercise responses.
+ */
+export interface FeedbackState {
+    /** Whether feedback is visible */
+    visible: boolean;
+    /** Type of feedback */
+    type: FeedbackType;
+    /** Feedback message */
+    message: string;
+    /** Optional explanation */
+    explanation?: string | undefined;
+}
 
 /**
  * Options for the useExerciseLogic hook.
@@ -34,6 +55,16 @@ export interface UseExerciseLogicOptions<T = unknown> {
     onComplete?: (result: ExerciseResult) => void;
     /** Whether to auto-focus on completion */
     autoFocusOnComplete?: boolean;
+    /** Array of hints to show progressively */
+    hints?: string[];
+    /** Callback when a hint is shown */
+    onHintShown?: (hintIndex: number) => void;
+    /** Custom messages for feedback */
+    feedbackMessages?: {
+        correct?: string;
+        incorrect?: string;
+        tryAgain?: string;
+    };
 }
 
 /**
@@ -48,6 +79,8 @@ export interface ExerciseResult {
     stars: Score;
     /** Time spent in seconds */
     timeSpentSeconds: number;
+    /** Number of hints used */
+    hintsUsed: number;
 }
 
 /**
@@ -70,18 +103,56 @@ export interface UseExerciseLogicReturn<T> {
     canRetry: boolean;
     /** Star rating earned (null if not completed) */
     stars: Score | null;
+    // ========================================
+    // Hint Management
+    // ========================================
     /** Current hint index (-1 = no hint shown) */
     currentHintIndex: number;
     /** Show the next hint */
     showNextHint: () => void;
     /** Total number of hints available */
     totalHints: number;
+    /** Number of hints used so far */
+    hintsUsed: number;
+    /** Whether there are more hints available */
+    hasMoreHints: boolean;
+    /** Current hint text (null if no hint shown) */
+    currentHint: string | null;
+    /** All shown hints so far */
+    shownHints: string[];
+    // ========================================
+    // Feedback Management
+    // ========================================
+    /** Current feedback state */
+    feedback: FeedbackState;
+    /** Set custom feedback */
+    setFeedback: (feedback: FeedbackState) => void;
+    /** Clear feedback */
+    clearFeedback: () => void;
+    /** Show success feedback */
+    showSuccess: (message?: string, explanation?: string) => void;
+    /** Show error feedback */
+    showError: (message?: string, explanation?: string) => void;
+    /** Show warning feedback */
+    showWarning: (message: string, explanation?: string) => void;
+    // ========================================
+    // Keyboard Handling
+    // ========================================
+    /** Handle key down for submission (Enter key) */
+    handleKeyDown: (e: React.KeyboardEvent) => void;
+    // ========================================
+    // Utility
+    // ========================================
     /** Reset the exercise state */
     reset: () => void;
     /** Time spent so far in seconds */
     timeSpentSeconds: number;
     /** Container ref for focus management */
     containerRef: React.RefObject<HTMLDivElement | null>;
+    /** Whether this is the first attempt */
+    isFirstAttempt: boolean;
+    /** Whether the exercise is complete */
+    isComplete: boolean;
 }
 
 // ============================================================================
@@ -119,19 +190,26 @@ export function calculateStarsFromTime(seconds: number): StarRating {
  *     stars,
  *     currentHintIndex,
  *     showNextHint,
+ *     feedback,
+ *     handleKeyDown,
  *   } = useExerciseLogic({
  *     maxAttempts: 3,
  *     validateAnswer: (ans) => ans === correctAnswer,
  *     onComplete: (result) => onSubmit(result),
+ *     hints: ['Hint 1', 'Hint 2'],
  *   });
  * 
  *   return (
- *     <div>
- *       <input value={answer} onChange={(e) => setAnswer(e.target.value)} />
+ *     <div ref={containerRef}>
+ *       <input 
+ *         value={answer ?? ''} 
+ *         onChange={(e) => setAnswer(e.target.value)} 
+ *         onKeyDown={handleKeyDown}
+ *       />
  *       <button onClick={submitAnswer} disabled={!answer || showSolution}>
  *         Check
  *       </button>
- *       {showSolution && <p>{isCorrect ? 'Correct!' : 'Try again!'}</p>}
+ *       {feedback.visible && <ExerciseFeedback {...feedback} />}
  *     </div>
  *   );
  * }
@@ -145,26 +223,58 @@ export function useExerciseLogic<T = unknown>(
         validateAnswer,
         onComplete,
         autoFocusOnComplete = true,
+        hints = [],
+        onHintShown,
+        feedbackMessages = {},
     } = options;
 
-    // State
+    // ========================================
+    // Core State
+    // ========================================
     const [answer, setAnswer] = useState<T | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [showSolution, setShowSolution] = useState(false);
     const [attempts, setAttempts] = useState(0);
-    const [currentHintIndex, setCurrentHintIndex] = useState(-1);
     const [startTime] = useState(() => Date.now());
     const [timeSpentSeconds, setTimeSpentSeconds] = useState(0);
 
+    // ========================================
+    // Hint State
+    // ========================================
+    const [currentHintIndex, setCurrentHintIndex] = useState(-1);
+
+    // ========================================
+    // Feedback State
+    // ========================================
+    const [feedback, setFeedbackState] = useState<FeedbackState>({
+        visible: false,
+        type: 'info',
+        message: '',
+    });
+
+    // ========================================
     // Refs
+    // ========================================
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Calculate derived state
+    // ========================================
+    // Derived State
+    // ========================================
     const canRetry = !showSolution && attempts < maxAttempts;
     const stars = showSolution && isCorrect ? calculateStars(attempts) : null;
-    const totalHints = 0; // Will be set by the component using hints
+    const totalHints = hints.length;
+    const hintsUsed = currentHintIndex + 1;
+    const hasMoreHints = currentHintIndex < totalHints - 1;
+    const currentHint = currentHintIndex >= 0 && currentHintIndex < totalHints
+        ? hints[currentHintIndex] ?? null
+        : null;
+    const shownHints = hints.slice(0, currentHintIndex + 1);
+    const isFirstAttempt = attempts === 0;
+    const isComplete = showSolution;
 
-    // Update time spent
+    // ========================================
+    // Time Tracking
+    // ========================================
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeSpentSeconds(Math.floor((Date.now() - startTime) / 1000));
@@ -172,7 +282,9 @@ export function useExerciseLogic<T = unknown>(
         return () => clearInterval(interval);
     }, [startTime]);
 
-    // Focus management on completion
+    // ========================================
+    // Focus Management
+    // ========================================
     useEffect(() => {
         if (showSolution && autoFocusOnComplete && containerRef.current) {
             const focusable = containerRef.current.querySelector<HTMLElement>(
@@ -182,7 +294,47 @@ export function useExerciseLogic<T = unknown>(
         }
     }, [showSolution, autoFocusOnComplete]);
 
-    // Submit answer
+    // ========================================
+    // Feedback Helpers
+    // ========================================
+    const setFeedback = useCallback((newFeedback: FeedbackState) => {
+        setFeedbackState(newFeedback);
+    }, []);
+
+    const clearFeedback = useCallback(() => {
+        setFeedbackState({ visible: false, type: 'info', message: '' });
+    }, []);
+
+    const showSuccess = useCallback((message?: string, explanation?: string) => {
+        setFeedbackState({
+            visible: true,
+            type: 'success',
+            message: message ?? feedbackMessages.correct ?? 'Correct!',
+            explanation,
+        });
+    }, [feedbackMessages.correct]);
+
+    const showError = useCallback((message?: string, explanation?: string) => {
+        setFeedbackState({
+            visible: true,
+            type: 'error',
+            message: message ?? feedbackMessages.incorrect ?? 'Incorrect',
+            explanation,
+        });
+    }, [feedbackMessages.incorrect]);
+
+    const showWarning = useCallback((message: string, explanation?: string) => {
+        setFeedbackState({
+            visible: true,
+            type: 'warning',
+            message,
+            explanation,
+        });
+    }, []);
+
+    // ========================================
+    // Submit Answer
+    // ========================================
     const handleSubmitAnswer = useCallback(() => {
         if (answer === null || showSolution) return;
 
@@ -194,41 +346,79 @@ export function useExerciseLogic<T = unknown>(
 
         if (correct) {
             setShowSolution(true);
+            showSuccess();
             const result: ExerciseResult = {
                 correct: true,
                 attempts: newAttempts,
                 stars: calculateStars(newAttempts),
                 timeSpentSeconds: Math.floor((Date.now() - startTime) / 1000),
+                hintsUsed,
             };
             onComplete?.(result);
         } else if (newAttempts >= maxAttempts) {
             setShowSolution(true);
+            showError();
             const result: ExerciseResult = {
                 correct: false,
                 attempts: newAttempts,
                 stars: 0,
                 timeSpentSeconds: Math.floor((Date.now() - startTime) / 1000),
+                hintsUsed,
             };
             onComplete?.(result);
+        } else {
+            // Can retry - show try again message
+            showError(feedbackMessages.tryAgain ?? 'Try again!');
         }
-        // If incorrect but can retry, just update attempts
-    }, [answer, showSolution, attempts, validateAnswer, maxAttempts, startTime, onComplete]);
+    }, [
+        answer,
+        showSolution,
+        attempts,
+        validateAnswer,
+        maxAttempts,
+        startTime,
+        onComplete,
+        hintsUsed,
+        showSuccess,
+        showError,
+        feedbackMessages.tryAgain
+    ]);
 
-    // Show next hint
+    // ========================================
+    // Keyboard Handling
+    // ========================================
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && answer !== null && !showSolution) {
+            e.preventDefault();
+            handleSubmitAnswer();
+        }
+    }, [answer, showSolution, handleSubmitAnswer]);
+
+    // ========================================
+    // Hint Management
+    // ========================================
     const handleShowNextHint = useCallback(() => {
-        setCurrentHintIndex((prev) => prev + 1);
-    }, []);
+        if (currentHintIndex < totalHints - 1) {
+            const newIndex = currentHintIndex + 1;
+            setCurrentHintIndex(newIndex);
+            onHintShown?.(newIndex);
+        }
+    }, [currentHintIndex, totalHints, onHintShown]);
 
-    // Reset state
+    // ========================================
+    // Reset
+    // ========================================
     const reset = useCallback(() => {
         setAnswer(null);
         setIsCorrect(null);
         setShowSolution(false);
         setAttempts(0);
         setCurrentHintIndex(-1);
-    }, []);
+        clearFeedback();
+    }, [clearFeedback]);
 
     return {
+        // Core
         answer,
         setAnswer,
         submitAnswer: handleSubmitAnswer,
@@ -237,12 +427,29 @@ export function useExerciseLogic<T = unknown>(
         attempts,
         canRetry,
         stars,
+        // Hints
         currentHintIndex,
         showNextHint: handleShowNextHint,
         totalHints,
+        hintsUsed,
+        hasMoreHints,
+        currentHint,
+        shownHints,
+        // Feedback
+        feedback,
+        setFeedback,
+        clearFeedback,
+        showSuccess,
+        showError,
+        showWarning,
+        // Keyboard
+        handleKeyDown,
+        // Utility
         reset,
         timeSpentSeconds,
         containerRef,
+        isFirstAttempt,
+        isComplete,
     };
 }
 

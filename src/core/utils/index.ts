@@ -157,3 +157,18 @@ export {
     type ProgressVariants,
     type ProgressBarVariants,
 } from './cva';
+
+// Exercise styles
+export {
+    solutionStateStyles,
+    feedbackStyles,
+    optionStyles,
+    inputFieldStyles,
+    hintButtonStyles,
+    getSolutionClasses,
+    getFeedbackClasses,
+    type SolutionState,
+    type FeedbackType,
+    type OptionVariant,
+    type InputFieldState,
+} from './exerciseStyles';

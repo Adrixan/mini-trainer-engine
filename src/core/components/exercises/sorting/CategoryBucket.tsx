@@ -6,6 +6,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { DraggableItem } from './DraggableItem';
+import type { DragData } from './useCategorySort';
 
 // ============================================================================
 // Types
@@ -23,19 +24,19 @@ export interface CategoryBucketProps {
     /** Whether the exercise is in solution mode */
     showSolution?: boolean;
     /** Results for items in this bucket (item -> correct) */
-    results?: Record<string, boolean>;
+    results?: Record<string, boolean> | undefined;
     /** Correct category for each item (for solution display) */
     correctMap?: Map<string, number>;
     /** Currently selected item from pool */
     selectedItem?: string | null;
     /** Currently dragging item */
     draggingItem?: string | null;
-    /** Callback when drag starts */
-    onDragStart?: (e: React.DragEvent, item: string, source: 'pool' | number) => void;
+    /** Callback when drag starts - receives DragData object */
+    onDragStart?: (e: React.DragEvent, data: DragData) => void;
     /** Callback when drag ends */
     onDragEnd?: () => void;
-    /** Callback when touch starts */
-    onTouchStart?: (e: React.TouchEvent, item: string, source: 'pool' | number) => void;
+    /** Callback when touch starts - receives DragData object */
+    onTouchStart?: (e: React.TouchEvent, data: DragData) => void;
     /** Callback when touch moves */
     onTouchMove?: (e: React.TouchEvent) => void;
     /** Callback when touch ends */

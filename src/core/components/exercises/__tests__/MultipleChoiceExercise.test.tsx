@@ -7,6 +7,21 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MultipleChoiceExercise } from '../MultipleChoiceExercise';
 import type { MultipleChoiceContent } from '@/types/exercise';
 
+// Mock window.matchMedia for useAccessibility hook
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+    })),
+});
+
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({
@@ -321,7 +336,7 @@ describe('MultipleChoiceExercise', () => {
     });
 
     describe('keyboard navigation', () => {
-        it('selects option on Enter key', () => {
+        it('selects option on Enter key via container navigation', () => {
             render(
                 <MultipleChoiceExercise
                     content={defaultContent}
@@ -330,13 +345,21 @@ describe('MultipleChoiceExercise', () => {
                 />
             );
 
-            const parisOption = screen.getByRole('radio', { name: /B: Paris/ });
-            fireEvent.keyDown(parisOption, { key: 'Enter' });
+            // The keyboard navigation works at the container level
+            const radiogroup = screen.getByRole('radiogroup');
 
+            // Navigate to second option (Paris) using ArrowDown
+            fireEvent.keyDown(radiogroup, { key: 'ArrowDown' });
+            fireEvent.keyDown(radiogroup, { key: 'ArrowDown' });
+
+            // Select with Enter
+            fireEvent.keyDown(radiogroup, { key: 'Enter' });
+
+            const parisOption = screen.getByRole('radio', { name: /B: Paris/ });
             expect(parisOption).toHaveAttribute('aria-checked', 'true');
         });
 
-        it('selects option on Space key', () => {
+        it('selects option on Space key via container navigation', () => {
             render(
                 <MultipleChoiceExercise
                     content={defaultContent}
@@ -345,9 +368,17 @@ describe('MultipleChoiceExercise', () => {
                 />
             );
 
-            const parisOption = screen.getByRole('radio', { name: /B: Paris/ });
-            fireEvent.keyDown(parisOption, { key: ' ' });
+            // The keyboard navigation works at the container level
+            const radiogroup = screen.getByRole('radiogroup');
 
+            // Navigate to second option (Paris) using ArrowDown
+            fireEvent.keyDown(radiogroup, { key: 'ArrowDown' });
+            fireEvent.keyDown(radiogroup, { key: 'ArrowDown' });
+
+            // Select with Space
+            fireEvent.keyDown(radiogroup, { key: ' ' });
+
+            const parisOption = screen.getByRole('radio', { name: /B: Paris/ });
             expect(parisOption).toHaveAttribute('aria-checked', 'true');
         });
 
@@ -363,7 +394,9 @@ describe('MultipleChoiceExercise', () => {
             const parisOption = screen.getByRole('radio', { name: /B: Paris/ });
             const initialState = parisOption.getAttribute('aria-checked');
 
-            fireEvent.keyDown(parisOption, { key: 'Enter' });
+            const radiogroup = screen.getByRole('radiogroup');
+            fireEvent.keyDown(radiogroup, { key: 'ArrowDown' });
+            fireEvent.keyDown(radiogroup, { key: 'Enter' });
 
             // State should not change
             expect(parisOption).toHaveAttribute('aria-checked', initialState);

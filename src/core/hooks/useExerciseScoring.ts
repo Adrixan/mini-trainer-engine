@@ -156,9 +156,6 @@ function calculateGroupStats(
     return stats;
 }
 
-// Re-export calculateStars from gamification.ts for backward compatibility
-export { calculateStars as calculateStarRating } from '@core/utils/gamification';
-
 /**
  * Get star display string.
  */

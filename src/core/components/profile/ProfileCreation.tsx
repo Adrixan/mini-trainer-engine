@@ -12,7 +12,7 @@ import {
     AVATAR_EMOJIS,
     MAX_NICKNAME_LENGTH,
     parseSaveGameFile,
-} from '@core/stores/profileStore';
+} from '@core/stores';
 
 /**
  * Profile creation component.

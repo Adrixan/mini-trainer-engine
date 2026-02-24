@@ -29,7 +29,38 @@
         "startExercises": "Start Exercises",
         "progress": "Progress",
         "settings": "Settings",
-        "results": "Results"
+        "results": "Results",
+        "loadGame": "Load Game",
+        "loadWarning": "Warning",
+        "loadWarningMessage": "Your current game state will be overwritten. This action cannot be undone.",
+        "selectFile": "Select save file",
+        "fileHelp": "Select a previously exported save game file (.json)",
+        "fileValid": "Valid save file selected",
+        "loadConfirm": "Load Game"
+    },
+    "progress": {
+        "title": "Progress",
+        "noProfile": "Please create a profile to view your progress.",
+        "totalExercises": "Exercises",
+        "totalStars": "Stars",
+        "accuracy": "Accuracy",
+        "timeSpent": "Time",
+        "graphTab": "Progress Graph",
+        "tableTab": "Exercise Results",
+        "last30Days": "Last 30 Days",
+        "exercisesCompleted": "Exercises Completed",
+        "noData": "No exercise data yet. Start practicing to see your progress!",
+        "noResults": "No exercise results yet. Complete some exercises to see your results!",
+        "table": {
+            "theme": "Theme",
+            "area": "Area",
+            "level": "Level",
+            "result": "Result",
+            "stars": "Stars",
+            "attempts": "Attempts",
+            "time": "Time",
+            "date": "Date"
+        }
     },
     "stats": {
         "stars": "Stars",

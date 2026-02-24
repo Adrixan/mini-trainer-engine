@@ -3,18 +3,25 @@
  * 
  * Manages the active user profile and provides actions for
  * updating progress, streaks, and achievements.
+ * 
+ * Persistence logic is handled by profilePersistence module.
  */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { saveProfile, clearAllExerciseResults, saveExerciseResult, getAllExerciseResults } from '@core/storage';
+import {
+    exportSaveGame,
+    importSaveGame,
+    syncProfileToIndexedDB,
+    type SaveGamePayload,
+    type ImportResult,
+} from './profilePersistence';
 import type {
     UserProfile,
     Badge,
     ObservationAreaId,
     ThemeId,
     ThemeProgress,
-    ExerciseResult,
 } from '@/types';
 
 // ============================================================================
@@ -44,27 +51,12 @@ export const AVATAR_EMOJIS = [
  */
 export const MAX_NICKNAME_LENGTH = 20;
 
-/**
- * Current save game version.
- */
-export const SAVE_GAME_VERSION = 2;
-
 /** Debug flag for storage logging - only enabled in development */
 const DEBUG_STORAGE = import.meta.env.DEV;
 
 // ============================================================================
 // Types
 // ============================================================================
-
-/**
- * Save game payload for export/import.
- */
-export interface SaveGamePayload {
-    version: 2;
-    savedAt: string;
-    profile: UserProfile;
-    exerciseResults: ExerciseResult[];
-}
 
 /**
  * Profile state interface.
@@ -101,7 +93,7 @@ export interface ProfileState {
     /** Export profile and results as JSON */
     exportSaveGame: () => Promise<SaveGamePayload | null>;
     /** Import profile and results from JSON */
-    importSaveGame: (data: SaveGamePayload) => Promise<{ success: boolean; error?: string }>;
+    importSaveGame: (data: SaveGamePayload) => Promise<ImportResult>;
 }
 
 // ============================================================================
@@ -300,55 +292,11 @@ export const useProfileStore = create<ProfileState>()(
             exportSaveGame: async () => {
                 const { activeProfile } = get();
                 if (!activeProfile) return null;
-
-                const exerciseResults = await getAllExerciseResults();
-
-                return {
-                    version: SAVE_GAME_VERSION,
-                    savedAt: new Date().toISOString(),
-                    profile: activeProfile,
-                    exerciseResults,
-                };
+                return exportSaveGame(activeProfile);
             },
 
             importSaveGame: async (data) => {
-                try {
-                    // Validate version
-                    if (data.version !== SAVE_GAME_VERSION) {
-                        return {
-                            success: false,
-                            error: `Invalid save game version. Expected ${SAVE_GAME_VERSION}, got ${data.version}`,
-                        };
-                    }
-
-                    // Validate required fields
-                    if (!data.profile || !data.profile.id || !data.profile.nickname) {
-                        return {
-                            success: false,
-                            error: 'Invalid save game: missing profile data',
-                        };
-                    }
-
-                    // Clear existing data
-                    await clearAllExerciseResults();
-
-                    // Import exercise results
-                    if (data.exerciseResults && Array.isArray(data.exerciseResults)) {
-                        for (const result of data.exerciseResults) {
-                            await saveExerciseResult(result);
-                        }
-                    }
-
-                    // Set the imported profile as active
-                    set({ activeProfile: data.profile });
-
-                    return { success: true };
-                } catch (error) {
-                    return {
-                        success: false,
-                        error: `Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                    };
-                }
+                return importSaveGame(data, (profile) => set({ activeProfile: profile }));
             },
         }),
         {
@@ -379,23 +327,9 @@ export const useProfileStore = create<ProfileState>()(
  */
 useProfileStore.subscribe((state, prevState) => {
     if (state.activeProfile && state.activeProfile !== prevState.activeProfile) {
-        if (DEBUG_STORAGE) {
-            console.log('[Storage] Syncing profile to IndexedDB:', {
-                profileId: state.activeProfile.id,
-                nickname: state.activeProfile.nickname,
-                totalStars: state.activeProfile.totalStars,
-                themeLevels: state.activeProfile.themeLevels,
-            });
-        }
-        saveProfile(state.activeProfile)
-            .then(() => {
-                if (DEBUG_STORAGE) {
-                    console.log('[Storage] ✅ Profile saved to IndexedDB successfully');
-                }
-            })
-            .catch((error) => {
-                console.error('[Storage] ❌ Failed to save profile to IndexedDB:', error);
-            });
+        syncProfileToIndexedDB(state.activeProfile).catch(() => {
+            // Error already logged in syncProfileToIndexedDB
+        });
     }
 });
 
@@ -461,53 +395,3 @@ export const selectThemeLevels = (state: ProfileState) =>
  */
 export const selectThemeLevel = (themeId: ThemeId) => (state: ProfileState) =>
     state.activeProfile?.themeLevels?.[themeId] ?? 0;
-
-// ============================================================================
-// Save Game Utilities
-// ============================================================================
-
-/**
- * Download a save game file.
- * 
- * @param payload - The save game data to download
- */
-export function downloadSaveGame(payload: SaveGamePayload): void {
-    const nickname = payload.profile.nickname || 'player';
-    const date = new Date().toISOString().split('T')[0];
-    const filename = `spielstand-${nickname}-${date}.json`;
-
-    const json = JSON.stringify(payload, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-/**
- * Parse and validate a save game file.
- * 
- * @param file - The file to parse
- * @returns Promise resolving to the save game payload or error
- */
-export async function parseSaveGameFile(file: File): Promise<SaveGamePayload | null> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const content = e.target?.result as string;
-                const data = JSON.parse(content) as SaveGamePayload;
-                resolve(data);
-            } catch {
-                reject(new Error('Invalid JSON file'));
-            }
-        };
-        reader.onerror = () => reject(new Error('Failed to read file'));
-        reader.readAsText(file);
-    });
-}

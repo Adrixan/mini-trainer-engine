@@ -4,8 +4,12 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useExerciseScoring, calculateStarRating, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from '../useExerciseScoring';
+import { useExerciseScoring, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from '../useExerciseScoring';
+import { calculateStars } from '@core/utils/gamification';
 import type { ExerciseResult } from '@/types/exercise';
+
+// Alias for backward compatibility with test names
+const calculateStarRating = calculateStars;
 
 // Helper to create mock exercise results
 function createMockResult(overrides: Partial<ExerciseResult> = {}): ExerciseResult {

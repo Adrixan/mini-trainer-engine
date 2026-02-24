@@ -34,11 +34,31 @@ export {
     selectBadges,
     selectThemeProgress,
     selectLevel,
+    selectThemeLevels,
+    selectThemeLevel,
+    AVATAR_EMOJIS,
+    MAX_NICKNAME_LENGTH,
 } from './profileStore';
 
 export type {
     ProfileState,
 } from './profileStore';
+
+// Profile persistence
+export {
+    SAVE_GAME_VERSION,
+    validateSaveGame,
+    exportSaveGame,
+    downloadSaveGame,
+    importSaveGame,
+    parseSaveGameFile,
+    syncProfileToIndexedDB,
+} from './profilePersistence';
+
+export type {
+    SaveGamePayload,
+    ImportResult,
+} from './profilePersistence';
 
 // Exercise session store
 export {

@@ -1,11 +1,19 @@
 /**
  * Gamification hook for the Mini Trainer Engine.
  * 
- * Combines scoring, badge checking, and level progression.
+ * Combines scoring, badge checking, level progression, and notification state.
+ * 
+ * Responsibilities:
+ * - Star calculation and tracking
+ * - Level progression
+ * - Badge checking and earning
+ * - Streak management
+ * - Notification state (earned badges, level up celebrations)
  */
 
 import { useCallback, useMemo, useState } from 'react';
 import { useProfileStore } from '@core/stores/profileStore';
+import { useAppStore } from '@core/stores/appStore';
 import {
     calculateStars,
     calculateLevel,
@@ -19,6 +27,7 @@ import {
     type BadgeDefinitionWithMeta,
 } from '@core/utils/badges';
 import { getExerciseResultsByArea } from '@core/storage';
+import { playLevelUp, playBadge } from '@core/utils/sounds';
 import type { Badge } from '@/types/profile';
 import type { LevelProgress, Score } from '@/types/gamification';
 import type { BadgeDefinition } from '@/types/config';
@@ -44,6 +53,18 @@ export interface ExerciseCompletionResult {
 }
 
 /**
+ * Notification state for gamification events.
+ */
+export interface GamificationNotifications {
+    /** Level up celebration state */
+    levelUpLevel: number | null;
+    /** Badges earned during session */
+    earnedBadges: Badge[];
+    /** Current badge index for display */
+    currentBadgeIndex: number;
+}
+
+/**
  * Gamification state returned by the hook.
  */
 export interface GamificationState {
@@ -61,6 +82,8 @@ export interface GamificationState {
     badges: Badge[];
     /** Next badges to earn (one per category) */
     nextBadges: BadgeDefinitionWithMeta[];
+    /** Notification state */
+    notifications: GamificationNotifications;
 }
 
 /**
@@ -75,6 +98,10 @@ export interface GamificationActions {
     getAreaStars: (areaId: string) => Promise<number>;
     /** Get level for a specific area */
     getAreaLevel: (areaId: string) => number;
+    /** Dismiss current badge notification */
+    dismissBadge: () => void;
+    /** Clear level up notification */
+    clearLevelUp: () => void;
 }
 
 /**
@@ -112,8 +139,16 @@ export function useGamification(
     // Profile store
     const activeProfile = useProfileStore((state) => state.activeProfile);
 
+    // App store for sound settings
+    const soundEnabled = useAppStore((state) => state.settings.soundEnabled);
+
     // Local state for tracking level changes
     const [previousLevel, setPreviousLevel] = useState<number | null>(null);
+
+    // Notification state for gamification events
+    const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
+    const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
+    const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
 
     // Calculate current gamification state
     const state = useMemo<GamificationState>(() => {
@@ -144,14 +179,46 @@ export function useGamification(
             longestStreak,
             badges,
             nextBadges,
+            notifications: {
+                levelUpLevel,
+                earnedBadges,
+                currentBadgeIndex,
+            },
         };
-    }, [activeProfile, starsPerLevel, previousLevel, badgeDefinitions]);
+    }, [activeProfile, starsPerLevel, previousLevel, badgeDefinitions, levelUpLevel, earnedBadges, currentBadgeIndex]);
 
-    // Process exercise completion
-    // Note: We use useProfileStore.getState() instead of the activeProfile from the selector
-    // to ensure we always have the latest state when processing. This is necessary because
-    // the callback might be called after state changes from other sources.
-    // This pattern is safe with Zustand stores as getState() returns the current state.
+    /**
+     * Process exercise completion and update gamification state.
+     * 
+     * This function handles all gamification updates when an exercise is completed:
+     * - Awards stars based on attempts (1st = 3★, 2nd = 2★, 3rd = 1★)
+     * - Updates streak count
+     * - Checks for level ups
+     * - Checks for new badges
+     * - Plays appropriate sound effects
+     * - Updates notification state for UI display
+     * 
+     * **IMPORTANT: Caller Responsibilities**
+     * This function should ONLY be called when:
+     * 1. The exercise was completed correctly (answer is correct)
+     * 2. This is the FIRST time completing this exercise (not previously completed)
+     * 
+     * The caller (typically `useExercisePageState`) is responsible for:
+     * - Checking `hasExerciseBeenCompleted()` before calling
+     * - Verifying `currentAnswer.correct` is true
+     * 
+     * @param attempts - Number of attempts made (1-3). Lower = more stars.
+     * @returns ExerciseCompletionResult with stars earned, level up info, and new badges
+     * 
+     * @example
+     * ```typescript
+     * // In useExercisePageState handleNext:
+     * const wasPreviouslyCompleted = await hasExerciseBeenCompleted(profileId, exerciseId);
+     * if (!wasPreviouslyCompleted && currentAnswer.correct) {
+     *     processExerciseCompletion(currentAnswer.attempts);
+     * }
+     * ```
+     */
     const processExerciseCompletion = useCallback((
         attempts: number
     ): ExerciseCompletionResult => {
@@ -215,6 +282,18 @@ export function useGamification(
             useProfileStore.getState().earnBadge(badge);
         }
 
+        // Update notification state and play sounds
+        if (leveledUp && newLevel) {
+            setLevelUpLevel(newLevel);
+            playLevelUp(soundEnabled);
+        }
+
+        if (newBadges.length > 0) {
+            setEarnedBadges(newBadges);
+            setCurrentBadgeIndex(0);
+            playBadge(soundEnabled);
+        }
+
         return {
             starsEarned,
             leveledUp,
@@ -222,7 +301,7 @@ export function useGamification(
             newBadges,
             streakUpdate,
         };
-    }, [starsPerLevel, badgeDefinitions]);
+    }, [starsPerLevel, badgeDefinitions, soundEnabled]);
 
     // Check for new badges manually
     const checkForBadges = useCallback((): Badge[] => {
@@ -249,12 +328,30 @@ export function useGamification(
         return activeProfile.currentLevels[areaId as keyof typeof activeProfile.currentLevels] ?? 1;
     }, [activeProfile]);
 
+    // Dismiss current badge notification
+    const dismissBadge = useCallback(() => {
+        const nextIndex = currentBadgeIndex + 1;
+        if (nextIndex >= earnedBadges.length) {
+            setEarnedBadges([]);
+            setCurrentBadgeIndex(0);
+        } else {
+            setCurrentBadgeIndex(nextIndex);
+        }
+    }, [currentBadgeIndex, earnedBadges.length]);
+
+    // Clear level up notification
+    const clearLevelUp = useCallback(() => {
+        setLevelUpLevel(null);
+    }, []);
+
     return {
         ...state,
         processExerciseCompletion,
         checkForBadges,
         getAreaStars,
         getAreaLevel,
+        dismissBadge,
+        clearLevelUp,
     };
 }
 

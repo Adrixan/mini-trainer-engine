@@ -48,6 +48,10 @@ export const routes: RouteObject[] = [
                 lazy: () => import('@/pages/ProfilePage').then((m) => ({ Component: m.ProfilePage })),
             },
             {
+                path: '/progress',
+                lazy: () => import('@/pages/ProgressPage').then((m) => ({ Component: m.ProgressPage })),
+            },
+            {
                 path: '/settings',
                 lazy: () => import('@/pages/SettingsPage').then((m) => ({ Component: m.SettingsPage })),
             },
@@ -93,6 +97,7 @@ export const ROUTES = {
     EXERCISE_WITH_LEVEL: (themeId: string, level: number) => `/exercise/${themeId}/level/${level}`,
     EXERCISE_WITH_AREA: (themeId: string, areaId: string) => `/exercise/${themeId}/${areaId}`,
     PROFILE: '/profile',
+    PROGRESS: '/progress',
     SETTINGS: '/settings',
     RESULTS: '/results',
     TEACHER_PIN: '/teacher/pin',
