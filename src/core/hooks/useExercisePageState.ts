@@ -243,7 +243,7 @@ export function useExercisePageState(): UseExercisePageStateReturn {
                         if (allLevelExercisesCompleted && levelExercises.length > 0) {
                             updateThemeLevel(themeId, numericLevel);
                         }
-                    } catch (error) {
+                    } catch {
                         // Log error but don't block user from finishing
                         // Level completion will be recalculated on next session
                         // Silently ignore
