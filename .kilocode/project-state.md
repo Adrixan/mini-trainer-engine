@@ -91,6 +91,15 @@
 - [x] Progress bars and visual feedback
 - [x] Celebration animations (level up, badge earned)
 
+#### Student Analytics Dashboard (100% - v0.2.0)
+
+- [x] Personal progress over time with enhanced graphs
+- [x] Strengths and weaknesses by theme analysis
+- [x] Weekly accuracy tracking and trends
+- [x] Area performance breakdown
+- [x] Trend indicators (improving/declining/stable)
+- [x] i18n support (English and German)
+
 #### Accessibility Features (100% - WCAG 2.1 AA)
 
 - [x] Full keyboard navigation
@@ -208,9 +217,8 @@ docs/                      # Documentation
 
 ### Planned for 0.2.0
 
+- [x] Enhanced analytics dashboard
 - [ ] Additional exercise types
-- [ ] Enhanced analytics dashboard
-- [ ] Teacher dashboard improvements
 - [ ] Export/import user data
 
 ### Planned for 0.3.0

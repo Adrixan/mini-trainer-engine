@@ -61,6 +61,10 @@ export {
     exportAllData,
     importData,
 
+    // Trainer isolation
+    getDatabaseName,
+    getTrainerId,
+
     // Utilities
     clearAllData,
     getDatabaseStats,

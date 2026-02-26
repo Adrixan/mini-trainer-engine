@@ -1,8 +1,10 @@
 /**
  * Progress page component.
  * 
- * Displays user's learning progress with a graph showing progress over time
- * and a table showing results for each exercise.
+ * Displays user's learning progress with enhanced analytics including:
+ * - Progress graph showing activity over time
+ * - Results table with exercise details
+ * - Analytics tab with strengths/weaknesses and trends
  */
 
 import { useState, useEffect, useMemo } from 'react';
@@ -12,7 +14,7 @@ import { ROUTES } from '@core/router';
 import { useProfileStore, selectActiveProfile } from '@core/stores/profileStore';
 import { getAllExerciseResults } from '@core/storage';
 import { useThemes, useAreas } from '@core/config';
-import type { ExerciseResult } from '@/types';
+import type { ExerciseResult, ThemeId, ObservationAreaId } from '@/types';
 
 // ============================================================================
 // Types
@@ -26,6 +28,7 @@ interface DailyProgress {
     exercisesCompleted: number;
     starsEarned: number;
     correctAnswers: number;
+    totalTimeSeconds: number;
 }
 
 /**
@@ -35,7 +38,9 @@ interface ExerciseRow {
     id: string;
     exerciseId: string;
     themeName: string;
+    themeId: ThemeId;
     areaName: string;
+    areaId: ObservationAreaId;
     level: number;
     correct: boolean;
     score: number;
@@ -43,6 +48,44 @@ interface ExerciseRow {
     timeSpentSeconds: number;
     completedAt: string;
 }
+
+/**
+ * Theme performance data.
+ */
+interface ThemePerformance {
+    themeId: ThemeId;
+    themeName: string;
+    exerciseCount: number;
+    accuracy: number;
+    avgTime: number;
+    avgScore: number;
+    trend: 'up' | 'down' | 'stable';
+}
+
+/**
+ * Area performance data.
+ */
+interface AreaPerformance {
+    areaId: ObservationAreaId;
+    areaName: string;
+    exerciseCount: number;
+    accuracy: number;
+    avgTime: number;
+}
+
+/**
+ * Weekly accuracy comparison.
+ */
+interface WeeklyAccuracy {
+    week: string;
+    startDate: string;
+    endDate: string;
+    accuracy: number;
+    exerciseCount: number;
+    avgTime: number;
+}
+
+type TabId = 'graph' | 'table' | 'analytics';
 
 // ============================================================================
 // Component
@@ -61,7 +104,7 @@ export function ProgressPage() {
 
     const [results, setResults] = useState<ExerciseResult[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'graph' | 'table'>('graph');
+    const [activeTab, setActiveTab] = useState<TabId>('graph');
 
     // Load exercise results
     useEffect(() => {
@@ -99,6 +142,7 @@ export function ProgressPage() {
                     exercisesCompleted: 0,
                     starsEarned: 0,
                     correctAnswers: 0,
+                    totalTimeSeconds: 0,
                 });
             }
         }
@@ -111,6 +155,7 @@ export function ProgressPage() {
             if (dayData) {
                 dayData.exercisesCompleted += 1;
                 dayData.starsEarned += result.score;
+                dayData.totalTimeSeconds += result.timeSpentSeconds;
                 if (result.correct) {
                     dayData.correctAnswers += 1;
                 }
@@ -131,7 +176,9 @@ export function ProgressPage() {
                     id: result.id,
                     exerciseId: result.exerciseId,
                     themeName: theme?.name ?? result.themeId,
+                    themeId: result.themeId,
                     areaName: area?.name ?? result.areaId,
+                    areaId: result.areaId,
                     level: result.level,
                     correct: result.correct,
                     score: result.score,
@@ -161,6 +208,132 @@ export function ProgressPage() {
             totalTime,
         };
     }, [results]);
+
+    // Calculate theme performance (strengths & weaknesses)
+    const themePerformance = useMemo((): ThemePerformance[] => {
+        const themeMap = new Map<ThemeId, { count: number; correct: number; totalTime: number; totalScore: number; dates: string[] }>();
+
+        results.forEach(r => {
+            const existing = themeMap.get(r.themeId) || { count: 0, correct: 0, totalTime: 0, totalScore: 0, dates: [] };
+            existing.count++;
+            existing.totalTime += r.timeSpentSeconds;
+            existing.totalScore += r.score;
+            existing.dates.push(r.completedAt);
+            if (r.correct) existing.correct++;
+            themeMap.set(r.themeId, existing);
+        });
+
+        const performances: ThemePerformance[] = [];
+        themeMap.forEach((data, themeId) => {
+            const theme = themes.find(t => t.id === themeId);
+            const accuracy = data.count > 0 ? Math.round((data.correct / data.count) * 100) : 0;
+            const avgTime = data.count > 0 ? Math.round(data.totalTime / data.count) : 0;
+            const avgScore = data.count > 0 ? data.totalScore / data.count : 0;
+
+            // Calculate trend (compare first half vs second half of attempts)
+            const sortedDates = data.dates.sort();
+            const mid = Math.floor(sortedDates.length / 2);
+            const firstHalf = data.dates.slice(0, mid);
+            const secondHalf = data.dates.slice(mid);
+
+            let trend: 'up' | 'down' | 'stable' = 'stable';
+            if (firstHalf.length >= 3 && secondHalf.length >= 3) {
+                const firstHalfCorrect = results.filter(r => firstHalf.includes(r.completedAt) && r.themeId === themeId && r.correct).length;
+                const secondHalfCorrect = results.filter(r => secondHalf.includes(r.completedAt) && r.themeId === themeId && r.correct).length;
+                const firstHalfAcc = firstHalf.length > 0 ? (firstHalfCorrect / firstHalf.length) * 100 : 0;
+                const secondHalfAcc = secondHalf.length > 0 ? (secondHalfCorrect / secondHalf.length) * 100 : 0;
+
+                if (secondHalfAcc - firstHalfAcc > 10) trend = 'up';
+                else if (firstHalfAcc - secondHalfAcc > 10) trend = 'down';
+            }
+
+            performances.push({
+                themeId,
+                themeName: theme?.name ?? themeId,
+                exerciseCount: data.count,
+                accuracy,
+                avgTime,
+                avgScore,
+                trend,
+            });
+        });
+
+        return performances.sort((a, b) => b.accuracy - a.accuracy);
+    }, [results, themes]);
+
+    // Calculate area performance
+    const areaPerformance = useMemo((): AreaPerformance[] => {
+        const areaMap = new Map<ObservationAreaId, { count: number; correct: number; totalTime: number }>();
+
+        results.forEach(r => {
+            const existing = areaMap.get(r.areaId) || { count: 0, correct: 0, totalTime: 0 };
+            existing.count++;
+            existing.totalTime += r.timeSpentSeconds;
+            if (r.correct) existing.correct++;
+            areaMap.set(r.areaId, existing);
+        });
+
+        const performances: AreaPerformance[] = [];
+        areaMap.forEach((data, areaId) => {
+            const area = areas.find(a => a.id === areaId);
+            const accuracy = data.count > 0 ? Math.round((data.correct / data.count) * 100) : 0;
+            const avgTime = data.count > 0 ? Math.round(data.totalTime / data.count) : 0;
+
+            performances.push({
+                areaId,
+                areaName: area?.name ?? areaId,
+                exerciseCount: data.count,
+                accuracy,
+                avgTime,
+            });
+        });
+
+        return performances.sort((a, b) => b.accuracy - a.accuracy);
+    }, [results, areas]);
+
+    // Calculate weekly accuracy (last 4 weeks)
+    const weeklyAccuracy = useMemo((): WeeklyAccuracy[] => {
+        const weeks: WeeklyAccuracy[] = [];
+        const today = new Date();
+
+        for (let w = 3; w >= 0; w--) {
+            const weekEnd = new Date(today);
+            weekEnd.setDate(weekEnd.getDate() - w * 7);
+            const weekStart = new Date(weekEnd);
+            weekStart.setDate(weekStart.getDate() - 7);
+
+            const startStr = weekStart.toISOString().split('T')[0] ?? '';
+            const endStr = weekEnd.toISOString().split('T')[0] ?? '';
+
+            const weekResults = results.filter(r => {
+                const dateParts = r.completedAt.split('T');
+                const dateStr = dateParts[0];
+                return dateStr && dateStr >= startStr && dateStr <= endStr;
+            });
+
+            const correctCount = weekResults.filter(r => r.correct).length;
+            const avgTime = weekResults.length > 0
+                ? Math.round(weekResults.reduce((sum, r) => sum + r.timeSpentSeconds, 0) / weekResults.length)
+                : 0;
+
+            weeks.push({
+                week: `Week ${4 - w}`,
+                startDate: startStr,
+                endDate: endStr,
+                accuracy: weekResults.length > 0 ? Math.round((correctCount / weekResults.length) * 100) : 0,
+                exerciseCount: weekResults.length,
+                avgTime,
+            });
+        }
+
+        return weeks;
+    }, [results]);
+
+    // Get strengths (themes with accuracy >= 70%)
+    const strengths = themePerformance.filter(t => t.accuracy >= 70);
+
+    // Get weaknesses (themes with accuracy < 50%)
+    const weaknesses = themePerformance.filter(t => t.accuracy < 50 && t.exerciseCount >= 3);
 
     // Calculate max values for graph scaling
     const maxExercises = Math.max(...dailyProgress.map(d => d.exercisesCompleted), 1);
@@ -215,7 +388,7 @@ export function ProgressPage() {
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex border-b border-gray-200 mb-4">
+            <div className="flex border-b border-gray-200 mb-4" role="tablist" aria-label={t('progress.tabs', 'Progress sections')}>
                 <button
                     onClick={() => setActiveTab('graph')}
                     className={`px-4 py-2 font-medium transition-colors ${activeTab === 'graph'
@@ -238,6 +411,17 @@ export function ProgressPage() {
                 >
                     {t('progress.tableTab', 'Exercise Results')}
                 </button>
+                <button
+                    onClick={() => setActiveTab('analytics')}
+                    className={`px-4 py-2 font-medium transition-colors ${activeTab === 'analytics'
+                        ? 'text-blue-600 border-b-2 border-blue-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                    aria-selected={activeTab === 'analytics'}
+                    role="tab"
+                >
+                    {t('progress.analyticsTab', 'Analytics')}
+                </button>
             </div>
 
             {/* Content */}
@@ -250,8 +434,16 @@ export function ProgressPage() {
                     data={dailyProgress}
                     maxExercises={maxExercises}
                 />
-            ) : (
+            ) : activeTab === 'table' ? (
                 <ResultsTable rows={tableRows} />
+            ) : (
+                <AnalyticsTab
+                    themePerformance={themePerformance}
+                    areaPerformance={areaPerformance}
+                    weeklyAccuracy={weeklyAccuracy}
+                    strengths={strengths}
+                    weaknesses={weaknesses}
+                />
             )}
         </div>
     );
@@ -427,6 +619,192 @@ function ResultsTable({ rows }: { rows: ExerciseRow[] }) {
                     </tbody>
                 </table>
             </div>
+        </div>
+    );
+}
+
+/**
+ * Analytics tab component.
+ * Shows strengths, weaknesses, and weekly trends.
+ */
+function AnalyticsTab({
+    themePerformance,
+    areaPerformance,
+    weeklyAccuracy,
+    strengths,
+    weaknesses,
+}: {
+    themePerformance: ThemePerformance[];
+    areaPerformance: AreaPerformance[];
+    weeklyAccuracy: WeeklyAccuracy[];
+    strengths: ThemePerformance[];
+    weaknesses: ThemePerformance[];
+}) {
+    const { t } = useTranslation();
+
+    const hasData = themePerformance.length > 0;
+
+    if (!hasData) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                <span className="text-4xl mb-2">📊</span>
+                <p>{t('progress.noData', 'No exercise data yet. Start practicing to see your analytics!')}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-6">
+            {/* Strengths */}
+            {strengths.length > 0 && (
+                <section className="bg-white border border-gray-200 rounded-xl p-4">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <span>💪</span>
+                        {t('progress.analytics.strengths', 'Your Strengths')}
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {strengths.map(s => (
+                            <div key={s.themeId} className="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between items-center">
+                                <span className="font-medium text-gray-800">{s.themeName}</span>
+                                <span className="text-green-600 font-bold">{s.accuracy}%</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {/* Weaknesses */}
+            {weaknesses.length > 0 && (
+                <section className="bg-white border border-gray-200 rounded-xl p-4">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <span>🎯</span>
+                        {t('progress.analytics.needsWork', 'Needs More Practice')}
+                    </h2>
+                    <div className="space-y-2">
+                        {weaknesses.map(w => (
+                            <div key={w.themeId} className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <div className="flex justify-between items-center mb-1">
+                                    <span className="font-medium text-gray-800">{w.themeName}</span>
+                                    <span className="text-red-600 font-bold">{w.accuracy}%</span>
+                                </div>
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-red-500 rounded-full"
+                                        style={{ width: `${w.accuracy}%` }}
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    {w.exerciseCount} {t('progress.analytics.exercises', 'exercises')}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {/* Weekly Progress */}
+            <section className="bg-white border border-gray-200 rounded-xl p-4">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <span>📈</span>
+                    {t('progress.analytics.weeklyProgress', 'Weekly Progress')}
+                </h2>
+                <div className="space-y-3">
+                    {weeklyAccuracy.map((week) => (
+                        <div key={week.week} className="flex items-center gap-3">
+                            <div className="w-16 text-sm text-gray-600">{week.week}</div>
+                            <div className="flex-1">
+                                <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full rounded-full transition-all ${week.accuracy >= 70 ? 'bg-green-500' :
+                                            week.accuracy >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                                            }`}
+                                        style={{ width: `${week.accuracy}%` }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="w-16 text-right">
+                                <span className={`font-bold ${week.accuracy >= 70 ? 'text-green-600' :
+                                    week.accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'
+                                    }`}>
+                                    {week.accuracy}%
+                                </span>
+                            </div>
+                            <div className="w-20 text-right text-xs text-gray-500">
+                                {week.exerciseCount} {t('progress.analytics.ex', 'ex')}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Theme Performance Table */}
+            {themePerformance.length > 0 && (
+                <section className="bg-white border border-gray-200 rounded-xl p-4">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <span>🎨</span>
+                        {t('progress.analytics.themePerformance', 'Theme Performance')}
+                    </h2>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm" role="table" aria-label={t('progress.analytics.themePerformance', 'Theme performance')}>
+                            <thead className="bg-gray-50 border-b border-gray-200">
+                                <tr>
+                                    <th className="px-3 py-2 text-left font-medium text-gray-700">{t('progress.table.theme', 'Theme')}</th>
+                                    <th className="px-3 py-2 text-right font-medium text-gray-700">{t('progress.analytics.exercises', 'Ex.')}</th>
+                                    <th className="px-3 py-2 text-right font-medium text-gray-700">{t('progress.accuracy', 'Accuracy')}</th>
+                                    <th className="px-3 py-2 text-right font-medium text-gray-700">{t('progress.analytics.avgTime', 'Avg Time')}</th>
+                                    <th className="px-3 py-2 text-center font-medium text-gray-700">{t('progress.analytics.trend', 'Trend')}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {themePerformance.map(tp => (
+                                    <tr key={tp.themeId} className="hover:bg-gray-50">
+                                        <td className="px-3 py-2 font-medium text-gray-800">{tp.themeName}</td>
+                                        <td className="px-3 py-2 text-right text-gray-600">{tp.exerciseCount}</td>
+                                        <td className="px-3 py-2 text-right">
+                                            <span className={`font-medium ${tp.accuracy >= 70 ? 'text-green-600' :
+                                                tp.accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'
+                                                }`}>
+                                                {tp.accuracy}%
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-2 text-right text-gray-600">{formatTime(tp.avgTime)}</td>
+                                        <td className="px-3 py-2 text-center">
+                                            <span title={t('progress.analytics.trendUp', 'Improving')}>
+                                                {tp.trend === 'up' ? '📈' : tp.trend === 'down' ? '📉' : '➡️'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            )}
+
+            {/* Area Performance */}
+            {areaPerformance.length > 0 && (
+                <section className="bg-white border border-gray-200 rounded-xl p-4">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <span>📋</span>
+                        {t('progress.analytics.areaPerformance', 'Area Performance')}
+                    </h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {areaPerformance.map(ap => (
+                            <div key={ap.areaId} className="bg-gray-50 rounded-lg p-3 text-center">
+                                <div className="font-medium text-gray-800 text-sm mb-1">{ap.areaName}</div>
+                                <div className={`text-xl font-bold ${ap.accuracy >= 70 ? 'text-green-600' :
+                                    ap.accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'
+                                    }`}>
+                                    {ap.accuracy}%
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                    {ap.exerciseCount} {t('progress.analytics.ex', 'ex')}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

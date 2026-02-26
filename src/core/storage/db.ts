@@ -3,6 +3,10 @@
  * 
  * Provides a type-safe interface for storing and retrieving
  * profiles, exercise results, and other persistent data.
+ * 
+ * Security features:
+ * - Trainer isolation via separate databases per trainer
+ * - Each trainer gets their own IndexedDB database
  */
 
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
@@ -13,6 +17,33 @@ import type {
     Foerderplan,
     StoreName,
 } from '@/types';
+
+// ============================================================================
+// Trainer ID Configuration
+// ============================================================================
+
+/**
+ * Get the trainer ID from environment or use default.
+ * This ensures each trainer (mathematik, daz, etc.) has isolated storage.
+ */
+function getTrainerId(): string {
+    const envTrainerId = import.meta.env?.VITE_APP_ID as string | undefined;
+    return envTrainerId || 'daz';
+}
+
+/**
+ * Get the trainer-specific database name.
+ * Each trainer gets their own IndexedDB database for isolation.
+ */
+export function getDatabaseName(): string {
+    const trainerId = getTrainerId();
+    return `mini-trainer-${trainerId}`;
+}
+
+/**
+ * Export the trainer ID for use in other modules.
+ */
+export { getTrainerId };
 
 // ============================================================================
 // Database Schema
@@ -65,9 +96,12 @@ interface TrainerDB extends DBSchema {
 // ============================================================================
 
 /**
- * Database name.
+ * Database name - now trainer-specific.
+ * 
+ * Security: Each trainer (mathematik, daz) gets their own database
+ * to prevent data leakage between trainers.
  */
-const DB_NAME = 'mini-trainer-db' as const;
+const DB_NAME = getDatabaseName();
 
 /**
  * Current database schema version.
@@ -307,6 +341,23 @@ export async function getCompletedExerciseIds(profileId: string): Promise<Set<st
 export async function clearAllExerciseResults(): Promise<void> {
     const db = await getDB();
     await db.clear('results');
+}
+
+/**
+ * Delete all exercise results for a specific profile.
+ * 
+ * @param profileId - The profile ID to delete results for
+ */
+export async function deleteAllResultsForProfile(profileId: string): Promise<void> {
+    const db = await getDB();
+    const tx = db.transaction('results', 'readwrite');
+    const index = tx.store.index('by-profile');
+    let cursor = await index.openCursor(profileId);
+    while (cursor) {
+        await cursor.delete();
+        cursor = await cursor.continue();
+    }
+    await tx.done;
 }
 
 // ============================================================================

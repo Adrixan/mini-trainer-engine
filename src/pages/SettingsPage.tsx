@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@core/router';
 import { AccessibilitySettings } from '@core/components/accessibility';
+import { Modal, ModalFooter } from '@core/components/ui';
 import {
     useProfileStore,
     selectActiveProfile,
@@ -43,6 +44,8 @@ export function SettingsPage() {
     const [isImporting, setIsImporting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [showImportConfirm, setShowImportConfirm] = useState(false);
+    const [pendingImportData, setPendingImportData] = useState<SaveGamePayload | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Handle sound toggle with preview
@@ -82,31 +85,56 @@ export function SettingsPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setIsImporting(true);
         setError(null);
         setSuccess(null);
 
         try {
             const data: SaveGamePayload | null = await parseSaveGameFile(file);
             if (data) {
-                const result = await importSaveGame(data);
-                if (result.success) {
-                    setSuccess(t('settings.loadSuccess', 'Game loaded successfully!'));
-                    setTimeout(() => setSuccess(null), 3000);
-                } else {
-                    setError(result.error || t('settings.loadFailed', 'Failed to load game'));
-                }
+                // Show confirmation dialog before importing
+                setPendingImportData(data);
+                setShowImportConfirm(true);
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : t('settings.invalidFile', 'Invalid save file'));
         } finally {
-            setIsImporting(false);
             // Reset file input
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
         }
-    }, [importSaveGame, t]);
+    }, [t]);
+
+    // Handle the actual import after confirmation
+    const handleConfirmImport = useCallback(async () => {
+        if (!pendingImportData) return;
+
+        setIsImporting(true);
+        setError(null);
+        setSuccess(null);
+        setShowImportConfirm(false);
+
+        try {
+            const result = await importSaveGame(pendingImportData);
+            if (result.success) {
+                setSuccess(t('settings.loadSuccess', 'Game loaded successfully!'));
+                setTimeout(() => setSuccess(null), 3000);
+            } else {
+                setError(result.error || t('settings.loadFailed', 'Failed to load game'));
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t('settings.loadFailed', 'Failed to load game'));
+        } finally {
+            setIsImporting(false);
+            setPendingImportData(null);
+        }
+    }, [pendingImportData, importSaveGame, t]);
+
+    // Cancel import
+    const handleCancelImport = useCallback(() => {
+        setShowImportConfirm(false);
+        setPendingImportData(null);
+    }, []);
 
     return (
         <div
@@ -198,11 +226,12 @@ export function SettingsPage() {
                             <button
                                 onClick={handleSaveGame}
                                 disabled={isExporting || isImporting}
+                                title={t('settings.exportDataTooltip', 'Download your profile, progress, and badges as a JSON file')}
                                 className="py-3 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isExporting
                                     ? t('settings.saving', 'Saving...')
-                                    : t('settings.saveButton', 'Save Game')
+                                    : t('settings.exportData', 'Export Data')
                                 }
                             </button>
 
@@ -217,11 +246,12 @@ export function SettingsPage() {
                             <button
                                 onClick={handleLoadGame}
                                 disabled={isExporting || isImporting}
+                                title={t('settings.importDataTooltip', 'Load profile data from a JSON file')}
                                 className="py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isImporting
                                     ? t('settings.loading', 'Loading...')
-                                    : t('settings.loadButton', 'Load Game')
+                                    : t('settings.importData', 'Import Data')
                                 }
                             </button>
                         </div>
@@ -266,6 +296,42 @@ export function SettingsPage() {
                     </button>
                 </div>
             </div>
+
+            {/* Import Confirmation Modal */}
+            <Modal
+                isOpen={showImportConfirm}
+                onClose={handleCancelImport}
+                title={t('settings.importConfirmTitle', 'Import Game Data?')}
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-700">
+                        {t('settings.importConfirmMessage', 'Your current game progress will be overwritten by the imported data. This action cannot be undone.')}
+                    </p>
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <p className="text-amber-800 text-sm font-medium">
+                            ⚠️ {t('settings.importConfirmWarning', 'This will replace all your current progress, stars, badges, and exercise results.')}
+                        </p>
+                    </div>
+                </div>
+                <ModalFooter>
+                    <button
+                        onClick={handleCancelImport}
+                        className="py-2 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                    >
+                        {t('common.cancel', 'Cancel')}
+                    </button>
+                    <button
+                        onClick={handleConfirmImport}
+                        disabled={isImporting}
+                        className="py-2 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isImporting
+                            ? t('settings.loading', 'Loading...')
+                            : t('settings.importButton', 'Import')
+                        }
+                    </button>
+                </ModalFooter>
+            </Modal>
         </div>
     );
 }
