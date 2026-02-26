@@ -50,6 +50,7 @@ const log = {
  */
 function parseArgs() {
     const args = {
+        app: null,
         input: join(rootDir, 'src', 'data', 'exercises.json'),
         output: join(rootDir, 'public', 'data', 'exercises.js'),
         validate: true,
@@ -62,6 +63,10 @@ function parseArgs() {
         const arg = argv[i];
 
         switch (arg) {
+            case '--app':
+            case '-a':
+                args.app = argv[++i];
+                break;
             case '--input':
                 args.input = resolve(rootDir, argv[++i]);
                 break;
@@ -436,6 +441,21 @@ function generateStats(exercises) {
  */
 function buildExerciseData(args) {
     log.header('Building Exercise Data');
+
+    // If --app is specified, use app-specific paths
+    if (args.app) {
+        const appDir = join(rootDir, 'src', 'apps', args.app);
+        args.input = join(appDir, 'exercises.json');
+        args.output = join(rootDir, 'public', 'data', args.app, 'exercises.js');
+
+        // Ensure output directory exists
+        const outputDir = dirname(args.output);
+        if (!existsSync(outputDir)) {
+            mkdirSync(outputDir, { recursive: true });
+        }
+
+        log.info(`Building for app: ${args.app}`);
+    }
 
     // Load exercises
     log.info(`Loading exercises from: ${args.input}`);

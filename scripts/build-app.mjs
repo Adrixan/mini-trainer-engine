@@ -110,7 +110,7 @@ ${colors.bright}Examples:${colors.reset}
   node scripts/build-app.mjs --app mathematik --pwa
   node scripts/build-app.mjs --app daz --skip-data
 
-${colors.bright}Available Apps:${reset}
+${colors.bright}Available Apps:${colors.reset}
   daz          - Deutsch als Zweitsprache Trainer
   mathematik   - Mathematik Lerntrainer
 `);
@@ -149,6 +149,33 @@ function validateApp(appId) {
         log.error(`Failed to parse app.json: ${error.message}`);
         return null;
     }
+}
+
+/**
+ * Get subject name from subject.json (or app.json as fallback)
+ */
+function getSubjectName(appId, appConfig) {
+    // First try subject.json
+    const subjectJsonPath = join(rootDir, 'src', 'apps', appId, 'subject.json');
+
+    if (existsSync(subjectJsonPath)) {
+        try {
+            const subjectConfig = JSON.parse(readFileSync(subjectJsonPath, 'utf-8'));
+            // Use subject name if it's meaningful (not "Generic Trainer")
+            if (subjectConfig.name && subjectConfig.name !== 'Generic Trainer') {
+                return subjectConfig.name;
+            }
+        } catch (error) {
+            log.warn(`Failed to parse subject.json: ${error.message}`);
+        }
+    }
+
+    // Fallback to app.json name
+    if (appConfig && appConfig.name) {
+        return appConfig.name;
+    }
+
+    return null;
 }
 
 /**
@@ -354,6 +381,12 @@ function buildApp(args) {
         process.exit(1);
     }
 
+    // Get subject name for title
+    const subjectName = getSubjectName(appId, appConfig);
+    if (subjectName) {
+        log.info(`Subject: ${subjectName}`);
+    }
+
     log.info(`App: ${appConfig.name} v${appConfig.version}`);
 
     // Step 1: Build exercise data
@@ -384,16 +417,22 @@ function buildApp(args) {
 
     // Step 4: Vite build
     log.info('Building with Vite...');
-    const buildCmd = `npx vite build`;
+    // Build with Vite - output to app-specific directory
+    // Use --base "./" for relative paths (works with file:// protocol for USB distribution)
+    const buildCmd = `npx vite build --base "./" --outDir "dist/${appId}"`;
+
+    // Build environment variables
+    const buildEnv = {
+        ...process.env,
+        VITE_APP_ID: appId,
+        VITE_SUBJECT_NAME: subjectName || '',
+    };
 
     try {
         execSync(buildCmd, {
             stdio: 'inherit',
             cwd: rootDir,
-            env: {
-                ...process.env,
-                VITE_APP_ID: appId,
-            },
+            env: buildEnv,
         });
         log.success('Vite build complete');
     } catch (error) {

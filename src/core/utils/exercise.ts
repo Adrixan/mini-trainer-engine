@@ -304,8 +304,8 @@ export function textMatches(a: string, b: string): boolean {
 export function loadExercises(): Exercise[] {
     // The exercise data is loaded via a script tag in index.html
     // and exposed as a global variable
-    const globalData = (window as unknown as { EXERCISE_DATA?: Exercise[] }).EXERCISE_DATA;
-    return globalData ?? [];
+    const globalData = (window as unknown as { __TRAINER_EXERCISES__?: { exercises: Exercise[] } }).__TRAINER_EXERCISES__;
+    return globalData?.exercises ?? [];
 }
 
 /**

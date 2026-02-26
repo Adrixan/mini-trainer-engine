@@ -39,9 +39,36 @@ function fileProtocolPlugin(): Plugin {
     };
 }
 
+/**
+ * Vite plugin to inject dynamic page title based on subject.
+ * Replaces the title in HTML with the subject name from environment variable.
+ */
+function titleInjectionPlugin(): Plugin {
+    return {
+        name: 'title-injection',
+        enforce: 'post',
+        transformIndexHtml(html) {
+            // Get subject name from environment variable (set during build)
+            const subjectName = process.env.VITE_SUBJECT_NAME || '';
+            const defaultTitle = 'Mini Trainer';
+
+            // Set the full title
+            const fullTitle = subjectName.trim()
+                ? `${defaultTitle} ${subjectName}`
+                : defaultTitle;
+
+            // Replace the title in HTML
+            return html.replace(
+                /<title>[^<]*<\/title>/,
+                `<title>${fullTitle}</title>`
+            );
+        },
+    };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react(), fileProtocolPlugin()],
+    plugins: [react(), titleInjectionPlugin(), fileProtocolPlugin()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),

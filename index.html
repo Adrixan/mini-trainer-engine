@@ -24,7 +24,12 @@
     <!-- Preconnect to common origins -->
     <link rel="preconnect" href="/" />
 
-    <title>Mini Trainer Engine</title>
+    <!-- 
+        Dynamic page title is injected by Vite's titleInjectionPlugin.
+        - In development: "Mini Trainer" 
+        - In production build: "Mini Trainer {subjectName}" from subject.json
+    -->
+    <title>Mini Trainer</title>
 
     <!-- Exercise data will be loaded as an IIFE script -->
     <script src="/data/exercises.js" defer></script>

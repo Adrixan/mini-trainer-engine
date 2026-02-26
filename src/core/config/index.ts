@@ -14,6 +14,9 @@ export {
     loadFullConfig,
     loadConfigSafe,
     loadExercises,
+    loadFullConfigSync,
+    resetConfigCache,
+    getCurrentAppId,
     type ConfigLoadResult,
 } from './loader';
 

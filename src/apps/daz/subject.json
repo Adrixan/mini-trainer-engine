@@ -1,6 +1,6 @@
 {
-    "id": "generic-trainer",
-    "name": "Generic Trainer",
+    "id": "daz-trainer",
+    "name": "Deutsch als Zweitsprache",
     "description": "A configurable trainer for any subject with adaptive learning capabilities",
     "targetAudience": "Learners of all ages and skill levels",
     "primarySkillArea": "comprehension",

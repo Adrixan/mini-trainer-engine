@@ -28,7 +28,6 @@ import {
     loadGamificationConfig,
     loadConfigSafe,
     loadExercises,
-    type ConfigLoadResult,
 } from './loader';
 
 // ============================================================================
@@ -134,8 +133,8 @@ export function ConfigProvider({
         setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
         try {
-            // Use synchronous loading for bundled JSON
-            const result: ConfigLoadResult = loadConfigSafe();
+            // Use async loading for dynamic app-specific config
+            const result = await loadConfigSafe();
 
             if (!result.success || !result.config) {
                 const errorMessage = result.errors
@@ -154,8 +153,8 @@ export function ConfigProvider({
                 return;
             }
 
-            // Load exercises
-            const exercises = loadExercises();
+            // Exercises are already loaded in the config result via loadFullConfig
+            const exercises = result.config ? loadExercises() : [];
 
             setState({
                 isLoading: false,
