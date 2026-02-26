@@ -229,7 +229,6 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
         // Check for duplicate completion (Issue #3 fix)
         const exerciseId = state.currentExercise.id;
         if (state.completedExerciseIds.has(exerciseId)) {
-            console.warn(`Exercise ${exerciseId} already completed, ignoring duplicate submission`);
             return { success: false, reason: 'duplicate' as const };
         }
 
@@ -339,9 +338,8 @@ export const useExerciseStore = create<ExerciseSessionState>()((set, get) => ({
                         childProfileId: state.childProfileId,
                     };
                     await saveExerciseResult(resultToSave);
-                } catch (error) {
-                    // Log error but don't throw - continue saving other results
-                    console.error('Failed to save exercise result:', error);
+                } catch {
+                    // Continue saving other results - don't throw
                 }
             }
         }

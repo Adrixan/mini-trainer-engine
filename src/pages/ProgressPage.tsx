@@ -75,9 +75,7 @@ export function ProgressPage() {
                     r => r.childProfileId === profile.id
                 );
                 setResults(profileResults);
-            } catch (error) {
-                console.error('Failed to load results:', error);
-            } finally {
+            } catch { /* Silently ignore load errors */ } finally {
                 setIsLoading(false);
             }
         }

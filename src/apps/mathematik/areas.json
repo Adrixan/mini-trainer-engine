@@ -1,0 +1,20 @@
+[
+    {
+        "id": "numbers",
+        "name": "Zahlen und Operationen",
+        "description": "Grundlegende Zahlenverständnis und Rechenoperationen",
+        "icon": "calculator"
+    },
+    {
+        "id": "geometry",
+        "name": "Geometrie",
+        "description": "Formen, Muster und räumliches Vorstellungsvermögen",
+        "icon": "shapes"
+    },
+    {
+        "id": "measurement",
+        "name": "Größen und Messen",
+        "description": "Längen, Gewichte, Zeit und andere Größen",
+        "icon": "ruler"
+    }
+]

@@ -94,13 +94,6 @@ export function loadSubjectConfig(): SubjectConfig {
         throw new Error(`Invalid subject configuration:\n${errorMessages}`);
     }
 
-    // Log warnings in development
-    if (import.meta.env.DEV && result.warnings.length > 0) {
-        result.warnings.forEach((w: ValidationWarning) => {
-            console.warn(`[Config] ${w.path}: ${w.message}`);
-        });
-    }
-
     return subjectJson as SubjectConfig;
 }
 
@@ -118,13 +111,6 @@ export function loadAreas(): ObservationArea[] {
             .map((e: ValidationError) => `${e.path}: ${e.message}`)
             .join('\n');
         throw new Error(`Invalid areas configuration:\n${errorMessages}`);
-    }
-
-    // Log warnings in development
-    if (import.meta.env.DEV && result.warnings.length > 0) {
-        result.warnings.forEach((w: ValidationWarning) => {
-            console.warn(`[Config] ${w.path}: ${w.message}`);
-        });
     }
 
     return areasJson as ObservationArea[];
@@ -146,13 +132,6 @@ export function loadThemes(): Theme[] {
         throw new Error(`Invalid themes configuration:\n${errorMessages}`);
     }
 
-    // Log warnings in development
-    if (import.meta.env.DEV && result.warnings.length > 0) {
-        result.warnings.forEach((w: ValidationWarning) => {
-            console.warn(`[Config] ${w.path}: ${w.message}`);
-        });
-    }
-
     return themesJson as Theme[];
 }
 
@@ -170,13 +149,6 @@ export function loadBadges(): BadgeDefinition[] {
             .map((e: ValidationError) => `${e.path}: ${e.message}`)
             .join('\n');
         throw new Error(`Invalid badges configuration:\n${errorMessages}`);
-    }
-
-    // Log warnings in development
-    if (import.meta.env.DEV && result.warnings.length > 0) {
-        result.warnings.forEach((w: ValidationWarning) => {
-            console.warn(`[Config] ${w.path}: ${w.message}`);
-        });
     }
 
     // Transform the badges.json format to BadgeDefinition[]

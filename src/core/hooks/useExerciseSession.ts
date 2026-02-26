@@ -160,7 +160,7 @@ export function useExerciseSession({
                 timeSpentSeconds: answer.timeSpentSeconds,
                 completedAt: new Date().toISOString(),
             };
-            saveExerciseResult(exerciseResult).catch(console.error);
+            saveExerciseResult(exerciseResult).catch(() => {});
         }
 
         nextExercise();

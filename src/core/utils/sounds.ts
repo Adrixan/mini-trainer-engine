@@ -102,9 +102,8 @@ function playNote(
         // Play
         oscillator.start(currentTime + delay);
         oscillator.stop(currentTime + delay + duration);
-    } catch (e) {
+    } catch {
         // Silently fail if audio context is not available
-        console.debug('Sound playback failed:', e);
     }
 }
 

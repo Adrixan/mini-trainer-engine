@@ -246,7 +246,7 @@ export function useExercisePageState(): UseExercisePageStateReturn {
                     } catch (error) {
                         // Log error but don't block user from finishing
                         // Level completion will be recalculated on next session
-                        console.error('Failed to check level completion:', error);
+                        // Silently ignore
                     }
                 }
             }

@@ -51,9 +51,6 @@ export const AVATAR_EMOJIS = [
  */
 export const MAX_NICKNAME_LENGTH = 20;
 
-/** Debug flag for storage logging - only enabled in development */
-const DEBUG_STORAGE = import.meta.env.DEV;
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -302,16 +299,8 @@ export const useProfileStore = create<ProfileState>()(
         {
             name: 'mini-trainer-profile',
             version: 1,
-            onRehydrateStorage: () => (state) => {
-                if (DEBUG_STORAGE) {
-                    console.log('[Storage] Zustand rehydrated profile from localStorage:', {
-                        hasProfile: !!state?.activeProfile,
-                        profileId: state?.activeProfile?.id,
-                        nickname: state?.activeProfile?.nickname,
-                        totalStars: state?.activeProfile?.totalStars,
-                        themeLevels: state?.activeProfile?.themeLevels,
-                    });
-                }
+            onRehydrateStorage: () => (_state) => {
+                // Profile rehydration complete
             },
         },
     ),

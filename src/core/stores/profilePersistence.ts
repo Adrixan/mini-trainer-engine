@@ -22,9 +22,6 @@ import {
  */
 export const SAVE_GAME_VERSION = 2;
 
-/** Debug flag for storage logging - only enabled in development */
-const DEBUG_STORAGE = import.meta.env.DEV;
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -208,20 +205,8 @@ export async function parseSaveGameFile(file: File): Promise<SaveGamePayload> {
 export async function syncProfileToIndexedDB(profile: UserProfile | null): Promise<void> {
     if (!profile) return;
 
-    if (DEBUG_STORAGE) {
-        console.log('[Storage] Syncing profile to IndexedDB:', {
-            profileId: profile.id,
-            nickname: profile.nickname,
-            totalStars: profile.totalStars,
-            themeLevels: profile.themeLevels,
-        });
-    }
-
     try {
         await saveProfile(profile);
-        if (DEBUG_STORAGE) {
-            console.log('[Storage] ✅ Profile saved to IndexedDB successfully');
-        }
     } catch (error) {
         console.error('[Storage] ❌ Failed to save profile to IndexedDB:', error);
         throw error;

@@ -154,15 +154,6 @@ export function ConfigProvider({
                 return;
             }
 
-            // Log warnings in development
-            if (import.meta.env?.DEV && result.warnings.length > 0) {
-                console.group('[Config] Configuration loaded with warnings:');
-                result.warnings.forEach((w) => {
-                    console.warn(`  ${w.file}: ${w.message}`);
-                });
-                console.groupEnd();
-            }
-
             // Load exercises
             const exercises = loadExercises();
 

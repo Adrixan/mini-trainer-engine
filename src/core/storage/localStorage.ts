@@ -7,9 +7,6 @@
 
 import type { StorageKey } from '@/types';
 
-/** Debug flag for storage logging - only enabled in development */
-const DEBUG_STORAGE = import.meta.env.DEV;
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -73,9 +70,6 @@ export function getStorageItem<K extends StorageKey>(
         const stored = localStorage.getItem(prefixedKey);
 
         if (!stored) {
-            if (DEBUG_STORAGE) {
-                console.log('[Storage] localStorage item not found:', { key });
-            }
             return undefined;
         }
 
@@ -83,20 +77,10 @@ export function getStorageItem<K extends StorageKey>(
 
         // Handle version migrations if needed
         if (entry.version !== STORAGE_VERSION) {
-            if (DEBUG_STORAGE) {
-                console.warn('[Storage] ⚠️ Version mismatch for localStorage item:', {
-                    key,
-                    storedVersion: entry.version,
-                    expectedVersion: STORAGE_VERSION
-                });
-            }
             // Future: add migration logic here
             return undefined;
         }
 
-        if (DEBUG_STORAGE) {
-            console.log('[Storage] ✅ Loaded from localStorage:', { key, value: entry.value });
-        }
         return entry.value;
     } catch (error) {
         // Invalid JSON or other error
@@ -123,9 +107,6 @@ export function setStorageItem<K extends StorageKey>(
             updatedAt: new Date().toISOString(),
         };
         localStorage.setItem(prefixedKey, JSON.stringify(entry));
-        if (DEBUG_STORAGE) {
-            console.log('[Storage] ✅ Saved to localStorage:', { key, value });
-        }
     } catch (error) {
         // Storage might be full or disabled
         console.error('[Storage] ❌ Failed to save to localStorage:', { key, error });
