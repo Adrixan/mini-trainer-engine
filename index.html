@@ -18,8 +18,9 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/vite.svg" />
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.svg" />
 
     <!-- Preconnect to common origins -->
     <link rel="preconnect" href="/" />
@@ -30,6 +31,12 @@
         - In production build: "Mini Trainer {subjectName}" from subject.json
     -->
     <title>Mini Trainer</title>
+
+    <!-- Config data will be loaded as IIFE scripts (order matters: subject -> areas -> themes -> badges) -->
+    <script src="./config/subject.js" defer></script>
+    <script src="./config/areas.js" defer></script>
+    <script src="./config/themes.js" defer></script>
+    <script src="./config/badges.js" defer></script>
 
     <!-- Exercise data will be loaded as an IIFE script -->
     <script src="/data/exercises.js" defer></script>
@@ -42,7 +49,8 @@
     <!-- Service Worker Registration -->
     <script>
         // Register service worker for PWA support
-        if ('serviceWorker' in navigator) {
+        // Only register when served via HTTP/HTTPS (not file://)
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {

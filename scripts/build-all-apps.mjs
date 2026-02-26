@@ -6,13 +6,16 @@
  * Usage:
  *   node scripts/build-all-apps.mjs
  *   node scripts/build-all-apps.mjs --pwa
- *   node scripts/build-all-apps.mjs --skip-data
+ *   node scripts/build-all-apps.mjs --both
+ *   node scripts/build-all-apps.mjs --app daz --both
  * 
  * Options:
- *   --pwa          Build as PWA with service worker
- *   --skip-data    Skip exercise data generation
- *   --parallel     Build apps in parallel (experimental)
- *   --help, -h     Show help message
+ *   --app, -a        Build specific app only
+ *   --pwa            Build as PWA with service worker
+ *   --both           Build both USB and PWA versions
+ *   --skip-data      Skip exercise data generation
+ *   --parallel       Build apps in parallel (experimental)
+ *   --help, -h       Show help message
  */
 
 import { readdirSync, existsSync, readFileSync } from 'fs';
@@ -53,7 +56,9 @@ const log = {
  */
 function parseArgs() {
     const args = {
+        app: null,
         pwa: false,
+        both: false,
         skipData: false,
         parallel: false,
         help: false,
@@ -65,8 +70,15 @@ function parseArgs() {
         const arg = argv[i];
 
         switch (arg) {
+            case '--app':
+            case '-a':
+                args.app = argv[++i];
+                break;
             case '--pwa':
                 args.pwa = true;
+                break;
+            case '--both':
+                args.both = true;
                 break;
             case '--skip-data':
                 args.skipData = true;
@@ -101,22 +113,26 @@ ${colors.bright}Usage:${colors.reset}
   node scripts/build-all-apps.mjs [options]
 
 ${colors.bright}Options:${colors.reset}
-  --pwa          Build as PWA with service worker
-  --skip-data    Skip exercise data generation
-  --parallel     Build apps in parallel (experimental)
-  --help, -h     Show this help message
+  --app, -a        Build specific app only
+  --pwa            Build as PWA with service worker
+  --both           Build both USB and PWA versions
+  --skip-data      Skip exercise data generation
+  --parallel       Build apps in parallel (experimental)
+  --help, -h       Show this help message
 
 ${colors.bright}Examples:${colors.reset}
   node scripts/build-all-apps.mjs
   node scripts/build-all-apps.mjs --pwa
-  node scripts/build-all-apps.mjs --skip-data
+  node scripts/build-all-apps.mjs --both
+  node scripts/build-all-apps.mjs --app daz --both
 `);
 }
 
 /**
  * Discover all apps from src/apps directory
+ * @param filterAppId - Optional app ID to filter by
  */
-function discoverApps() {
+function discoverApps(filterAppId = null) {
     const appsDir = join(rootDir, 'src', 'apps');
 
     if (!existsSync(appsDir)) {
@@ -131,6 +147,10 @@ function discoverApps() {
         if (!entry.isDirectory()) continue;
 
         const appId = entry.name;
+
+        // Filter by specific app if requested
+        if (filterAppId && appId !== filterAppId) continue;
+
         const appJsonPath = join(appsDir, appId, 'app.json');
 
         let appInfo = {
@@ -183,15 +203,29 @@ function buildApp(appId, options) {
 function buildAllApps(args) {
     log.header('Building All Apps');
 
-    // Discover apps
-    const apps = discoverApps();
+    // Discover apps (filter by specific app if provided)
+    const apps = discoverApps(args.app);
 
     if (apps.length === 0) {
-        log.error('No apps found to build');
+        if (args.app) {
+            log.error(`App '${args.app}' not found`);
+        } else {
+            log.error('No apps found to build');
+        }
         process.exit(1);
     }
 
+    // Determine build variants
+    const buildVariants = [];
+    if (args.both) {
+        buildVariants.push({ type: 'USB', pwa: false, suffix: '' });
+        buildVariants.push({ type: 'PWA', pwa: true, suffix: '-pwa' });
+    } else {
+        buildVariants.push({ type: args.pwa ? 'PWA' : 'USB', pwa: args.pwa, suffix: args.pwa ? '-pwa' : '' });
+    }
+
     log.info(`Found ${apps.length} app(s): ${apps.map(a => a.id).join(', ')}`);
+    log.info(`Build variant(s): ${buildVariants.map(v => v.type).join(', ')}`);
 
     const results = {
         success: [],
@@ -202,17 +236,30 @@ function buildAllApps(args) {
 
     // Build each app
     for (const app of apps) {
-        log.divider();
-        console.log(`${colors.bright}Building: ${app.name} v${app.version} (${app.id})${colors.reset}`);
-        log.divider();
+        for (const variant of buildVariants) {
+            const variantLabel = buildVariants.length > 1
+                ? `${app.id}${variant.suffix}`
+                : app.id;
 
-        try {
-            buildApp(app.id, args);
-            results.success.push(app);
-            log.success(`Completed: ${app.id}`);
-        } catch (error) {
-            log.error(`Failed: ${app.id} - ${error.message}`);
-            results.failed.push({ app, error });
+            log.divider();
+            console.log(`${colors.bright}Building: ${app.name} v${app.version} (${variantLabel})${colors.reset}`);
+            console.log(`${colors.gray}Variant: ${variant.type}${colors.reset}`);
+            log.divider();
+
+            try {
+                // Create build options for this variant
+                const buildOptions = {
+                    ...args,
+                    pwa: variant.pwa,
+                };
+
+                buildApp(app.id, buildOptions);
+                results.success.push({ app, variant: variant.type });
+                log.success(`Completed: ${variantLabel}`);
+            } catch (error) {
+                log.error(`Failed: ${variantLabel} - ${error.message}`);
+                results.failed.push({ app, variant: variant.type, error });
+            }
         }
     }
 
@@ -220,15 +267,18 @@ function buildAllApps(args) {
 
     // Summary
     log.header('Build Summary');
+    const totalBuilds = apps.length * buildVariants.length;
     console.log(`  Total apps: ${apps.length}`);
+    console.log(`  Variants per app: ${buildVariants.length} (${buildVariants.map(v => v.type).join(', ')})`);
+    console.log(`  Total builds: ${totalBuilds}`);
     console.log(`  ${colors.green}Successful: ${results.success.length}${colors.reset}`);
     console.log(`  ${colors.red}Failed: ${results.failed.length}${colors.reset}`);
     console.log(`  Duration: ${duration}s`);
 
     if (results.failed.length > 0) {
-        console.log(`\n${colors.red}Failed apps:${colors.reset}`);
-        results.failed.forEach(({ app, error }) => {
-            console.log(`  - ${app.id}: ${error.message}`);
+        console.log(`\n${colors.red}Failed builds:${colors.reset}`);
+        results.failed.forEach(({ app, variant, error }) => {
+            console.log(`  - ${app.id} (${variant}): ${error.message}`);
         });
         process.exit(1);
     }

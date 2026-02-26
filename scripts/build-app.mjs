@@ -24,6 +24,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
 
+/**
+ * Get the output directory for an app build
+ * @param appId - App ID
+ * @param isPwa - Whether this is a PWA build
+ * @returns The output directory path
+ */
+function getDistDir(appId, isPwa = false) {
+    return isPwa ? join(rootDir, 'dist', `${appId}-pwa`) : join(rootDir, 'dist', appId);
+}
+
 // ANSI color codes for terminal output
 const colors = {
     reset: '\x1b[0m',
@@ -229,9 +239,9 @@ window.__TRAINER_EXERCISES__ = {
 /**
  * Copy app-specific assets
  */
-function copyAppAssets(appId) {
+function copyAppAssets(appId, isPwa = false) {
     const appAssetsDir = join(rootDir, 'src', 'apps', appId, 'assets');
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, isPwa);
 
     if (existsSync(appAssetsDir)) {
         log.info('Copying app assets...');
@@ -243,8 +253,8 @@ function copyAppAssets(appId) {
 /**
  * Generate manifest.json for PWA
  */
-function generateManifest(appConfig) {
-    const distDir = join(rootDir, 'dist', appConfig.id);
+function generateManifest(appConfig, isPwa = false) {
+    const distDir = getDistDir(appConfig.id, isPwa);
     const manifestPath = join(distDir, 'manifest.json');
 
     const manifest = {
@@ -276,9 +286,9 @@ function generateManifest(appConfig) {
 /**
  * Copy service worker for PWA
  */
-function copyServiceWorker(appId) {
+function copyServiceWorker(appId, isPwa = false) {
     const swSource = join(rootDir, 'public', 'sw.js');
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, isPwa);
     const swDest = join(distDir, 'sw.js');
 
     if (existsSync(swSource)) {
@@ -301,14 +311,14 @@ function copyServiceWorker(appId) {
  * Since we disabled publicDir in Vite config to prevent copying all app exercises,
  * we need to manually copy the necessary public files.
  */
-function copyPublicAssets(appId) {
+function copyPublicAssets(appId, isPwa = false) {
     const publicDir = join(rootDir, 'public');
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, isPwa);
 
     log.info('Copying public assets...');
 
     // Files to copy from public root (excluding data/)
-    const publicFiles = ['manifest.json', 'sw.js', 'vite.svg'];
+    const publicFiles = ['manifest.json', 'sw.js', 'vite.svg', 'icon-192.svg', 'icon-512.svg'];
 
     for (const file of publicFiles) {
         const sourcePath = join(publicDir, file);
@@ -327,13 +337,78 @@ function copyPublicAssets(appId) {
 }
 
 /**
+ * Copy app config files to dist.
+ * 
+ * For USB/offline mode: Generates JS files with window.__TRAINER_*__ globals
+ * For PWA mode: Optionally copies JSON files for fetch loading
+ * 
+ * @param appId - App ID
+ * @param pwa - Whether this is a PWA build (includes JSON files for fetch)
+ */
+function copyConfigFiles(appId, pwa = false) {
+    const appConfigDir = join(rootDir, 'src', 'apps', appId);
+    const defaultConfigDir = join(rootDir, 'src', 'config');
+    const distDir = getDistDir(appId, pwa);
+
+    log.info('Generating config files...');
+
+    // Config files to process: map JSON name to window global name
+    const configFiles = [
+        { json: 'subject.json', js: 'subject.js', global: '__TRAINER_SUBJECT__' },
+        { json: 'areas.json', js: 'areas.js', global: '__TRAINER_AREAS__' },
+        { json: 'themes.json', js: 'themes.js', global: '__TRAINER_THEMES__' },
+        { json: 'badges.json', js: 'badges.js', global: '__TRAINER_BADGES__' },
+    ];
+
+    // Create config directory in dist
+    const configDistDir = join(distDir, 'config');
+    mkdirSync(configDistDir, { recursive: true });
+
+    for (const config of configFiles) {
+        // Try app-specific config first, then fall back to default
+        const appConfigPath = join(appConfigDir, config.json);
+        const defaultConfigPath = join(defaultConfigDir, config.json);
+        const sourcePath = existsSync(appConfigPath) ? appConfigPath :
+            existsSync(defaultConfigPath) ? defaultConfigPath : null;
+
+        if (!sourcePath) {
+            log.warn(`Config file not found: ${config.json}`);
+            continue;
+        }
+
+        try {
+            // Read and parse the JSON
+            const jsonContent = readFileSync(sourcePath, 'utf-8');
+            const data = JSON.parse(jsonContent);
+
+            // Generate JS file with window global (USB/offline mode)
+            const jsContent = `// ${config.json} - Auto-generated for USB/offline mode\nwindow.${config.global} = ${JSON.stringify(data)};\n`;
+            const jsPath = join(configDistDir, config.js);
+            writeFileSync(jsPath, jsContent, 'utf-8');
+            log.info(`Generated: ${config.js}`);
+
+            // For PWA mode: also copy JSON files for fetch loading
+            if (pwa) {
+                const jsonPath = join(configDistDir, config.json);
+                cpSync(sourcePath, jsonPath);
+                log.info(`Copied: ${config.json}`);
+            }
+        } catch (error) {
+            log.error(`Failed to process ${config.json}: ${error.message}`);
+        }
+    }
+
+    log.success('Config files generated');
+}
+
+/**
  * Copy fonts to dist
  */
-function copyFonts(appId) {
+function copyFonts(appId, isPwa = false) {
     // This function is now deprecated - use copyPublicAssets instead
     // Kept for backwards compatibility with existing calls
     const fontsSource = join(rootDir, 'public', 'fonts');
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, isPwa);
 
     if (existsSync(fontsSource)) {
         log.info('Copying fonts...');
@@ -347,9 +422,9 @@ function copyFonts(appId) {
  * Copies to data/exercises.js (not data/{appId}/exercises.js) because
  * the HTML loads ./data/exercises.js regardless of app ID.
  */
-function copyExerciseData(appId) {
+function copyExerciseData(appId, isPwa = false) {
     const dataSource = join(rootDir, 'public', 'data', appId, 'exercises.js');
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, isPwa);
     const dataDir = join(distDir, 'data');
 
     // Clean up entire data directory to ensure only selected app's exercises.js remains
@@ -397,7 +472,7 @@ function buildApp(args) {
     }
 
     // Step 2: Clean dist directory
-    const distDir = join(rootDir, 'dist', appId);
+    const distDir = getDistDir(appId, args.pwa);
     if (existsSync(distDir)) {
         log.info('Cleaning dist directory...');
         rmSync(distDir, { recursive: true, force: true });
@@ -419,7 +494,8 @@ function buildApp(args) {
     log.info('Building with Vite...');
     // Build with Vite - output to app-specific directory
     // Use --base "./" for relative paths (works with file:// protocol for USB distribution)
-    const buildCmd = `npx vite build --base "./" --outDir "dist/${appId}"`;
+    const outDir = args.pwa ? `dist/${appId}-pwa` : `dist/${appId}`;
+    const buildCmd = `npx vite build --base "./" --outDir "${outDir}"`;
 
     // Build environment variables
     const buildEnv = {
@@ -441,15 +517,16 @@ function buildApp(args) {
     }
 
     // Step 5: Copy additional assets
-    copyPublicAssets(appId);
-    copyExerciseData(appId);
-    copyAppAssets(appId);
+    copyPublicAssets(appId, pwa);
+    copyConfigFiles(appId, pwa);
+    copyExerciseData(appId, pwa);
+    copyAppAssets(appId, pwa);
 
     // Step 6: PWA-specific steps
     if (pwa) {
         log.info('Configuring PWA...');
-        generateManifest(appConfig);
-        copyServiceWorker(appId);
+        generateManifest(appConfig, pwa);
+        copyServiceWorker(appId, pwa);
         log.success('PWA configuration complete');
     }
 

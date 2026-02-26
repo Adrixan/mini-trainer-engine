@@ -134,74 +134,120 @@ export function getCurrentAppId(): string {
 // ============================================================================
 
 /**
- * Type for a JSON module with default export.
- */
-type JsonModule<T> = { default: T };
-
-/**
  * Load a JSON configuration file dynamically.
  * Tries to load from app-specific directory first, falls back to default.
  * 
+ * Supports two loading modes:
+ * 1. USB/offline mode: Checks window.__TRAINER_* globals (set via script tags)
+ * 2. HTTP/PWA mode: Falls back to fetch for HTTP server loading
+ * 
  * @param filename - The name of the JSON file (e.g., 'subject.json')
- * @param appId - The app ID to load from
+ * @param _appId - The app ID to load from (kept for API compatibility)
  * @param useFallback - Whether to fall back to default config if app-specific doesn't exist
  * @returns The loaded JSON data
  */
-async function loadConfigJson<T>(filename: string, appId: string, useFallback = true): Promise<T> {
-    // Try app-specific path first
-    const appPath = `/src/apps/${appId}/${filename}`;
+async function loadConfigJson<T>(filename: string, _appId: string, useFallback = true): Promise<T> {
+    // Map filename to window key for USB/offline mode
+    const windowKeyMap: Record<string, string> = {
+        'subject.json': '__TRAINER_SUBJECT__',
+        'areas.json': '__TRAINER_AREAS__',
+        'themes.json': '__TRAINER_THEMES__',
+        'badges.json': '__TRAINER_BADGES__',
+    };
+
+    // Check window object first for USB/offline mode (script tag loading)
+    const windowObj = window as unknown as Record<string, unknown>;
+    const windowKey = windowKeyMap[filename];
+    if (windowKey && windowObj[windowKey]) {
+        return windowObj[windowKey] as T;
+    }
+
+    // Fall back to fetch for HTTP/PWA mode
+    // In production, config files are copied to /config/ directory
+    // Try app-specific path first (works in both dev and production)
+    const appPath = `./config/${filename}`;
+
+    // Skip file:// protocol check since we now check window first
+    // If window data wasn't available, try fetch anyway (might work with local server)
 
     try {
-        const module = await import(/* @vite-ignore */ appPath) as JsonModule<T>;
-        return module.default;
+        const response = await fetch(appPath);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        return await response.json() as T;
     } catch {
         // If app-specific doesn't exist and fallback is enabled, try default path
         if (useFallback) {
-            const defaultPath = `/src/config/${filename}`;
+            const defaultPath = `./config/${filename}`;
             try {
-                const module = await import(/* @vite-ignore */ defaultPath) as JsonModule<T>;
-                return module.default;
+                const response = await fetch(defaultPath);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return await response.json() as T;
             } catch {
                 throw new Error(`Failed to load ${filename} from both app-specific and default paths`);
             }
         }
-        throw new Error(`Failed to load ${filename} from app-specific path: /src/apps/${appId}/${filename}`);
+        throw new Error(`Failed to load ${filename} from app-specific path: ${appPath}`);
     }
 }
 
 /**
  * Load exercises JSON which has a different structure.
  * 
- * @param appId - The app ID to load from
+ * Supports two loading modes:
+ * 1. USB/offline mode: Checks window.__TRAINER_EXERCISES__ (set via script tags)
+ * 2. HTTP/PWA mode: Falls back to fetch for HTTP server loading
+ * 
+ * @param _appId - The app ID to load from (kept for API compatibility)
  * @param useFallback - Whether to fall back to default config
  * @returns The loaded exercises data
  */
-async function loadExercisesJson(appId: string, useFallback = true): Promise<Exercise[]> {
+async function loadExercisesJson(_appId: string, useFallback = true): Promise<Exercise[]> {
+    // Check window object first for USB/offline mode (script tag loading)
+    const windowObj = window as unknown as Record<string, unknown>;
+    if (windowObj.__TRAINER_EXERCISES__) {
+        const exercisesData = windowObj.__TRAINER_EXERCISES__;
+        if (Array.isArray(exercisesData)) {
+            return exercisesData as Exercise[];
+        }
+        // Handle object format { exercises: [...] }
+        if (exercisesData && typeof exercisesData === 'object' && 'exercises' in exercisesData) {
+            return (exercisesData as { exercises: Exercise[] }).exercises || [];
+        }
+    }
+
+    // Fall back to fetch for HTTP/PWA mode
+    // In production, exercises are loaded via script tag (window.__TRAINER_EXERCISES__)
+    // This function is for loading exercises via fetch if needed
     // Try app-specific path first
-    const appPath = `/src/apps/${appId}/exercises.json`;
+    const appPath = `./data/exercises.js`;
 
     try {
-        const module = await import(/* @vite-ignore */ appPath) as { default: { exercises: Exercise[] } };
-        return module.default.exercises;
+        const response = await fetch(appPath);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        return data.exercises || [];
     } catch {
         // If app-specific doesn't exist and fallback is enabled, try default path
         if (useFallback) {
-            const defaultPath = `/src/config/exercises.json`;
+            const defaultPath = `./data/exercises.js`;
             try {
-                const module = await import(/* @vite-ignore */ defaultPath) as { default: { exercises: Exercise[] } };
-                return module.default.exercises;
-            } catch {
-                // Try legacy path as last resort
-                const legacyPath = '/src/data/exercises.json';
-                try {
-                    const module = await import(/* @vite-ignore */ legacyPath) as { default: { exercises: Exercise[] } };
-                    return module.default.exercises;
-                } catch {
-                    throw new Error('Failed to load exercises from all possible paths');
+                const response = await fetch(defaultPath);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
+                const data = await response.json();
+                return data.exercises || [];
+            } catch {
+                throw new Error('Failed to load exercises from all possible paths');
             }
         }
-        throw new Error(`Failed to load exercises from app-specific path: /src/apps/${appId}/exercises.json`);
+        throw new Error(`Failed to load exercises from app-specific path: ${appPath}`);
     }
 }
 
