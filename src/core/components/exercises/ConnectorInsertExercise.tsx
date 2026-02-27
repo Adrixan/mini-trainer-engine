@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
+import { optionStyles, type OptionVariant } from '@core/utils/exerciseStyles';
 import type { ConnectorInsertContent } from '@/types/exercise';
 
 interface Props {
@@ -82,10 +84,15 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
                     const isCorrect = showSolution && option === content.correctConnector;
                     const isWrong = showSolution && isSelected && option !== content.correctConnector;
 
-                    let style = 'bg-white border-2 border-gray-200 text-gray-700';
-                    if (isSelected && !showSolution) style = 'bg-primary/10 border-2 border-primary text-primary';
-                    if (isCorrect) style = 'bg-green-50 border-2 border-green-400 text-green-700';
-                    if (isWrong) style = 'bg-red-50 border-2 border-red-400 text-red-700';
+                    const getVariant = (): OptionVariant => {
+                        if (showSolution) {
+                            if (isCorrect) return 'correct';
+                            if (isWrong) return 'incorrect';
+                            return 'disabled';
+                        }
+                        if (isSelected) return 'selected';
+                        return 'default';
+                    };
 
                     return (
                         <button
@@ -96,7 +103,7 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
                             role="radio"
                             aria-checked={isSelected}
                             aria-label={option}
-                            className={`py-3 px-4 rounded-xl font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${style}`}
+                            className={`py-3 px-4 rounded-xl font-bold text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${optionStyles({ variant: getVariant() })}`}
                         >
                             {option}
                         </button>
@@ -106,20 +113,12 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
 
             {/* Solution */}
             {showSolution && selected !== content.correctConnector && (
-                <div
-                    className="bg-green-50 border border-green-200 rounded-xl p-3 animate-fadeIn"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <div className="text-xs text-green-600 font-semibold mb-1">
-                        {t('exercises.connectorInsert.solution')}
-                    </div>
-                    <p className="text-sm text-green-800 font-semibold">
-                        {content.sentencePart1}{' '}
-                        <span className="underline">{content.correctConnector}</span>{' '}
-                        {content.sentencePart2}
-                    </p>
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={t('exercises.connectorInsert.solution')}
+                    explanation={`${content.sentencePart1} ${content.correctConnector} ${content.sentencePart2}`}
+                />
             )}
 
             {/* Hints */}

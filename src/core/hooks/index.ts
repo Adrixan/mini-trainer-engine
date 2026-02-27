@@ -5,7 +5,7 @@ export type { UseExerciseSessionOptions, UseExerciseSessionReturn } from './useE
 export { useExerciseScoring, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from './useExerciseScoring';
 export type { ExerciseTypeStats, ScoringStats, UseExerciseScoringOptions } from './useExerciseScoring';
 
-export { useExerciseLogic, useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise, calculateStarsFromAttempts, calculateStarsFromTime } from './useExerciseLogic';
+export { useExerciseLogic, useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise, calculateStarsFromTime } from './useExerciseLogic';
 export type { UseExerciseLogicOptions, UseExerciseLogicReturn, ExerciseResult } from './useExerciseLogic';
 
 export { useFocusTrap, useFocusNavigation, useRovingTabIndex } from './useFocusTrap';

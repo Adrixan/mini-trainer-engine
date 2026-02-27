@@ -15,8 +15,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { calculateStars } from '@core/utils/gamification';
 import type { Score, StarRating } from '@/types/gamification';
 
-// Re-export for backward compatibility
-export { calculateStars as calculateStarsFromAttempts } from '@core/utils/gamification';
 
 // ============================================================================
 // Types
@@ -460,6 +458,9 @@ export function useExerciseLogic<T = unknown>(
 /**
  * Hook for exercises with text input.
  * Includes case-insensitive matching and trim functionality.
+ * 
+ * @deprecated This hook is not used by any exercise component. Exercise components
+ * manage their own local state. This hook will be removed in a future version.
  */
 export function useTextInputExercise(
     correctAnswers: string[],
@@ -490,6 +491,9 @@ export function useTextInputExercise(
 
 /**
  * Hook for exercises with multiple choice selection.
+ * 
+ * @deprecated This hook is not used by any exercise component. Exercise components
+ * manage their own local state. This hook will be removed in a future version.
  */
 export function useMultipleChoiceExercise(
     correctIndex: number,
@@ -508,6 +512,9 @@ export function useMultipleChoiceExercise(
 
 /**
  * Hook for exercises with array ordering (word order, sentence builder).
+ * 
+ * @deprecated This hook is not used by any exercise component. Exercise components
+ * manage their own local state. This hook will be removed in a future version.
  */
 export function useOrderingExercise<T>(
     correctOrder: T[],

@@ -7,6 +7,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
 import { ItemPool, CategoryBucket, useCategorySort } from './sorting';
 import type { SortingContent } from '@/types/exercise';
 
@@ -166,21 +167,13 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
 
             {/* Show correct sorting when wrong */}
             {showSolution && results && Object.values(results).some((cat) => Object.values(cat).some((v) => !v)) && (
-                <div
-                    className="bg-green-50 border border-green-200 rounded-xl p-3 animate-fadeIn"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <span className="text-xs text-green-600 font-semibold">
-                        {t('exercises.sorting.correctSorting')}
-                    </span>
-                    {content.categories.map((cat, idx) => (
-                        <p key={idx} className="mt-1 text-sm">
-                            <span className="font-bold text-green-800">{cat.label}:</span>{' '}
-                            <span className="text-green-700">{cat.items.join(', ')}</span>
-                        </p>
-                    ))}
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={t('exercises.sorting.correctSorting')}
+                    explanation={content.categories.map((cat) => `${cat.label}: ${cat.items.join(', ')}`).join('\n')}
+                    className="whitespace-pre-line"
+                />
             )}
 
             {/* Hints */}

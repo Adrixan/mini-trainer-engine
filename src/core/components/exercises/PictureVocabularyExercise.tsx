@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
+import { optionStyles, type OptionVariant } from '@core/utils/exerciseStyles';
 import type { PictureVocabularyContent } from '@/types/exercise';
 
 interface Props {
@@ -95,18 +97,15 @@ export function PictureVocabularyExercise({ content, hints, onSubmit, showSoluti
                             option === content.correctAnswer ||
                             content.acceptableAnswers?.includes(option);
 
-                        let style = 'bg-white border-2 border-gray-200 text-gray-700';
-                        if (showSolution) {
-                            if (isCorrect) {
-                                style = 'bg-green-50 border-2 border-green-400 text-green-800';
-                            } else if (isSelected && !isCorrect) {
-                                style = 'bg-red-50 border-2 border-red-400 text-red-700';
-                            } else {
-                                style = 'bg-gray-50 border-2 border-gray-200 text-gray-400';
+                        const getVariant = (): OptionVariant => {
+                            if (showSolution) {
+                                if (isCorrect) return 'correct';
+                                if (isSelected && !isCorrect) return 'incorrect';
+                                return 'disabled';
                             }
-                        } else if (isSelected) {
-                            style = 'bg-primary/10 border-2 border-primary text-primary';
-                        }
+                            if (isSelected) return 'selected';
+                            return 'default';
+                        };
 
                         return (
                             <button
@@ -118,7 +117,7 @@ export function PictureVocabularyExercise({ content, hints, onSubmit, showSoluti
                                 role="radio"
                                 aria-checked={isSelected}
                                 aria-label={`${String.fromCharCode(65 + idx)}: ${option}`}
-                                className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-base transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${style} ${showSolution ? 'cursor-default' : 'hover:border-primary/50'}`}
+                                className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-base transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${optionStyles({ variant: getVariant() })}`}
                             >
                                 <span className="inline-flex items-center gap-3">
                                     <span
@@ -143,15 +142,12 @@ export function PictureVocabularyExercise({ content, hints, onSubmit, showSoluti
 
             {/* Show correct answer in solution mode */}
             {showSolution && (
-                <div
-                    className="bg-green-50 rounded-xl p-3 text-center"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <p className="text-sm text-green-800 font-semibold">
-                        {t('exercises.pictureVocabulary.correctAnswer')} <strong>{content.correctAnswer}</strong>
-                    </p>
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={t('exercises.pictureVocabulary.correctAnswer')}
+                    explanation={content.correctAnswer}
+                />
             )}
 
             {/* Hints */}

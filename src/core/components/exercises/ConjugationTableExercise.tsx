@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
+import { inputFieldStyles } from '@core/utils/exerciseStyles';
 import type { ConjugationTableContent } from '@/types/exercise';
 
 interface Props {
@@ -147,14 +149,11 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
                                             aria-label={cell.person}
                                             aria-invalid={result === false}
                                             aria-describedby={result === false ? `correct-${idx}` : undefined}
-                                            className={`w-full px-3 py-1.5 text-sm border-2 rounded-lg focus:outline-none transition-colors ${result === true
-                                                ? 'border-green-400 bg-green-50'
-                                                : result === false
-                                                    ? 'border-red-400 bg-red-50'
-                                                    : caseWrongCells[idx]
-                                                        ? 'border-amber-400 bg-amber-50'
-                                                        : 'border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/30'
-                                                }`}
+                                            className={`w-full px-3 py-1.5 text-sm border-2 rounded-lg focus:outline-none transition-colors ${inputFieldStyles({
+                                                state: showSolution
+                                                    ? (result === true ? 'correct' : result === false ? 'incorrect' : 'neutral')
+                                                    : 'neutral'
+                                            })}`}
                                             placeholder="..."
                                         />
                                         {/* Show correct answer on solution */}
@@ -176,15 +175,11 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
 
             {/* Case-wrong feedback */}
             {Object.values(caseWrongCells).some(Boolean) && !showSolution && (
-                <div
-                    className="bg-amber-50 border border-amber-200 rounded-xl p-3 animate-bounceIn"
-                    role="alert"
-                    aria-live="polite"
-                >
-                    <p className="text-sm font-semibold text-amber-800">
-                        {t('exercises.fillBlank.wrongCase')}
-                    </p>
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="warning"
+                    message={t('exercises.fillBlank.wrongCase')}
+                />
             )}
 
             {/* Hints - only show after 3 failed attempts (when showSolution is true) */}

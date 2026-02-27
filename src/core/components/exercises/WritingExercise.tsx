@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
 import type { WritingContent } from '@/types/exercise';
 import { shuffle } from '@/core/utils/shuffle';
 
@@ -283,11 +284,12 @@ export function WritingExercise({ content, hints, onSubmit, showSolution }: Prop
 
             {/* Show correct answer in solution mode */}
             {showSolution && content.correctSentence && (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-3">
-                    <p className="text-sm text-green-800 font-medium">
-                        <strong>{t('exercises.writing.correctAnswer')}:</strong> {content.correctSentence}
-                    </p>
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={t('exercises.writing.correctAnswer')}
+                    explanation={content.correctSentence}
+                />
             )}
         </div>
     );

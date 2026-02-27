@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
 import type { WordOrderContent } from '@/types/exercise';
 
 interface Props {
@@ -207,22 +208,15 @@ export function WordOrderExercise({ content, hints, onSubmit, showSolution }: Pr
 
             {/* Show all correct orders when wrong */}
             {showSolution && result === false && (
-                <div
-                    className="bg-green-50 border border-green-200 rounded-xl p-3 animate-fadeIn"
-                    role="status"
-                    aria-live="polite"
-                >
-                    <span className="text-xs text-green-600 font-semibold">
-                        {allValidOrders.length > 1
-                            ? t('exercises.wordOrder.correctOrders', 'Correct sentences:')
-                            : t('exercises.wordOrder.correctOrder')}
-                    </span>
-                    {allValidOrders.map((order, idx) => (
-                        <p key={idx} className="mt-1 text-base font-bold text-green-800">
-                            {order.join(' ')}
-                        </p>
-                    ))}
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={allValidOrders.length > 1
+                        ? t('exercises.wordOrder.correctOrders', 'Correct sentences:')
+                        : t('exercises.wordOrder.correctOrder')}
+                    explanation={allValidOrders.map((order) => order.join(' ')).join('\n')}
+                    className="whitespace-pre-line"
+                />
             )}
 
             {/* Hints */}

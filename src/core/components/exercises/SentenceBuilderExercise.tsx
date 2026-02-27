@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
+import { ExerciseFeedback } from './ExerciseFeedback';
+import { optionStyles, type OptionVariant } from '@core/utils/exerciseStyles';
 import { isValidSubjectVerbAgreement, findSubjectVerbColumns } from '@/core/data';
 import type { SentenceBuilderContent } from '@/types/exercise';
 
@@ -20,7 +22,6 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
     const [selections, setSelections] = useState<(string | null)[]>(
         content.columns.map(() => null),
     );
-    const [wasCorrect, setWasCorrect] = useState(false);
 
     const builtSentence = selections.filter(Boolean).join(' ');
     const allSelected = selections.every((s) => s !== null);
@@ -64,7 +65,6 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
             }
         }
 
-        setWasCorrect(isCorrect);
         onSubmit(isCorrect);
     };
 
@@ -90,6 +90,13 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
                         <div className="space-y-1" role="radiogroup" aria-label={col.label}>
                             {col.words.map((word) => {
                                 const isSelected = selections[colIdx] === word;
+                                const getVariant = (): OptionVariant => {
+                                    if (showSolution) {
+                                        return isSelected ? 'correct' : 'disabled';
+                                    }
+                                    return isSelected ? 'selected' : 'default';
+                                };
+
                                 return (
                                     <button
                                         key={word}
@@ -98,10 +105,7 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
                                         role="radio"
                                         aria-checked={isSelected}
                                         aria-label={word}
-                                        className={`w-full py-2 px-3 rounded-lg text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${isSelected
-                                            ? 'bg-primary text-white shadow-md'
-                                            : 'bg-white border border-gray-200 text-gray-700 hover:border-primary hover:bg-primary/5'
-                                            } ${showSolution ? 'cursor-default' : ''}`}
+                                        className={`w-full py-2 px-3 rounded-lg text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${optionStyles({ variant: getVariant(), size: 'sm' })}`}
                                     >
                                         {word}
                                     </button>
@@ -132,25 +136,15 @@ export function SentenceBuilderExercise({ content, hints, onSubmit, showSolution
 
             {/* Solution display - show all possible sentences */}
             {showSolution && (
-                <div
-                    className={`rounded-xl p-4 animate-fadeIn ${wasCorrect
-                        ? 'bg-green-50 border border-green-200'
-                        : 'bg-green-50 border border-green-200'
-                        }`}
-                    role="status"
-                    aria-live="polite"
-                >
-                    <div className="text-xs text-green-600 font-semibold mb-1">
-                        {content.targetSentences.length > 1
-                            ? t('exercises.sentenceBuilder.possibleSentences', 'Mögliche Sätze:')
-                            : t('exercises.solved')}
-                    </div>
-                    {content.targetSentences.map((sentence, idx) => (
-                        <div key={idx} className="text-lg font-bold text-green-800">
-                            {sentence}
-                        </div>
-                    ))}
-                </div>
+                <ExerciseFeedback
+                    show={true}
+                    type="success"
+                    message={content.targetSentences.length > 1
+                        ? t('exercises.sentenceBuilder.possibleSentences', 'Mögliche Sätze:')
+                        : t('exercises.solved')}
+                    explanation={content.targetSentences.join('\n')}
+                    className="whitespace-pre-line"
+                />
             )}
 
             {/* Hints */}

@@ -16,6 +16,19 @@ import {
     type SaveGamePayload,
     type ImportResult,
 } from './profilePersistence';
+import {
+    selectActiveProfile,
+    selectNickname,
+    selectAvatar,
+    selectTotalStars,
+    selectCurrentStreak,
+    selectLongestStreak,
+    selectBadges,
+    selectThemeProgress,
+    selectLevel,
+    selectThemeLevels,
+    selectThemeLevel,
+} from './profileSelectors';
 import type {
     UserProfile,
     Badge,
@@ -323,64 +336,20 @@ useProfileStore.subscribe((state, prevState) => {
 });
 
 // ============================================================================
-// Selectors
+// Re-export Selectors
 // ============================================================================
 
-/**
- * Selector for active profile.
- */
-export const selectActiveProfile = (state: ProfileState) => state.activeProfile;
-
-/**
- * Selector for profile nickname.
- */
-export const selectNickname = (state: ProfileState) => state.activeProfile?.nickname;
-
-/**
- * Selector for profile avatar.
- */
-export const selectAvatar = (state: ProfileState) => state.activeProfile?.avatarId;
-
-/**
- * Selector for total stars.
- */
-export const selectTotalStars = (state: ProfileState) => state.activeProfile?.totalStars ?? 0;
-
-/**
- * Selector for current streak.
- */
-export const selectCurrentStreak = (state: ProfileState) => state.activeProfile?.currentStreak ?? 0;
-
-/**
- * Selector for longest streak.
- */
-export const selectLongestStreak = (state: ProfileState) => state.activeProfile?.longestStreak ?? 0;
-
-/**
- * Selector for badges.
- */
-export const selectBadges = (state: ProfileState) => state.activeProfile?.badges ?? [];
-
-/**
- * Selector for theme progress.
- */
-export const selectThemeProgress = (themeId: ThemeId) => (state: ProfileState) =>
-    state.activeProfile?.themeProgress[themeId];
-
-/**
- * Selector for level in an area.
- */
-export const selectLevel = (areaId: ObservationAreaId) => (state: ProfileState) =>
-    state.activeProfile?.currentLevels[areaId] ?? 1;
-
-/**
- * Selector for theme levels (highest completed level per theme).
- */
-export const selectThemeLevels = (state: ProfileState) =>
-    state.activeProfile?.themeLevels ?? {};
-
-/**
- * Selector for a specific theme's completed level.
- */
-export const selectThemeLevel = (themeId: ThemeId) => (state: ProfileState) =>
-    state.activeProfile?.themeLevels?.[themeId] ?? 0;
+// Re-export selectors from profileSelectors for backwards compatibility
+export {
+    selectActiveProfile,
+    selectNickname,
+    selectAvatar,
+    selectTotalStars,
+    selectCurrentStreak,
+    selectLongestStreak,
+    selectBadges,
+    selectThemeProgress,
+    selectLevel,
+    selectThemeLevels,
+    selectThemeLevel,
+};
