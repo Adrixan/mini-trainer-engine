@@ -5,8 +5,14 @@ export type { UseExerciseSessionOptions, UseExerciseSessionReturn } from './useE
 export { useExerciseScoring, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from './useExerciseScoring';
 export type { ExerciseTypeStats, ScoringStats, UseExerciseScoringOptions } from './useExerciseScoring';
 
-export { useExerciseLogic, useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise, calculateStarsFromTime } from './useExerciseLogic';
+export { useExerciseLogic, calculateStarsFromTime } from './useExerciseLogic';
 export type { UseExerciseLogicOptions, UseExerciseLogicReturn, ExerciseResult } from './useExerciseLogic';
+
+/**
+ * @deprecated These hooks are not used by any exercise component. Exercise components
+ * manage their own local state. These will be removed in a future version.
+ */
+export { useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise } from './useExerciseLogic';
 
 export { useFocusTrap, useFocusNavigation, useRovingTabIndex } from './useFocusTrap';
 export type { UseFocusTrapOptions } from './useFocusTrap';

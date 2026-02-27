@@ -17,6 +17,9 @@ mini-trainer-engine/
 │   │   ├── components/
 │   │   │   ├── exercises/             # Exercise type components
 │   │   │   │   ├── ExerciseRenderer.tsx
+│   │   │   │   ├── ExerciseFeedback.tsx    # NEW: Centralized feedback component
+│   │   │   │   ├── ExerciseHeader.tsx
+│   │   │   │   ├── ExerciseFooter.tsx
 │   │   │   │   ├── SentenceBuilderExercise.tsx
 │   │   │   │   ├── ConjugationTableExercise.tsx
 │   │   │   │   ├── MultipleChoiceExercise.tsx
@@ -27,60 +30,108 @@ mini-trainer-engine/
 │   │   │   │   ├── ConnectorInsertExercise.tsx
 │   │   │   │   ├── WritingExercise.tsx
 │   │   │   │   ├── PictureVocabularyExercise.tsx
-│   │   │   │   └── HintButton.tsx
-│   │   │   ├── BottomNav.tsx
-│   │   │   ├── ErrorBoundary.tsx
-│   │   │   ├── BadgeNotification.tsx
-│   │   │   └── LevelUpCelebration.tsx
+│   │   │   │   ├── HintButton.tsx
+│   │   │   │   └── sorting/           # Category sorting subcomponents
+│   │   │   │       ├── CategoryBucket.tsx
+│   │   │   │       ├── DraggableItem.tsx
+│   │   │   │       ├── ItemPool.tsx
+│   │   │   │       └── useCategorySort.ts
+│   │   │   ├── gamification/         # Gamification components
+│   │   │   │   ├── AchievementGrid.tsx
+│   │   │   │   ├── BadgeEarnedToast.tsx
+│   │   │   │   ├── LevelUpCelebration.tsx
+│   │   │   │   ├── ProgressBar.tsx
+│   │   │   │   ├── StarDisplay.tsx
+│   │   │   │   └── StreakCounter.tsx
+│   │   │   ├── level/               # Level display components
+│   │   │   │   └── LevelCard.tsx
+│   │   │   ├── theme/               # Theme display components
+│   │   │   │   └── ThemeCard.tsx
+│   │   │   ├── profile/             # Profile components
+│   │   │   │   └── ProfileCreation.tsx
+│   │   │   ├── accessibility/        # Accessibility components
+│   │   │   │   ├── AccessibilitySettings.tsx
+│   │   │   │   ├── LiveRegion.tsx
+│   │   │   │   └── SkipToContent.tsx
+│   │   │   ├── layout/              # Layout components
+│   │   │   │   ├── GameHeader.tsx
+│   │   │   │   └── Layout.tsx
+│   │   │   ├── ui/                 # Reusable UI components
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── Card.tsx
+│   │   │   │   ├── Modal.tsx
+│   │   │   │   └── index.ts
+│   │   │   └── ErrorBoundary.tsx
 │   │   ├── hooks/
 │   │   │   ├── useExerciseScoring.ts
 │   │   │   ├── useExerciseSession.ts
-│   │   │   └── useFocusTrap.ts
+│   │   │   ├── useExerciseLogic.ts
+│   │   │   ├── useExercisePageState.ts
+│   │   │   ├── useGamification.ts
+│   │   │   ├── useFocusTrap.ts
+│   │   │   ├── useKeyboardNavigation.ts  # NEW: Keyboard navigation hook
+│   │   │   ├── useAccessibility.ts
+│   │   │   └── index.ts
 │   │   ├── stores/
 │   │   │   ├── appStore.ts
-│   │   │   └── childStore.ts
+│   │   │   ├── profileStore.ts       # NEW: Separated profile store
+│   │   │   ├── exerciseStore.ts     # NEW: Separated exercise store
+│   │   │   └── index.ts
 │   │   ├── storage/
-│   │   │   └── db.ts
+│   │   │   ├── db.ts
+│   │   │   ├── localStorage.ts
+│   │   │   ├── migration.ts
+│   │   │   └── index.ts
 │   │   ├── utils/
-│   │   │   ├── dailyChallenge.ts
-│   │   │   ├── dataExport.ts
-│   │   │   ├── exerciseSelector.ts
-│   │   │   ├── levelThresholds.ts
-│   │   │   └── sounds.ts
+│   │   │   ├── shuffle.ts           # NEW: Consolidated shuffle utilities
+│   │   │   ├── exerciseStyles.ts    # NEW: Exercise styling utilities
+│   │   │   ├── starCalculation.ts  # NEW: Star rating calculations
+│   │   │   ├── levelCalculation.ts # NEW: Level progression calculations
+│   │   │   ├── streakCalculation.ts # NEW: Daily streak calculations
+│   │   │   ├── gamification.ts     # Re-exports from calculation modules
+│   │   │   ├── badges.ts           # Badge checking utilities
+│   │   │   ├── accessibility.ts     # Accessibility utilities
+│   │   │   ├── sounds.ts           # Sound effect utilities
+│   │   │   ├── exercise.ts         # Exercise utilities
+│   │   │   ├── validation.ts       # Configuration validation
+│   │   │   ├── id.ts               # ID generation
+│   │   │   ├── cva.ts              # Class variance authority
+│   │   │   └── index.ts
 │   │   ├── pages/
 │   │   │   ├── HomePage.tsx
 │   │   │   ├── ThemeSelectPage.tsx
 │   │   │   ├── LevelSelectPage.tsx
 │   │   │   ├── ExercisePage.tsx
+│   │   │   ├── exercise/           # NEW: Decomposed exercise page views
+│   │   │   │   ├── ExerciseCompleteView.tsx
+│   │   │   │   ├── ExerciseInProgressView.tsx
+│   │   │   │   ├── ExerciseLoadingState.tsx
+│   │   │   │   ├── NoExerciseView.tsx
+│   │   │   │   └── index.ts
 │   │   │   ├── ProgressPage.tsx
 │   │   │   ├── SettingsPage.tsx
+│   │   │   ├── ProfilePage.tsx
+│   │   │   ├── ResultsPage.tsx
 │   │   │   ├── TeacherPinPage.tsx
 │   │   │   ├── TeacherDashboardPage.tsx
-│   │   │   ├── BadgeGalleryPage.tsx
-│   │   │   └── DailyChallengePage.tsx
-│   │   └── i18n/
-│   │       └── index.ts
+│   │   │   └── BadgeGalleryPage.tsx
+│   │   ├── i18n/
+│   │   │   └── index.ts
+│   │   ├── config/
+│   │   │   ├── ConfigContext.tsx
+│   │   │   ├── loader.ts
+│   │   │   ├── validation.ts
+│   │   │   └── index.ts
+│   │   └── router/
+│   │       └── index.tsx
 │   │
-│   ├── config/                        # CONFIGURATION (customizable per trainer)
-│   │   ├── trainer.config.ts          # Main trainer configuration
-│   │   ├── subject.config.ts          # Subject/domain definition
-│   │   ├── exercises.json             # Exercise content data
-│   │   ├── themes.json                # Content themes
-│   │   ├── badges.json                # Achievement definitions
-│   │   ├── observationAreas.json      # Diagnostic framework
-│   │   └── i18n/
-│   │       ├── de-AT.json
-│   │       ├── en.json
-│   │       └── [other-locales].json
+│   ├── apps/                         # App-specific configurations
+│   │   ├── daz/
+│   │   └── mathematik/
 │   │
-│   ├── types/                         # TYPE DEFINITIONS (extensible)
-│   │   ├── index.ts
-│   │   ├── exercises.ts
-│   │   ├── observations.ts
-│   │   ├── themes.ts
-│   │   ├── profile.ts
-│   │   ├── settings.ts
-│   │   └── config.ts                  # Configuration type definitions
+│   ├── config/                       # Default configuration files
+│   │
+│   ├── types/                       # TYPE DEFINITIONS (extensible)
 │   │
 │   ├── App.tsx
 │   ├── main.tsx
@@ -93,10 +144,12 @@ mini-trainer-engine/
 ├── scripts/
 │   ├── build-exercise-data.mjs        # Exercise data build script
 │   ├── validate-exercises.cjs         # Exercise validation script
-│   └── add-new-exercises.mjs          # Exercise authoring helper
+│   ├── add-new-exercises.mjs          # Exercise authoring helper
+│   └── build-app.mjs                 # App build script
 │
-├── plans/                             # Architecture and planning documents
-├── .kilocode/                         # Kilo Code configuration
+├── docs/                             # Documentation
+├── plans/                            # Architecture and planning documents
+├── .kilocode/                       # Kilo Code configuration
 ├── vite.config.ts
 ├── tailwind.config.js
 ├── tsconfig.json
