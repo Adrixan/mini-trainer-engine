@@ -13,11 +13,11 @@ export const solutionStateStyles = cva(
     {
         variants: {
             state: {
-                neutral: 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700',
-                correct: 'bg-green-50 dark:bg-green-900/30 border-2 border-green-500 dark:border-green-400',
-                incorrect: 'bg-red-50 dark:bg-red-900/30 border-2 border-red-500 dark:border-red-400',
-                selected: 'bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-500 dark:border-blue-400',
-                disabled: 'bg-gray-100 dark:bg-gray-800 opacity-50 cursor-not-allowed',
+                neutral: 'bg-white border-2 border-gray-200',
+                correct: 'bg-green-50 border-2 border-green-500',
+                incorrect: 'bg-red-50 border-2 border-red-500',
+                selected: 'bg-blue-50 border-2 border-blue-500',
+                disabled: 'bg-gray-100 opacity-50 cursor-not-allowed',
             },
         },
         defaultVariants: {
@@ -34,10 +34,10 @@ export const feedbackStyles = cva(
     {
         variants: {
             type: {
-                success: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200',
-                error: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200',
-                info: 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200',
-                warning: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200',
+                success: 'bg-green-100 text-green-800',
+                error: 'bg-red-100 text-red-800',
+                info: 'bg-blue-100 text-blue-800',
+                warning: 'bg-yellow-100 text-yellow-800',
             },
         },
         defaultVariants: {
@@ -54,11 +54,11 @@ export const optionStyles = cva(
     {
         variants: {
             variant: {
-                default: 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500',
-                selected: 'bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-500 dark:border-blue-400',
-                correct: 'bg-green-50 dark:bg-green-900/30 border-2 border-green-500 dark:border-green-400',
-                incorrect: 'bg-red-50 dark:bg-red-900/30 border-2 border-red-500 dark:border-red-400',
-                disabled: 'bg-gray-100 dark:bg-gray-800 opacity-50 cursor-not-allowed',
+                default: 'bg-white border-2 border-gray-200 hover:border-blue-400',
+                selected: 'bg-blue-50 border-2 border-blue-500',
+                correct: 'bg-green-50 border-2 border-green-500',
+                incorrect: 'bg-red-50 border-2 border-red-500',
+                disabled: 'bg-gray-100 opacity-50 cursor-not-allowed',
             },
             size: {
                 sm: 'p-2 text-sm',
@@ -81,10 +81,10 @@ export const inputFieldStyles = cva(
     {
         variants: {
             state: {
-                neutral: 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800',
-                correct: 'border-green-500 dark:border-green-400 bg-green-50 dark:bg-green-900/30',
-                incorrect: 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/30',
-                focused: 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20',
+                neutral: 'border-gray-200 bg-white',
+                correct: 'border-green-500 bg-green-50',
+                incorrect: 'border-red-500 bg-red-50',
+                focused: 'border-blue-500 ring-2 ring-blue-500/20',
             },
         },
         defaultVariants: {
@@ -101,8 +101,8 @@ export const hintButtonStyles = cva(
     {
         variants: {
             variant: {
-                default: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700',
-                active: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200',
+                default: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                active: 'bg-yellow-100 text-yellow-800',
             },
         },
         defaultVariants: {

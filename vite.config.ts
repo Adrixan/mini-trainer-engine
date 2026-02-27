@@ -97,4 +97,9 @@ export default defineConfig({
             allow: ['..'],
         },
     },
+    preview: {
+        // Preview server configuration
+        // Serves via HTTP for proper functionality
+        port: 4173,
+    },
 });

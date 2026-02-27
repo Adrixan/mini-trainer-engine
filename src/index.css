@@ -20,22 +20,6 @@
     --font-size-multiplier: 1;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-primary: 56 189 248;
-        /* sky-400 */
-        --color-secondary: 232 121 249;
-        /* fuchsia-400 */
-        --color-success: 74 222 128;
-        /* green-400 */
-        --color-warning: 251 191 36;
-        /* amber-400 */
-        --color-error: 248 113 113;
-        /* red-400 */
-    }
-}
-
 /* ============================================================================
    Accessibility: Font Size Variants
    ============================================================================ */

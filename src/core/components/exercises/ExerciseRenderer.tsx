@@ -33,6 +33,8 @@ export interface ExerciseRendererProps extends ExerciseProps {
     fallback?: ReactNode;
     /** Optional loading state */
     isLoading?: boolean;
+    /** Exercise ID for key prop to force remount when exercise changes */
+    exerciseId?: string;
 }
 
 /**
@@ -113,6 +115,7 @@ export const ExerciseRenderer = memo(function ExerciseRenderer({
     showSolution,
     fallback,
     isLoading,
+    exerciseId,
 }: ExerciseRendererProps) {
     // Show loading state
     if (isLoading) {
@@ -128,8 +131,11 @@ export const ExerciseRenderer = memo(function ExerciseRenderer({
     }
 
     // Render the exercise component
+    // Use exerciseId as key to force remount when exercise changes
+    // This ensures local state (like answer input) is cleared between exercises
     return (
         <Component
+            key={exerciseId}
             content={content}
             hints={hints}
             onSubmit={onSubmit}

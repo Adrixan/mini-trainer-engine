@@ -103,6 +103,7 @@ export function ExerciseInProgressView({
             <div className="flex-1 lg:flex-none">
                 <ExerciseRenderer
                     content={currentExercise.content}
+                    exerciseId={currentExercise.id}
                     hints={currentExercise.hints}
                     onSubmit={onSubmit}
                     showSolution={showSolution}

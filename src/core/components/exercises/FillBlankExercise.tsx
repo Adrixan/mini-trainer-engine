@@ -36,7 +36,7 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
     const parts = content.sentence.split('{{blank}}');
 
     // Case-sensitive list for exact matching
-    const allAcceptableExact = [content.correctAnswer, ...content.acceptableAnswers];
+    const allAcceptableExact = [content.correctAnswer, ...(content.acceptableAnswers || [])];
     // Case-insensitive list for detecting "right word, wrong case"
     const allAcceptableLower = allAcceptableExact.map((a) => a.toLowerCase());
 

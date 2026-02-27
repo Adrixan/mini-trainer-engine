@@ -63,11 +63,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "1, 2, 3, {{blank}}, 5",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "Welche Zahl kommt nach 3?",
@@ -87,11 +83,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "6, 7, {{blank}}, 9, 10",
-                "correctAnswer": "8",
-                "acceptableAnswers": [
-                    "acht"
-                ],
-                "numericWordForm": "acht"
+                "correctAnswer": "8"
             },
             "hints": [
                 "Welche Zahl ist zwischen 7 und 9?",
@@ -273,11 +265,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "11, 12, 13, {{blank}}, 15",
-                "correctAnswer": "14",
-                "acceptableAnswers": [
-                    "vierzehn"
-                ],
-                "numericWordForm": "vierzehn"
+                "correctAnswer": "14"
             },
             "hints": [
                 "Nach 13 kommt die nächste Zahl",
@@ -297,11 +285,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "16, 17, {{blank}}, 19, 20",
-                "correctAnswer": "18",
-                "acceptableAnswers": [
-                    "achtzehn"
-                ],
-                "numericWordForm": "achtzehn"
+                "correctAnswer": "18"
             },
             "hints": [
                 "Achtzehn = acht + zehn",
@@ -507,11 +491,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "2 + 2 = {{blank}}",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "2 + 2 ist doppelt so viel",
@@ -1445,11 +1425,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "21, 22, 23, {{blank}}, 25",
-                "correctAnswer": "24",
-                "acceptableAnswers": [
-                    "vierundzwanzig"
-                ],
-                "numericWordForm": "vierundzwanzig"
+                "correctAnswer": "24"
             },
             "hints": [
                 "Zähle weiter: 21, 22, 23, ...",
@@ -1469,11 +1445,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "35, 36, {{blank}}, 38, 39",
-                "correctAnswer": "37",
-                "acceptableAnswers": [
-                    "siebenunddreißig"
-                ],
-                "numericWordForm": "siebenunddreißig"
+                "correctAnswer": "37"
             },
             "hints": [
                 "Welche Zahl ist zwischen 36 und 38?",
@@ -1541,15 +1513,11 @@
             "themeId": "numbers-1-100",
             "level": 2,
             "difficulty": 2,
-            "instruction": "Schreibe die Zahl als Zehner und Einer.",
+            "instruction": "Schreibe die Zehnerstelle als Ziffer.",
             "content": {
                 "type": "fill-blank",
                 "sentence": "63 = {{blank}} Zehner und 3 Einer",
-                "correctAnswer": "6",
-                "acceptableAnswers": [
-                    "sechs"
-                ],
-                "numericWordForm": "sechs"
+                "correctAnswer": "6"
             },
             "hints": [
                 "Welche Ziffer steht an der Zehnerstelle?",
@@ -2549,11 +2517,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "12 ÷ 3 = {{blank}}",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "Wie oft passt 3 in 12?",
@@ -2899,11 +2863,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "Du kaufst für 6 Euro und bezahlst mit 10 Euro. Du bekommst {{blank}} Euro zurück.",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "10 - 6 = ?",
@@ -4086,11 +4046,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "24 ÷ 6 = {{blank}}",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "Welche Zahl mal 6 ergibt 24?",
@@ -5891,11 +5847,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "1/3 = {{blank}}/12",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "Mit welcher Zahl musst du 3 multiplizieren, um 12 zu erhalten?",
@@ -6179,11 +6131,7 @@
             "content": {
                 "type": "fill-blank",
                 "sentence": "Quadrat A hat 10 cm Seitenlänge. Quadrat B hat 20 cm Seitenlänge. Der Flächeninhalt von B ist {{blank}} mal größer als von A.",
-                "correctAnswer": "4",
-                "acceptableAnswers": [
-                    "vier"
-                ],
-                "numericWordForm": "vier"
+                "correctAnswer": "4"
             },
             "hints": [
                 "Berechne beide Flächeninhalte: A = 10×10 = 100, B = 20×20 = 400",

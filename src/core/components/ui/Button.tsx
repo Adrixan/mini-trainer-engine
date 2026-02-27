@@ -36,10 +36,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const intentStyles: Record<ButtonIntent, string> = {
     primary: 'bg-primary text-white hover:bg-primary/90 focus:ring-primary',
-    secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-gray-400 border border-gray-200',
+    secondary: 'bg-slate-100 text-slate-800 hover:bg-slate-200 focus:ring-slate-400 border border-slate-200',
     accent: 'bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-400',
+    ghost: 'bg-transparent text-slate-700 hover:bg-slate-100 focus:ring-slate-400',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

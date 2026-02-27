@@ -13,13 +13,22 @@ const DATA_CACHE_NAME = 'mini-trainer-data-v1';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
-    '/vite.svg',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/icon-192.svg',
+    '/icon-512.svg',
     '/manifest.json',
+    '/sw.js',
 ];
 
-// Data files to cache on first request
+// Data files to pre-cache for offline use
 const DATA_ASSETS = [
     '/data/exercises.js',
+];
+
+// Directories to cache for offline use
+const DATA_DIRECTORIES = [
+    '/config/',
 ];
 
 // File extensions to consider as static assets
@@ -52,7 +61,8 @@ function isStaticAsset(url) {
  */
 function isDataAsset(url) {
     const path = new URL(url).pathname;
-    return DATA_ASSETS.some(asset => path === asset || path.startsWith(asset));
+    return DATA_ASSETS.some(asset => path === asset || path.startsWith(asset)) ||
+        DATA_DIRECTORIES.some(dir => path.startsWith(dir));
 }
 
 /**
@@ -68,11 +78,17 @@ self.addEventListener('install', (event) => {
                 return cache.addAll(STATIC_ASSETS);
             })
             .then(() => {
-                console.log('[SW] Static assets cached successfully');
+                // Also pre-cache data assets for offline use
+                console.log('[SW] Pre-caching data assets');
+                return caches.open(DATA_CACHE_NAME)
+                    .then((dataCache) => dataCache.addAll(DATA_ASSETS));
+            })
+            .then(() => {
+                console.log('[SW] All assets cached successfully');
                 return self.skipWaiting();
             })
             .catch((error) => {
-                console.error('[SW] Failed to cache static assets:', error);
+                console.error('[SW] Failed to cache assets:', error);
             })
     );
 });
