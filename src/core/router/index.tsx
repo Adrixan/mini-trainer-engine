@@ -60,6 +60,14 @@ export const routes: RouteObject[] = [
                 lazy: () => import('@/pages/ResultsPage').then((m) => ({ Component: m.ResultsPage })),
             },
             {
+                path: '/badges',
+                lazy: () => import('@/pages/BadgeGalleryPage').then((m) => ({ Component: m.BadgeGalleryPage })),
+            },
+            {
+                path: '/daily-challenge',
+                lazy: () => import('@/pages/DailyChallengePage').then((m) => ({ Component: m.DailyChallengePage })),
+            },
+            {
                 path: '/teacher/pin',
                 lazy: () => import('@/pages/TeacherPinPage').then((m) => ({ Component: m.TeacherPinPage })),
             },
@@ -100,6 +108,8 @@ export const ROUTES = {
     PROGRESS: '/progress',
     SETTINGS: '/settings',
     RESULTS: '/results',
+    BADGES: '/badges',
+    DAILY_CHALLENGE: '/daily-challenge',
     TEACHER_PIN: '/teacher/pin',
     TEACHER_DASHBOARD: '/teacher/dashboard',
 } as const;

@@ -5,7 +5,7 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ROUTES } from '@core/router';
 import { useExercisesByTheme, useExercisesByArea, useExercises, useTheme, useThemes } from '@core/config';
 import { useExerciseStore, selectCurrentExercise, selectProgress, selectIsSessionActive } from '@core/stores';
@@ -17,6 +17,84 @@ import { playCorrect, playIncorrect } from '@core/utils/sounds';
 import { hasExerciseBeenCompleted, getExerciseResultsByTheme } from '@core/storage';
 import { isLevelAccessible } from '@core/utils/gamification';
 import type { Exercise } from '@/types';
+
+// ============================================================================
+// Daily Challenge Helper Functions
+// ============================================================================
+
+/**
+ * Deterministic pseudo-random number generator based on seed.
+ * Uses a simple linear congruential generator.
+ */
+function createSeededRandom(seed: number): () => number {
+    let currentSeed = seed;
+    return () => {
+        currentSeed = (currentSeed * 1103515245 + 12345) & 0x7fffffff;
+        return currentSeed / 0x7fffffff;
+    };
+}
+
+/**
+ * Fisher-Yates shuffle using a seeded random number generator.
+ */
+function shuffleArray<T>(array: T[], random: () => number): T[] {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        // Swap elements
+        const temp = result[i]!;
+        result[i] = result[j]!;
+        result[j] = temp;
+    }
+    return result;
+}
+
+/**
+ * Get exercises for the daily challenge using deterministic selection based on current date.
+ * Returns exactly 5 exercises from different themes (or fewer if not enough available).
+ * 
+ * Algorithm:
+ * 1. Use current date as seed for deterministic selection
+ * 2. Group exercises by themeId
+ * 3. Shuffle themes deterministically
+ * 4. Select one random exercise from each of the first 5 themes
+ */
+function getDailyChallengeExercises(exercises: Exercise[]): Exercise[] {
+    // Get current date as seed (year * 10000 + month * 100 + day)
+    const today = new Date();
+    const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const random = createSeededRandom(dateSeed);
+
+    // Group exercises by themeId
+    const exercisesByTheme = new Map<string, Exercise[]>();
+    for (const exercise of exercises) {
+        const themeExercises = exercisesByTheme.get(exercise.themeId) || [];
+        themeExercises.push(exercise);
+        exercisesByTheme.set(exercise.themeId, themeExercises);
+    }
+
+    // Get all unique themes and shuffle them deterministically
+    const themes = shuffleArray(Array.from(exercisesByTheme.keys()), random);
+
+    // Select exercises from different themes
+    const selectedExercises: Exercise[] = [];
+
+    for (const theme of themes) {
+        if (selectedExercises.length >= 5) break;
+
+        const themeExercises = exercisesByTheme.get(theme);
+        if (!themeExercises || themeExercises.length === 0) continue;
+
+        // Shuffle exercises within this theme and pick the first one
+        const shuffledExercises = shuffleArray(themeExercises, random);
+        const firstExercise = shuffledExercises[0];
+        if (firstExercise !== undefined) {
+            selectedExercises.push(firstExercise);
+        }
+    }
+
+    return selectedExercises;
+}
 
 // ============================================================================
 // Types
@@ -70,12 +148,26 @@ export function useExercisePageState(): UseExercisePageStateReturn {
     const exercisesByTheme = useExercisesByTheme(themeId ?? 'default');
     const exercisesByArea = useExercisesByArea(areaId ?? '');
 
+    // Determine if this is the daily challenge
+    const isDailyChallenge = themeId === 'daily';
+
     // Determine which exercises to use
-    const baseExercises = areaId
-        ? exercisesByArea
-        : (themeId === 'default' || !themeId)
-            ? allExercises
-            : exercisesByTheme;
+    const baseExercises = useMemo(() => {
+        if (isDailyChallenge) {
+            // Get exercises from different themes using deterministic selection based on date
+            return getDailyChallengeExercises(allExercises);
+        }
+
+        if (areaId) {
+            return exercisesByArea;
+        }
+
+        if (themeId === 'default' || !themeId) {
+            return allExercises;
+        }
+
+        return exercisesByTheme;
+    }, [isDailyChallenge, allExercises, areaId, exercisesByArea, themeId, exercisesByTheme]);
 
     // Filter by level if specified
     const exercises: Exercise[] = level

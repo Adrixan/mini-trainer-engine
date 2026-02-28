@@ -80,10 +80,20 @@ export default defineConfig({
     build: {
         // Ensure compatibility with file:// protocol for local file usage
         target: 'esnext',
+        // Increase chunk size warning limit
+        chunkSizeWarningLimit: 1000,
         // Use IIFE format for file:// protocol compatibility
         // This wraps the code in immediately invoked function expressions
         // which work better with file:// protocol than ES modules
         rollupOptions: {
+            // External scripts that should not be bundled
+            external: [
+                './config/subject.js',
+                './config/areas.js',
+                './config/themes.js',
+                './config/badges.js',
+                '/data/exercises.js',
+            ],
             output: {
                 format: 'iife',
                 // Inline dynamic imports to avoid module loading issues

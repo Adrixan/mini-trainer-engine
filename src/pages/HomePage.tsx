@@ -205,6 +205,13 @@ function Dashboard() {
                 </button>
 
                 <button
+                    onClick={() => navigate(ROUTES.DAILY_CHALLENGE)}
+                    className="w-full py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+                >
+                    {t('dashboard.dailyChallenge', 'Daily Challenge')}
+                </button>
+
+                <button
                     onClick={() => navigate(ROUTES.PROGRESS)}
                     className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 >
@@ -213,19 +220,26 @@ function Dashboard() {
 
                 <div className="grid grid-cols-2 gap-3">
                     <button
+                        onClick={() => navigate(ROUTES.BADGES)}
+                        className="py-3 px-4 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+                    >
+                        {t('dashboard.badges', 'Badges')}
+                    </button>
+                    <button
                         onClick={() => navigate(ROUTES.SETTINGS)}
                         className="py-3 px-4 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
                         {t('dashboard.settings', 'Settings')}
                     </button>
-                    <button
-                        onClick={handleSaveGame}
-                        disabled={isSaving}
-                        className="py-3 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isSaving ? t('settings.saving', 'Saving...') : t('settings.saveButton', 'Save Game')}
-                    </button>
                 </div>
+
+                <button
+                    onClick={handleSaveGame}
+                    disabled={isSaving}
+                    className="w-full py-3 px-4 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isSaving ? t('settings.saving', 'Saving...') : t('settings.saveButton', 'Save Game')}
+                </button>
 
                 {/* Load Game Button */}
                 <button
@@ -239,7 +253,8 @@ function Dashboard() {
             {/* Load Game Modal */}
             <Modal
                 isOpen={showLoadDialog}
-                onClose={() => setShowLoadDialog(false)}
+                onClose={() => setShowLoadDialog(false)
+                }
                 title={t('dashboard.loadGame', 'Load Game')}
                 size="md"
             >
@@ -318,8 +333,8 @@ function Dashboard() {
                         </button>
                     </div>
                 </div>
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     );
 }
 
