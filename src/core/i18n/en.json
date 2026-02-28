@@ -276,6 +276,7 @@
         "instruction": "Task",
         "exerciseArea": "Exercise area",
         "check": "Check",
+        "skip": "Skip",
         "next": "Next",
         "hint": "Hint",
         "hintNext": "Next hint ({{current}}/{{total}})",
@@ -295,7 +296,7 @@
             "answerLabel": "Enter answer",
             "wrongCase": "Watch out for capitalization!",
             "followUp": "One more question:",
-            "followUpHint": "Tip: Pay attention to the ending",
+            "followUpHint": "Tip: Write the number out in full",
             "followUpLabel": "Enter follow-up answer",
             "correctAnswer": "Correct answer:"
         },

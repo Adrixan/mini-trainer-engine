@@ -82,6 +82,11 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
         }
     };
 
+    const handleFollowUpSkip = () => {
+        // Skip the follow-up - the child already got the main answer correct
+        onSubmit(true);
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && answer.trim() && !showSolution && !followUpActive) {
             handleCheck();
@@ -186,6 +191,12 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                         className="w-full py-2.5 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
                     >
                         {t('exercises.check')}
+                    </button>
+                    <button
+                        onClick={handleFollowUpSkip}
+                        className="w-full py-2 bg-transparent text-amber-600 font-semibold rounded-xl hover:bg-amber-100 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    >
+                        {t('exercises.skip')}
                     </button>
                 </div>
             )}

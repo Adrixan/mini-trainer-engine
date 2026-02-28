@@ -275,6 +275,7 @@
         "instruction": "Aufgabe",
         "exerciseArea": "Übungsbereich",
         "check": "Prüfen",
+        "skip": "Überspringen",
         "next": "Weiter",
         "hint": "Hinweis",
         "hintNext": "Nächster Hinweis ({{current}}/{{total}})",
@@ -294,7 +295,7 @@
             "answerLabel": "Antwort eingeben",
             "wrongCase": "Achte auf Groß- und Kleinschreibung!",
             "followUp": "Noch eine Frage:",
-            "followUpHint": "Tipp: Achte auf die Endung",
+            "followUpHint": "Tipp: Schreibe die Zahl vollständig aus",
             "followUpLabel": "Folgeantwort eingeben",
             "correctAnswer": "Richtige Antwort:"
         },
