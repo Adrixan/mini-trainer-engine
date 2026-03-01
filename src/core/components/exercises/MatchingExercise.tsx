@@ -4,7 +4,7 @@ import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
 import { optionStyles } from '@core/utils/exerciseStyles';
 import type { MatchingContent } from '@/types/exercise';
-import { shuffle } from '../../utils/shuffle';
+import { shuffle } from '@core/utils/shuffle';
 import { useKeyboardNavigation } from '@core/hooks/useKeyboardNavigation';
 
 interface Props {
