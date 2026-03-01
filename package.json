@@ -6,6 +6,7 @@
         "dev": "vite",
         "dev:daz": "VITE_APP_ID=daz vite",
         "dev:math": "VITE_APP_ID=mathematik vite",
+        "build": "node scripts/build-app.mjs --app daz",
         "build:daz": "node scripts/build-app.mjs --app daz",
         "build:math": "node scripts/build-app.mjs --app mathematik",
         "build:math:pwa": "node scripts/build-app.mjs --app mathematik --pwa",

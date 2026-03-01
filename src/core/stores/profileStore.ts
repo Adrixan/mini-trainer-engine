@@ -29,6 +29,8 @@ import {
     selectThemeLevels,
     selectThemeLevel,
 } from './profileSelectors';
+// Re-export constants for backwards compatibility
+export { AVATAR_EMOJIS, MAX_NICKNAME_LENGTH } from './profileConstants';
 import type {
     UserProfile,
     Badge,
@@ -38,31 +40,10 @@ import type {
 } from '@/types';
 
 // ============================================================================
-// Constants
+// Constants (imported from profileConstants.ts)
 // ============================================================================
 
-/**
- * Available avatar emojis for profile creation.
- */
-export const AVATAR_EMOJIS = [
-    '🦊', // Fox
-    '🐻', // Bear
-    '🐰', // Bunny
-    '🦁', // Lion
-    '🐸', // Frog
-    '🐼', // Panda
-    '🦄', // Unicorn
-    '🐕', // Dog
-    '🐱', // Cat
-    '🐵', // Monkey
-    '🦋', // Butterfly
-    '🌟', // Star
-] as const;
-
-/**
- * Maximum nickname length.
- */
-export const MAX_NICKNAME_LENGTH = 20;
+// Note: AVATAR_EMOJIS and MAX_NICKNAME_LENGTH are now imported from profileConstants.ts
 
 // ============================================================================
 // Types

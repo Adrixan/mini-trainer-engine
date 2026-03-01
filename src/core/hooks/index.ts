@@ -3,17 +3,6 @@ export { useExerciseSession } from './useExerciseSession';
 export type { UseExerciseSessionOptions, UseExerciseSessionReturn } from './useExerciseSession';
 
 export { useExerciseScoring, getStarDisplay, calculateProgress, isLevelThresholdMet, getLevelFromStars } from './useExerciseScoring';
-export type { ExerciseTypeStats, ScoringStats, UseExerciseScoringOptions } from './useExerciseScoring';
-
-export { useExerciseLogic, calculateStarsFromTime } from './useExerciseLogic';
-export type { UseExerciseLogicOptions, UseExerciseLogicReturn, ExerciseResult } from './useExerciseLogic';
-
-/**
- * @deprecated These hooks are not used by any exercise component. Exercise components
- * manage their own local state. These will be removed in a future version.
- */
-export { useTextInputExercise, useMultipleChoiceExercise, useOrderingExercise } from './useExerciseLogic';
-
 export { useFocusTrap, useFocusNavigation, useRovingTabIndex } from './useFocusTrap';
 export type { UseFocusTrapOptions } from './useFocusTrap';
 
@@ -44,3 +33,7 @@ export type {
 // Exercise page state hook
 export { useExercisePageState, MAX_ATTEMPTS_PER_EXERCISE } from './useExercisePageState';
 export type { UseExercisePageStateReturn } from './useExercisePageState';
+
+// Sound effects hook
+export { useSoundEffects } from './useSoundEffects';
+export type { UseSoundEffectsReturn } from './useSoundEffects';

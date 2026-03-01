@@ -69,6 +69,11 @@ function titleInjectionPlugin(): Plugin {
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [react(), titleInjectionPlugin(), fileProtocolPlugin()],
+    // Define compile-time constants for VITE_APP_ID
+    // This allows the app to know its ID at build time without runtime config
+    define: {
+        'import.meta.env.VITE_APP_ID': JSON.stringify(process.env.VITE_APP_ID || ''),
+    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -95,7 +100,7 @@ export default defineConfig({
                 '/data/exercises.js',
             ],
             output: {
-                format: 'iife',
+                format: 'iife' as const,
                 // Inline dynamic imports to avoid module loading issues
                 inlineDynamicImports: true,
             },

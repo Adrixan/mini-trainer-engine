@@ -31,6 +31,7 @@ import { playLevelUp, playBadge } from '@core/utils/sounds';
 import type { Badge } from '@/types/profile';
 import type { LevelProgress, Score } from '@/types/gamification';
 import type { BadgeDefinition } from '@/types/config';
+import { useGamificationNotifications } from './useGamificationNotifications';
 
 // ============================================================================
 // Types
@@ -145,10 +146,17 @@ export function useGamification(
     // Local state for tracking level changes
     const [previousLevel, setPreviousLevel] = useState<number | null>(null);
 
-    // Notification state for gamification events
-    const [earnedBadges, setEarnedBadges] = useState<Badge[]>([]);
-    const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
-    const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
+    // Notification state (extracted to separate hook)
+    const {
+        earnedBadges,
+        levelUpLevel,
+        currentBadgeIndex,
+        setEarnedBadges,
+        setLevelUpLevel,
+        setCurrentBadgeIndex,
+        dismissBadge,
+        clearLevelUp,
+    } = useGamificationNotifications();
 
     // Calculate current gamification state
     const state = useMemo<GamificationState>(() => {
@@ -327,22 +335,6 @@ export function useGamification(
         if (!activeProfile) return 1;
         return activeProfile.currentLevels[areaId as keyof typeof activeProfile.currentLevels] ?? 1;
     }, [activeProfile]);
-
-    // Dismiss current badge notification
-    const dismissBadge = useCallback(() => {
-        const nextIndex = currentBadgeIndex + 1;
-        if (nextIndex >= earnedBadges.length) {
-            setEarnedBadges([]);
-            setCurrentBadgeIndex(0);
-        } else {
-            setCurrentBadgeIndex(nextIndex);
-        }
-    }, [currentBadgeIndex, earnedBadges.length]);
-
-    // Clear level up notification
-    const clearLevelUp = useCallback(() => {
-        setLevelUpLevel(null);
-    }, []);
 
     return {
         ...state,
