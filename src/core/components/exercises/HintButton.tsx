@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { hintButtonStyles } from '@core/utils/exerciseStyles';
 
 interface HintButtonProps {
     hints: string[];
@@ -37,7 +38,7 @@ export function HintButton({ hints }: HintButtonProps) {
             {hintIndex < hints.length - 1 && (
                 <button
                     onClick={showNextHint}
-                    className="text-sm text-yellow-600 hover:text-yellow-800 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1"
+                    className={`${hintButtonStyles({ variant: hintIndex >= 0 ? 'active' : 'default' })} ${hintIndex >= 0 ? 'text-sm' : 'text-sm'}`}
                     aria-label={hintIndex >= 0
                         ? t('exercises.hintNext', { current: hintIndex + 1, total: hints.length })
                         : t('exercises.hintShow', { total: hints.length })

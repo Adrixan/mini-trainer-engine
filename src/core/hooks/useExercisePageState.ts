@@ -1,7 +1,26 @@
 /**
  * Hook for managing ExercisePage state and logic.
  *
- * Orchestrates session management, gamification, and navigation.
+ * ⚠️ PRIMARY ORCHESTRATOR HOOK
+ * 
+ * This is the main hook used by ExercisePage. It orchestrates all exercise
+ * session functionality including:
+ * - URL parameter handling (themeId, areaId, level)
+ * - Exercise filtering and selection
+ * - Daily challenge deterministic selection
+ * - Access control (level accessibility)
+ * - Answer submission handling
+ * - Exercise progression and session completion
+ * - Gamification integration
+ * - Keyboard navigation
+ * 
+ * IMPORTANT: This hook handles BOTH session flow AND orchestration.
+ * The separate useExerciseSession hook exists but is NOT used.
+ * 
+ * Architecture:
+ *   useExercisePageState → useGamification (profile mutations)
+ *                         → exerciseStore (session state)
+ *                         → IndexedDB (persistence)
  */
 
 import { useParams, useNavigate } from 'react-router-dom';

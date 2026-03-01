@@ -1,8 +1,13 @@
 /**
  * Sound effects hook for centralized audio feedback.
  * 
+ * ⚠️ NOTE: This hook exists but is NOT currently used by useExercisePageState.
+ * The exercise page currently imports sound functions directly from @core/utils/sounds.
+ * 
  * Provides easy access to game sound effects with lazy loading.
  * Wraps sound functions from @core/utils/sounds.
+ * 
+ * TODO: Integrate this hook into useExercisePageState to centralize sound handling.
  */
 
 import { useCallback, useState } from 'react';

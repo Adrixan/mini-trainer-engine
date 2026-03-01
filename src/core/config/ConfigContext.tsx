@@ -28,6 +28,8 @@ import {
     loadGamificationConfig,
     loadConfigSafe,
     loadExercises,
+    loadAppConfig,
+    type AppConfig,
 } from './loader';
 
 // ============================================================================
@@ -436,4 +438,37 @@ export function useExercisesByArea(areaId: string): Exercise[] {
         () => getExercisesByArea(areaId),
         [getExercisesByArea, areaId, exercises]
     );
+}
+
+/**
+ * Hook to get app-specific configuration (from app.json).
+ * Includes primary color and app terminology.
+ *
+ * @returns App configuration with primaryColor and terminology
+ */
+export function useAppConfig(): AppConfig {
+    const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
+
+    useEffect(() => {
+        loadAppConfig().then(setAppConfig);
+    }, []);
+
+    // Return default config while loading or if load fails
+    const defaultConfig: AppConfig = {
+        id: 'daz',
+        name: 'Mini Trainer',
+        version: '1.0.0',
+        build: { pwaEnabled: true, usbDistribution: true },
+        display: { primaryColor: '#3b82f6', icon: '/icon.svg' },
+        terminology: {
+            level: 'Level',
+            levelPlural: 'Level',
+            theme: 'Theme',
+            themePlural: 'Themes',
+            exercise: 'Exercise',
+            exercisePlural: 'Exercises',
+        },
+    };
+
+    return appConfig ?? defaultConfig;
 }

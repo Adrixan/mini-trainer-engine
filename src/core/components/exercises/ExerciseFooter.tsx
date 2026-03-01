@@ -6,6 +6,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@core/components/ui';
+import { feedbackStyles } from '@core/utils/exerciseStyles';
 
 // ============================================================================
 // Types
@@ -66,11 +67,16 @@ export function ExerciseFooter({
 }: ExerciseFooterProps) {
     const { t } = useTranslation();
 
-    // Feedback styles based on type
-    const feedbackStyles = {
-        correct: 'bg-green-50 border border-green-200 text-green-800',
-        incorrect: 'bg-red-50 border border-red-200 text-red-800',
-        warning: 'bg-yellow-50 border border-yellow-200 text-yellow-800',
+    // Map feedbackType to exerciseStyles feedback type
+    const getFeedbackType = (): 'success' | 'error' | 'warning' => {
+        switch (feedbackType) {
+            case 'correct':
+                return 'success';
+            case 'incorrect':
+                return 'error';
+            default:
+                return 'warning';
+        }
     };
 
     return (
@@ -78,7 +84,7 @@ export function ExerciseFooter({
             {/* Feedback message */}
             {feedbackMessage && (
                 <div
-                    className={`mb-4 p-4 rounded-lg ${feedbackStyles[feedbackType]}`}
+                    className={`mb-4 ${feedbackStyles({ type: getFeedbackType() })}`}
                     role="alert"
                     aria-live="polite"
                 >
@@ -103,7 +109,7 @@ export function ExerciseFooter({
                 {/* Next button - when solution shown or completed, and more exercises remain */}
                 {(showSolution || isCompleted) && hasNext && (
                     <Button
-                        intent="primary"
+                        intent={isCompleted ? 'success' : 'primary'}
                         fullWidth
                         onClick={onNext}
                         aria-label={t('exercise.next')}

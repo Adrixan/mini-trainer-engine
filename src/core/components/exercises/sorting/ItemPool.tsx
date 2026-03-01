@@ -5,6 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import { solutionStateStyles } from '@/core/utils/exerciseStyles';
 import { DraggableItem } from './DraggableItem';
 import type { DragData } from './useCategorySort';
 
@@ -81,15 +82,15 @@ export function ItemPool({
 }: ItemPoolProps) {
     const { t } = useTranslation();
 
-    // Calculate pool styling
+    // Calculate pool styling using exerciseStyles
     const getPoolStyles = (): string => {
-        const baseStyles = 'rounded-xl p-4 transition-colors';
+        const baseClasses = 'rounded-xl p-4 transition-colors';
 
         if (isDragOver) {
-            return `${baseStyles} bg-primary/10 border-2 border-primary/30`;
+            return `${baseClasses} ${solutionStateStyles({ state: 'selected' })} border-primary/30`;
         }
 
-        return `${baseStyles} bg-gray-50 border-2 border-transparent`;
+        return `${baseClasses} ${solutionStateStyles({ state: 'neutral' })} border-2 border-transparent`;
     };
 
     // Don't render in solution mode

@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 // Types
 // ============================================================================
 
-export type ButtonIntent = 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost';
+export type ButtonIntent = 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'success';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -35,11 +35,12 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 // ============================================================================
 
 const intentStyles: Record<ButtonIntent, string> = {
-    primary: 'bg-primary text-white hover:bg-primary/90 focus:ring-primary',
+    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500',
     secondary: 'bg-slate-100 text-slate-800 hover:bg-slate-200 focus:ring-slate-400 border border-slate-200',
     accent: 'bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
     ghost: 'bg-transparent text-slate-700 hover:bg-slate-100 focus:ring-slate-400',
+    success: 'bg-green-500 text-white hover:bg-green-600 focus:ring-green-500',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

@@ -28,6 +28,35 @@ import {
 } from './validation';
 
 // ============================================================================
+// App Configuration Type
+// ============================================================================
+
+/**
+ * App configuration from app.json
+ */
+export interface AppConfig {
+    id: string;
+    name: string;
+    version: string;
+    build: {
+        pwaEnabled: boolean;
+        usbDistribution: boolean;
+    };
+    display: {
+        primaryColor: string;
+        icon: string;
+    };
+    terminology: {
+        level: string;
+        levelPlural: string;
+        theme: string;
+        themePlural: string;
+        exercise: string;
+        exercisePlural: string;
+    };
+}
+
+// ============================================================================
 // App ID Detection
 // ============================================================================
 
@@ -127,6 +156,93 @@ export function resetConfigCache(): void {
  */
 export function getCurrentAppId(): string {
     return getAppId();
+}
+
+/**
+ * Load app configuration (app.json).
+ * Falls back to defaults if not available.
+ *
+ * @returns AppConfig with primary color and terminology
+ */
+export async function loadAppConfig(): Promise<AppConfig> {
+    const appId = getAppId();
+    const windowObj = window as unknown as Record<string, unknown>;
+
+    // Check window object first for USB/offline mode
+    if (windowObj.__TRAINER_APP__) {
+        return windowObj.__TRAINER_APP__ as AppConfig;
+    }
+
+    // Try to fetch app.json from apps directory
+    const appPath = `./apps/${appId}/app.json`;
+
+    try {
+        const response = await fetch(appPath);
+        if (response.ok) {
+            return await response.json() as AppConfig;
+        }
+    } catch {
+        // Ignore fetch errors, use defaults
+    }
+
+    // Return default config based on appId
+    return getDefaultAppConfig(appId);
+}
+
+/**
+ * Get default app config for known apps.
+ */
+function getDefaultAppConfig(appId: string): AppConfig {
+    if (appId === 'daz') {
+        return {
+            id: 'daz',
+            name: 'Deutsch als Zweitsprache',
+            version: '1.0.0',
+            build: { pwaEnabled: true, usbDistribution: true },
+            display: { primaryColor: '#3b82f6', icon: '/assets/daz-icon.svg' },
+            terminology: {
+                level: 'Wortschatz-Level',
+                levelPlural: 'Wortschatz-Level',
+                theme: 'Thema',
+                themePlural: 'Themen',
+                exercise: 'Übung',
+                exercisePlural: 'Übungen',
+            },
+        };
+    }
+    if (appId === 'mathematik') {
+        return {
+            id: 'mathematik',
+            name: 'Mathematik Grundstufe',
+            version: '1.0.0',
+            build: { pwaEnabled: true, usbDistribution: true },
+            display: { primaryColor: '#10b981', icon: '/assets/mathematik-icon.svg' },
+            terminology: {
+                level: 'Level',
+                levelPlural: 'Level',
+                theme: 'Thema',
+                themePlural: 'Themen',
+                exercise: 'Aufgabe',
+                exercisePlural: 'Aufgaben',
+            },
+        };
+    }
+    // Default fallback
+    return {
+        id: appId,
+        name: 'Mini Trainer',
+        version: '1.0.0',
+        build: { pwaEnabled: true, usbDistribution: true },
+        display: { primaryColor: '#3b82f6', icon: '/icon.svg' },
+        terminology: {
+            level: 'Level',
+            levelPlural: 'Level',
+            theme: 'Theme',
+            themePlural: 'Themes',
+            exercise: 'Exercise',
+            exercisePlural: 'Exercises',
+        },
+    };
 }
 
 // ============================================================================

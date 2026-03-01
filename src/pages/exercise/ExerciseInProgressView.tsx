@@ -2,13 +2,13 @@
  * Exercise in-progress view component.
  *
  * Displays the current exercise with progress, feedback, and action buttons.
+ * Uses reusable components from @core/components/exercises.
  */
 
 import { useTranslation } from 'react-i18next';
-import { ExerciseRenderer } from '@core/components/exercises';
+import { ExerciseRenderer, ExerciseHeader, ExerciseFooter } from '@core/components/exercises';
 import { BadgeEarnedToast, LevelUpCelebration } from '@core/components/gamification';
-import { MAX_ATTEMPTS_PER_EXERCISE } from '@core/hooks/useExercisePageState';
-import type { Exercise } from '@/types';
+import type { Exercise, Theme } from '@/types';
 import type { UseExercisePageStateReturn } from '@core/hooks/useExercisePageState';
 
 export interface ExerciseInProgressViewProps {
@@ -20,6 +20,8 @@ export interface ExerciseInProgressViewProps {
     themeId: string | undefined;
     /** Progress information */
     progress: { current: number; total: number };
+    /** Whether the exercise is completed (from store) */
+    isCompleted: boolean;
     /** Whether solution is being shown */
     showSolution: boolean;
     /** Whether level has been failed */
@@ -53,6 +55,7 @@ export function ExerciseInProgressView({
     themeName,
     themeId,
     progress,
+    isCompleted: isCompletedFromStore,
     showSolution,
     levelFailed,
     hasAnswered,
@@ -69,35 +72,35 @@ export function ExerciseInProgressView({
 }: ExerciseInProgressViewProps) {
     const { t } = useTranslation();
 
+    // Prepare theme object for ExerciseHeader
+    const theme = themeId ? { name: themeName } as Theme : null;
+
+    // Build feedback message for ExerciseFooter
+    let feedbackMessage: string | undefined;
+    let feedbackType: 'correct' | 'incorrect' | undefined;
+
+    if (hasAnswered && answer && !levelFailed) {
+        feedbackType = answer.correct ? 'correct' : 'incorrect';
+        feedbackMessage = answer.correct
+            ? currentExercise.feedbackCorrect
+            : showSolution
+                ? currentExercise.feedbackIncorrect
+                : t('exercise.tryAgain');
+    }
+
+    // Check if there's more exercises
+    const hasNext = progress.current < progress.total;
+
     return (
         <div className="flex flex-col min-h-[80vh] lg:min-h-0 p-4 max-w-2xl mx-auto">
-            {/* Progress bar */}
-            <div className="mb-6">
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>
-                        {t('exercise.progress', {
-                            current: progress.current,
-                            total: progress.total,
-                        })}
-                    </span>
-                    <span>{themeName ?? themeId}</span>
-                </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                        className="h-full bg-blue-600 transition-all duration-300"
-                        style={{ width: `${(progress.current / progress.total) * 100}%` }}
-                    />
-                </div>
-            </div>
-
-            {/* Exercise instruction */}
-            <div className="mb-4">
-                <h1 className="text-xl font-bold text-gray-900">
-                    {currentExercise.instruction.startsWith('t:')
-                        ? t(currentExercise.instruction.slice(2))
-                        : currentExercise.instruction}
-                </h1>
-            </div>
+            {/* Exercise header with progress bar and instruction */}
+            <ExerciseHeader
+                currentExercise={progress.current}
+                totalExercises={progress.total}
+                theme={theme}
+                themeId={themeId || ''}
+                instruction={currentExercise.instruction}
+            />
 
             {/* Exercise content */}
             <div className="flex-1 lg:flex-none">
@@ -109,30 +112,6 @@ export function ExerciseInProgressView({
                     showSolution={showSolution}
                 />
             </div>
-
-            {/* Feedback */}
-            {hasAnswered && answer && !levelFailed && (
-                <div
-                    className={`mt-4 p-4 rounded-lg ${answer.correct
-                        ? 'bg-green-50 border border-green-200'
-                        : 'bg-red-50 border border-red-200'
-                        }`}
-                    role="alert"
-                >
-                    <p className={answer.correct ? 'text-green-800' : 'text-red-800'}>
-                        {answer.correct
-                            ? currentExercise.feedbackCorrect
-                            : showSolution
-                                ? currentExercise.feedbackIncorrect
-                                : t('exercise.tryAgain')}
-                    </p>
-                    {!answer.correct && answer.attempts < MAX_ATTEMPTS_PER_EXERCISE && (
-                        <p className="text-red-600 text-sm mt-1">
-                            {t('exercise.attemptsRemaining', { count: MAX_ATTEMPTS_PER_EXERCISE - answer.attempts })}
-                        </p>
-                    )}
-                </div>
-            )}
 
             {/* Level Failed Message */}
             {levelFailed && (
@@ -149,61 +128,36 @@ export function ExerciseInProgressView({
                 </div>
             )}
 
-            {/* Action buttons */}
-            <div className="mt-6 flex gap-4">
-                {/* Level failed - show restart button */}
-                {levelFailed && (
-                    <>
-                        <button
-                            onClick={onRestartLevel}
-                            className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        >
-                            {t('exercise.restartLevel')}
-                        </button>
-                        <button
-                            onClick={onFinish}
-                            className="flex-1 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                        >
-                            {t('exercise.exitLevel')}
-                        </button>
-                    </>
-                )}
-                {/* Normal flow - show solution button when not yet answered */}
-                {!levelFailed && !showSolution && !hasAnswered && (
+            {/* Action buttons - Level failed state */}
+            {levelFailed ? (
+                <div className="mt-6 flex gap-4">
                     <button
-                        onClick={onShowSolution}
-                        className="flex-1 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                    >
-                        {t('exercise.showSolution')}
-                    </button>
-                )}
-                {/* Next button when solution shown and more exercises remain */}
-                {!levelFailed && showSolution && progress.current < progress.total && (
-                    <button
-                        onClick={onNext}
+                        onClick={onRestartLevel}
                         className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                        {t('exercise.next')}
+                        {t('exercise.restartLevel')}
                     </button>
-                )}
-                {/* Finish/Return button when solution shown and this is the last exercise */}
-                {!levelFailed && showSolution && progress.current >= progress.total && (
                     <button
                         onClick={onFinish}
-                        className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        className="flex-1 py-2 px-4 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                        {t('exercise.finish')}
+                        {t('exercise.exitLevel')}
                     </button>
-                )}
-            </div>
-
-            {/* Back button */}
-            <button
-                onClick={onBack}
-                className="mt-4 py-2 px-4 text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rounded"
-            >
-                {t('common.back')}
-            </button>
+                </div>
+            ) : (
+                /* Normal flow - use ExerciseFooter with proper state */
+                <ExerciseFooter
+                    showSolution={showSolution}
+                    isCompleted={isCompletedFromStore}
+                    hasNext={hasNext}
+                    onShowSolution={onShowSolution}
+                    onNext={onNext}
+                    onFinish={onFinish}
+                    onBack={onBack}
+                    feedbackMessage={feedbackMessage || ''}
+                    feedbackType={feedbackType || 'correct'}
+                />
+            )}
 
             {/* Level Up Celebration */}
             {notifications.levelUpLevel !== null && (

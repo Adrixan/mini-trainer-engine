@@ -5,6 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import { solutionStateStyles } from '@/core/utils/exerciseStyles';
 import { DraggableItem } from './DraggableItem';
 import type { DragData } from './useCategorySort';
 
@@ -112,15 +113,15 @@ export function CategoryBucket({
         }
     };
 
-    // Calculate bucket styling
+    // Calculate bucket styling using exerciseStyles
     const getBucketStyles = (): string => {
-        const baseStyles = 'rounded-xl p-4 transition-colors min-h-[80px]';
+        const baseClasses = 'rounded-xl p-4 transition-colors min-h-[80px]';
 
         if (isDragOver) {
-            return `${baseStyles} bg-primary/10 border-2 border-primary/30`;
+            return `${baseClasses} ${solutionStateStyles({ state: 'selected' })} border-primary/30`;
         }
 
-        return `${baseStyles} bg-gray-50 border-2 border-gray-200`;
+        return `${baseClasses} ${solutionStateStyles({ state: 'neutral' })}`;
     };
 
     return (

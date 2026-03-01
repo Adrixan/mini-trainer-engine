@@ -6,6 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import { optionStyles } from '@/core/utils/exerciseStyles';
 import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
 import { ItemPool, CategoryBucket, useCategorySort } from './sorting';
@@ -188,7 +189,7 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                         <button
                             onClick={reset}
                             aria-label={t('exercises.reset')}
-                            className="px-4 py-3 bg-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                            className={optionStyles({ variant: 'default' })}
                         >
                             🔄
                         </button>
@@ -196,7 +197,7 @@ export function CategorySortExercise({ content, hints, onSubmit, showSolution }:
                     <button
                         onClick={checkAnswers}
                         disabled={!allPlaced}
-                        className="flex-1 py-3 bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
+                        className={`flex-1 py-3 ${optionStyles({ variant: allPlaced ? 'default' : 'disabled', size: 'lg' })} bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600`}
                     >
                         {t('exercises.check')}
                     </button>

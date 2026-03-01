@@ -12,7 +12,7 @@ import { ROUTES } from '@core/router';
 import { useProfileStore, selectActiveProfile, selectTotalStars, selectCurrentStreak, selectThemeLevels } from '@core/stores/profileStore';
 import { ProfileCreation } from '@core/components/profile';
 import { Modal } from '@core/components/ui';
-import { useThemes } from '@core/config';
+import { useThemes, useAppConfig } from '@core/config';
 import { calculateGlobalLevel } from '@core/utils/gamification';
 import { parseSaveGameFile, validateSaveGame, type SaveGamePayload } from '@core/stores/profilePersistence';
 
@@ -44,6 +44,12 @@ function Dashboard() {
     const [loadError, setLoadError] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Get app-specific configuration
+    const appConfig = useAppConfig();
+    const primaryColor = appConfig.display.primaryColor;
+    const appName = appConfig.name;
+    const levelTerm = appConfig.terminology.level;
 
     // Get all themes for global level calculation
     const themes = useThemes();
@@ -155,18 +161,24 @@ function Dashboard() {
                     <h1 id="dashboard-title" className="text-2xl font-bold text-gray-900">
                         {t('dashboard.welcome', 'Welcome back')}, {profile?.nickname}!
                     </h1>
+                    <p className="text-sm" style={{ color: primaryColor }}>
+                        {appName}
+                    </p>
                 </div>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-3 gap-3 w-full max-w-sm mb-6">
                 {/* Global Level Card */}
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                <div
+                    className="border rounded-xl p-4 text-center"
+                    style={{ backgroundColor: `${primaryColor}15`, borderColor: `${primaryColor}30` }}
+                >
                     <div className="text-3xl mb-1" role="img" aria-label={t('stats.level', 'Level')}>
                         🎯
                     </div>
-                    <div className="text-2xl font-bold text-blue-700">{globalLevel}</div>
-                    <div className="text-sm text-blue-600">{t('stats.level', 'Level')}</div>
+                    <div className="text-2xl font-bold" style={{ color: primaryColor }}>{globalLevel}</div>
+                    <div className="text-sm" style={{ color: primaryColor }}>{levelTerm}</div>
                 </div>
 
                 {/* Total Stars Card */}
@@ -199,7 +211,8 @@ function Dashboard() {
             <div className="grid gap-4 w-full max-w-sm">
                 <button
                     onClick={() => navigate(ROUTES.THEMES)}
-                    className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    className="w-full py-3 px-4 text-white rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    style={{ backgroundColor: primaryColor }}
                 >
                     {t('dashboard.startExercises', 'Start Exercises')}
                 </button>

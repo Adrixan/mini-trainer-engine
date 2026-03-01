@@ -57,6 +57,12 @@ interface UseExerciseScoringOptions {
 
 /**
  * Hook for calculating and tracking exercise scores and progress.
+ * 
+ * ⚠️ NOTE: This hook is NOT currently integrated into the main application flow.
+ * It exists as a utility for computing statistics from ExerciseResult arrays.
+ * 
+ * Currently used only in tests. Should be integrated for displaying
+ * session statistics and progress reports.
  */
 export function useExerciseScoring(
     results: ExerciseResult[],

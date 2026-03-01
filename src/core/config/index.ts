@@ -17,7 +17,9 @@ export {
     loadFullConfigSync,
     resetConfigCache,
     getCurrentAppId,
+    loadAppConfig,
     type ConfigLoadResult,
+    type AppConfig,
 } from './loader';
 
 // Configuration validation
@@ -46,6 +48,7 @@ export {
     useExercises,
     useExercisesByTheme,
     useExercisesByArea,
+    useAppConfig,
     type ConfigContextState,
     type ConfigContextValue,
     type ConfigProviderProps,

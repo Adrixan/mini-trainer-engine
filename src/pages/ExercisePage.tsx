@@ -63,6 +63,7 @@ export function ExercisePage() {
             themeName={theme?.name}
             themeId={themeId}
             progress={progress}
+            isCompleted={isCompleted}
             showSolution={showSolution}
             levelFailed={levelFailed}
             hasAnswered={hasAnswered}

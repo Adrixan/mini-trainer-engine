@@ -5,6 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import { solutionStateStyles } from '@/core/utils/exerciseStyles';
 import type { DragData } from './useCategorySort';
 
 // ============================================================================
@@ -72,26 +73,26 @@ export function DraggableItem({
 }: DraggableItemProps) {
     const { t } = useTranslation();
 
-    // Determine styling based on state
+    // Determine styling based on state using exerciseStyles
     const getStyles = (): string => {
-        const baseStyles = 'px-3 py-1.5 rounded-lg font-bold text-sm transition-all shadow-sm select-none touch-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2';
+        const baseClasses = 'px-3 py-1.5 rounded-lg font-bold text-sm transition-all shadow-sm select-none touch-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2';
 
         if (disabled && isCorrect !== null) {
-            // Solution mode - show correct/incorrect
-            return isCorrect
-                ? `${baseStyles} bg-green-100 text-green-800 border-2 border-green-300`
-                : `${baseStyles} bg-red-100 text-red-800 border-2 border-red-300`;
+            // Solution mode - use exerciseStyles for correct/incorrect states
+            const state = isCorrect ? 'correct' : 'incorrect';
+            return `${baseClasses} ${solutionStateStyles({ state })}`;
         }
 
         if (isDragging) {
-            return `${baseStyles} opacity-40 scale-95`;
+            return `${baseClasses} opacity-40 scale-95`;
         }
 
         if (isSelected) {
-            return `${baseStyles} bg-primary text-white border-2 border-primary scale-105`;
+            return `${baseClasses} ${solutionStateStyles({ state: 'selected' })} scale-105`;
         }
 
-        return `${baseStyles} bg-white border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary active:scale-95 cursor-grab active:cursor-grabbing`;
+        // Default state
+        return `${baseClasses} bg-white border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary active:scale-95 cursor-grab active:cursor-grabbing`;
     };
 
     const handleDragStart = (e: React.DragEvent) => {

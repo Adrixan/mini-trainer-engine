@@ -3,6 +3,14 @@
  * 
  * Manages the current exercise session state including
  * the current exercise, answers, and session progress.
+ * 
+ * Architecture:
+ *   - exerciseStore: Session state, answer tracking, stats aggregation
+ *   - useExercisePageState: Orchestrator that uses this store
+ *   - IndexedDB: Persists results via saveExerciseResult
+ * 
+ * ⚠️ KNOWN ISSUE: recordTime() is defined but never called.
+ * Time tracking needs to be implemented in useExercisePageState.
  */
 
 import { create } from 'zustand';

@@ -77,6 +77,8 @@ export default [
             'vite.config.d.ts.map',
             'vitest.config.d.ts',
             'vitest.config.d.ts.map',
+            // Example files not part of the project
+            '.github/copilot-instructions/**/*',
         ],
     },
 ];

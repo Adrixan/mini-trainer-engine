@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { feedbackStyles } from '@core/utils/exerciseStyles';
 import type { Exercise, StarRating } from '@/types/exercise';
 
 /**
@@ -91,10 +92,7 @@ export function ExerciseWrapper({
             {/* Feedback */}
             {showSolution && (
                 <div
-                    className={`rounded-xl p-4 animate-fadeIn ${isCorrect
-                            ? 'bg-green-50 border border-green-200'
-                            : 'bg-red-50 border border-red-200'
-                        }`}
+                    className={`${feedbackStyles({ type: isCorrect ? 'success' : 'error' })} animate-fadeIn`}
                     role="alert"
                     aria-live="polite"
                 >
@@ -103,15 +101,14 @@ export function ExerciseWrapper({
                             {isCorrect ? '🎉' : '💪'}
                         </span>
                         <div>
-                            <p className={`font-bold ${isCorrect ? 'text-green-800' : 'text-red-800'
-                                }`}>
+                            <p className="font-bold">
                                 {isCorrect
                                     ? (feedbackCorrect || t('exercises.correct'))
                                     : (feedbackIncorrect || t('exercises.incorrect'))
                                 }
                             </p>
                             {!isCorrect && attempts < maxAttempts && (
-                                <p className="text-sm text-red-600 mt-1">
+                                <p className="text-sm opacity-90 mt-1">
                                     {t('exercises.tryAgain')}
                                 </p>
                             )}

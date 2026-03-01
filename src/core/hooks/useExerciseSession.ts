@@ -1,15 +1,20 @@
 /**
  * Custom hook for managing exercise sessions.
  * 
- * Encapsulates session lifecycle, answer submission, and navigation logic.
+ * ⚠️ DEPRECATED - THIS HOOK IS NOT CURRENTLY USED
  * 
- * Responsibilities:
+ * This hook was designed as a session-specific layer but has been
+ * superseded by useExercisePageState which handles all orchestration.
+ * 
+ * Responsibilities (as originally designed):
  * - Session lifecycle management (start/end)
  * - Exercise state and progression
  * - Answer submission handling
  * - Navigation between exercises
  * 
  * Note: Gamification (stars, levels, badges) is handled by useGamification hook.
+ * 
+ * @deprecated Use useExercisePageState instead for all exercise page functionality.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -160,7 +165,7 @@ export function useExerciseSession({
                 timeSpentSeconds: answer.timeSpentSeconds,
                 completedAt: new Date().toISOString(),
             };
-            saveExerciseResult(exerciseResult).catch(() => {});
+            saveExerciseResult(exerciseResult).catch(() => { });
         }
 
         nextExercise();
