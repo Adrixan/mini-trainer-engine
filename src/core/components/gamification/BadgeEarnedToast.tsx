@@ -6,6 +6,8 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAppStore } from '@core/stores/appStore';
+import { playBadge } from '@core/utils/sounds';
 import type { Badge } from '@/types/profile';
 
 interface BadgeEarnedToastProps {
@@ -34,6 +36,12 @@ export function BadgeEarnedToast({
     useEffect(() => {
         const timer = setTimeout(() => setIsVisible(true), 50);
         return () => clearTimeout(timer);
+    }, []);
+
+    // Play badge sound on mount
+    useEffect(() => {
+        const soundEnabled = useAppStore.getState().settings.soundEnabled;
+        playBadge(soundEnabled);
     }, []);
 
     // Auto-dismiss

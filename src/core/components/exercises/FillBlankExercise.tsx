@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
@@ -26,6 +26,16 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
     const { t } = useTranslation();
     const [answer, setAnswer] = useState('');
     const [caseWrong, setCaseWrong] = useState(false);
+
+    // Ref for the first input for focus management
+    const firstInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus first input on mount and when a new exercise loads
+    useEffect(() => {
+        if (!showSolution) {
+            firstInputRef.current?.focus();
+        }
+    }, [content, showSolution]);
 
     // Follow-up state: when the child answers with a digit and numericWordForm is set
     const [followUpActive, setFollowUpActive] = useState(false);
@@ -133,12 +143,12 @@ export function FillBlankExercise({ content, hints, onSubmit, showSolution }: Pr
                     {parts[0]}
                     <span className="inline-block align-middle mx-1">
                         <input
+                            ref={firstInputRef}
                             type="text"
                             value={answer}
                             onChange={(e) => handleAnswerChange(e.target.value)}
                             onKeyDown={handleKeyDown}
                             disabled={showSolution || followUpActive}
-                            autoFocus
                             aria-label={t('exercises.fillBlank.answerLabel')}
                             className={`inline-block w-40 px-3 py-1.5 text-base font-bold border-b-4 rounded-lg text-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${inputFieldStyles({ state: getInputState() })} ${caseWrongOverride}`}
                             placeholder="..."

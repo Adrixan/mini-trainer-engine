@@ -30,8 +30,12 @@ let audioContext: AudioContext | null = null;
 
 /**
  * Get or create the audio context.
+ * Returns null if AudioContext is not available (e.g., in test environments).
  */
-function getAudioContext(): AudioContext {
+function getAudioContext(): AudioContext | null {
+    if (typeof AudioContext === 'undefined') {
+        return null;
+    }
     if (!audioContext) {
         audioContext = new AudioContext();
     }
@@ -40,9 +44,11 @@ function getAudioContext(): AudioContext {
 
 /**
  * Resume audio context if suspended (required for some browsers).
+ * Returns early if audio context is not available.
  */
 async function resumeAudioContext(): Promise<void> {
     const ctx = getAudioContext();
+    if (!ctx) return;
     if (ctx.state === 'suspended') {
         await ctx.resume();
     }
@@ -54,6 +60,7 @@ async function resumeAudioContext(): Promise<void> {
 
 /**
  * Play a frequency with optional duration and type.
+ * Returns early if audio context is not available.
  */
 function playTone(
     frequency: number,
@@ -62,6 +69,7 @@ function playTone(
     volume: number = 0.3
 ): void {
     const ctx = getAudioContext();
+    if (!ctx) return;
 
     const oscillator = ctx.createOscillator();
     const gainNode = ctx.createGain();

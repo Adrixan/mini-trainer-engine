@@ -301,7 +301,9 @@
         },
         "matching": {
             "instruction": "Verbinde die zusammengehörenden Paare",
-            "solution": "Lösung:"
+            "solution": "Lösung:",
+            "leftColumn": "Zahlen (linke Spalte)",
+            "rightColumn": "Wörter (rechte Spalte)"
         },
         "wordOrder": {
             "yourSentence": "Dein Satz",
@@ -366,14 +368,20 @@
     "teacher": {
         "pinTitle": "Lehrer-Login",
         "pinSubtitle": "Gib deine PIN ein, um zum Lehrer-Bereich zu gelangen",
-        "pinSetup": "PIN erstellen",
-        "pinSetupHint": "Erstelle eine PIN, um den Lehrer-Bereich zu schützen",
+        "pinSetup": "PIN festlegen",
+        "pinSetupHint": "4-stelligen PIN eingeben",
         "pinPlaceholder": "PIN eingeben",
         "pinConfirm": "PIN bestätigen",
         "pinSubmit": "Anmelden",
-        "pinInvalid": "Ungültige PIN",
+        "pinInvalid": "Falscher PIN",
         "pinTooShort": "PIN muss mindestens 4 Ziffern haben",
         "pinMismatch": "PINs stimmen nicht überein",
+        "pinSuccess": "PIN erfolgreich festgelegt",
+        "wrongPin": "Falscher PIN",
+        "newPin": "Neuer PIN",
+        "confirmPin": "PIN bestätigen",
+        "enterPin": "PIN eingeben",
+        "enterNewPin": "Neuen PIN eingeben",
         "dashboardTitle": "Lehrer-Dashboard",
         "logout": "Abmelden",
         "totalProfiles": "Profile",

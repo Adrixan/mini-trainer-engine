@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { optionStyles, type OptionVariant } from '@core/utils/exerciseStyles';
 import { useKeyboardNavigation } from '@core/hooks/useKeyboardNavigation';
@@ -23,6 +23,14 @@ interface Props {
 export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution }: Props) {
     const { t } = useTranslation();
     const [selected, setSelected] = useState<number | null>(null);
+    const checkButtonRef = useRef<HTMLButtonElement>(null);
+
+    // Auto-focus check button after selection
+    useEffect(() => {
+        if (selected !== null && !showSolution) {
+            checkButtonRef.current?.focus();
+        }
+    }, [selected, showSolution]);
 
     const handleSelect = useCallback((index: number) => {
         if (showSolution) return;
@@ -36,12 +44,24 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
     }, [selected, content.correctIndex, onSubmit]);
 
     // Keyboard navigation hook
-    const { focusedIndex, containerRef } = useKeyboardNavigation({
+    const { focusedIndex, containerRef, itemRefs, focus } = useKeyboardNavigation({
         items: content.options,
         onSelect: (_option, index) => handleSelect(index),
         enabled: !showSolution,
         wrap: true,
+        autoFocus: true,
     });
+
+    // Focus first option on mount when no selection made
+    useEffect(() => {
+        if (!showSolution && selected === null) {
+            // Delay slightly to ensure DOM is ready
+            const timer = setTimeout(() => {
+                focus();
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [showSolution, selected, focus]);
 
     // Determine option variant for styling
     const getOptionVariant = (idx: number): OptionVariant => {
@@ -89,6 +109,7 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
                     return (
                         <button
                             key={idx}
+                            ref={(el) => { itemRefs.current[idx] = el; }}
                             onClick={() => handleSelect(idx)}
                             disabled={showSolution}
                             role="radio"
@@ -131,6 +152,7 @@ export function MultipleChoiceExercise({ content, hints, onSubmit, showSolution 
             {/* Check button */}
             {!showSolution && (
                 <button
+                    ref={checkButtonRef}
                     onClick={handleCheck}
                     disabled={selected === null}
                     className="w-full py-3 bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"

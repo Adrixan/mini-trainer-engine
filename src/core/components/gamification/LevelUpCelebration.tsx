@@ -127,11 +127,20 @@ export function LevelUpCelebration({
         onDone();
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setVisible(false);
+            onDone();
+        }
+    };
+
     return (
         <div
             ref={dialogRef}
             className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
             onClick={handleClick}
+            onKeyDown={handleKeyDown}
             role="dialog"
             aria-modal="true"
             aria-label={`Level up celebration: Level ${newLevel}`}

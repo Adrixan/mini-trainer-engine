@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
@@ -19,6 +19,12 @@ interface Props {
 export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution }: Props) {
     const { t } = useTranslation();
     const [selected, setSelected] = useState<string | null>(null);
+    const firstOptionRef = useRef<HTMLButtonElement>(null);
+
+    // Auto-focus first choice on mount
+    useEffect(() => {
+        firstOptionRef.current?.focus();
+    }, []);
 
     const handleSelect = (option: string) => {
         if (showSolution) return;
@@ -96,6 +102,7 @@ export function ConnectorInsertExercise({ content, hints, onSubmit, showSolution
 
                     return (
                         <button
+                            ref={idx === 0 ? firstOptionRef : undefined}
                             key={idx}
                             onClick={() => handleSelect(option)}
                             onKeyDown={(e) => handleKeyDown(e, option)}

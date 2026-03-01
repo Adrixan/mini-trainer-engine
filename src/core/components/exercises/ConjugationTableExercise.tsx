@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
@@ -21,6 +21,14 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
     const [inputs, setInputs] = useState<Record<number, string>>({});
     const [results, setResults] = useState<Record<number, boolean | null>>({});
     const [caseWrongCells, setCaseWrongCells] = useState<Record<number, boolean>>({});
+    const firstInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus first input on mount and when showing new problem
+    useEffect(() => {
+        if (!showSolution) {
+            firstInputRef.current?.focus();
+        }
+    }, [showSolution]);
 
     const handleInputChange = (cellIndex: number, value: string) => {
         if (showSolution) return;
@@ -141,6 +149,7 @@ export function ConjugationTableExercise({ content, hints, onSubmit, showSolutio
                                             {cell.person}
                                         </label>
                                         <input
+                                            ref={idx === editableCells[0]?.idx ? firstInputRef : null}
                                             id={`conjugation-${idx}`}
                                             type="text"
                                             value={inputs[idx] ?? ''}

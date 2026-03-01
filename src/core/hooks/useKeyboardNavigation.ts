@@ -36,7 +36,7 @@ export interface KeyboardNavigationResult<T> {
     /** Ref to attach to the container element */
     containerRef: React.RefObject<HTMLDivElement | null>;
     /** Refs to attach to individual items */
-    itemRefs: React.RefObject<(HTMLDivElement | null)[]>;
+    itemRefs: React.RefObject<(HTMLElement | null)[]>;
     /** Manually set focus to a specific index */
     setFocusedIndex: (index: number) => void;
     /** Reset to initial state */
@@ -68,7 +68,7 @@ export function useKeyboardNavigation<T>({
 }: KeyboardNavigationOptions<T>): KeyboardNavigationResult<T> {
     const [focusedIndex, setFocusedIndex] = useState(initialIndex);
     const containerRef = useRef<HTMLDivElement>(null);
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
     // Move focus to next item
     const moveToNext = useCallback(() => {

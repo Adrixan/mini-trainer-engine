@@ -28,9 +28,21 @@ export function ProfileCreation() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const createButtonRef = useRef<HTMLButtonElement>(null);
 
     const trimmedNickname = nickname.trim();
     const isValid = trimmedNickname.length > 0 && selectedAvatar !== null;
+
+    // Focus create button when avatar is selected and nickname is valid
+    const handleAvatarSelect = useCallback((emoji: string) => {
+        setSelectedAvatar(emoji);
+        // Move focus to create button if nickname is already entered
+        if (trimmedNickname.length > 0) {
+            setTimeout(() => {
+                createButtonRef.current?.focus();
+            }, 50);
+        }
+    }, [trimmedNickname]);
 
     const handleCreateProfile = useCallback(() => {
         if (!isValid || !selectedAvatar) return;
@@ -125,7 +137,7 @@ export function ProfileCreation() {
                         <button
                             key={emoji}
                             type="button"
-                            onClick={() => setSelectedAvatar(emoji)}
+                            onClick={() => handleAvatarSelect(emoji)}
                             className={`
                                 w-14 h-14 text-3xl rounded-xl border-2 transition-all
                                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
@@ -157,6 +169,7 @@ export function ProfileCreation() {
             {/* Action Buttons */}
             <div className="w-full max-w-sm space-y-3">
                 <button
+                    ref={createButtonRef}
                     onClick={handleCreateProfile}
                     disabled={!isValid || isLoading}
                     className={`

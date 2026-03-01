@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HintButton } from './HintButton';
 import { ExerciseFeedback } from './ExerciseFeedback';
 import { optionStyles } from '@core/utils/exerciseStyles';
 import type { MatchingContent } from '@/types/exercise';
 import { shuffle } from '../../utils/shuffle';
+import { useKeyboardNavigation } from '@core/hooks/useKeyboardNavigation';
 
 interface Props {
     content: MatchingContent;
@@ -16,6 +17,7 @@ interface Props {
 /**
  * Matching exercise: match items from left column to right column.
  * Supports tap-to-select and keyboard navigation.
+ * Cross-column keyboard navigation: selecting left switches focus to right and vice versa.
  */
 export function MatchingExercise({ content, hints, onSubmit, showSolution }: Props) {
     const { t } = useTranslation();
@@ -30,10 +32,64 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
     const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
     const [matches, setMatches] = useState<Record<number, string>>({});
 
-    const handleLeftClick = (idx: number) => {
+    // Refs for both columns
+    const leftColumnRef = useRef<HTMLDivElement>(null);
+    const rightColumnRef = useRef<HTMLDivElement>(null);
+    const leftButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const rightButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const checkButtonRef = useRef<HTMLButtonElement>(null);
+
+    // Keyboard navigation for left column
+    const leftNav = useKeyboardNavigation<number>({
+        items: content.pairs.map((_, i) => i),
+        onSelect: useCallback((item: number) => {
+            handleLeftSelect(item);
+        }, [showSolution]),
+        onCancel: useCallback(() => {
+            setSelectedLeft(null);
+        }, []),
+        enabled: !showSolution,
+        wrap: true,
+        initialIndex: -1,
+    });
+
+    // Get available right items (not already used)
+    const availableRightItems = useMemo(() => {
+        return shuffledRight
+            .map((rightValue, rIdx) => ({ rightValue, rIdx }))
+            .filter(({ rightValue }) => !Object.values(matches).includes(rightValue));
+    }, [shuffledRight, matches]);
+
+    // Keyboard navigation for right column
+    const rightNav = useKeyboardNavigation<{ rightValue: string; rIdx: number }>({
+        items: availableRightItems,
+        onSelect: useCallback((item: { rightValue: string; rIdx: number }) => {
+            handleRightSelect(item.rightValue);
+        }, [selectedLeft, showSolution]),
+        onCancel: useCallback(() => {
+            // Return focus to left column
+            setSelectedLeft(null);
+        }, []),
+        enabled: !showSolution && selectedLeft !== null,
+        wrap: true,
+        initialIndex: -1,
+    });
+
+    // Sync button refs for left column
+    useEffect(() => {
+        leftNav.itemRefs.current = leftButtonRefs.current;
+    }, [leftNav]);
+
+    // Sync button refs for right column
+    useEffect(() => {
+        rightNav.itemRefs.current = rightButtonRefs.current;
+    }, [rightNav]);
+
+    // Handle left column selection (keyboard or click)
+    const handleLeftSelect = (idx: number) => {
         if (showSolution) return;
 
-        // If this left item already has a match, unmatch it (tap to undo)
+        // If this left item already has a match, unmatch it
         if (matches[idx] !== undefined) {
             setMatches((prev) => {
                 const next = { ...prev };
@@ -44,14 +100,57 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
             return;
         }
 
-        // Otherwise toggle selection
-        setSelectedLeft(selectedLeft === idx ? null : idx);
+        // Select this left item and switch focus to right column
+        setSelectedLeft(idx);
+
+        // Focus the first available (not used) item in the right column
+        setTimeout(() => {
+            const firstAvailableIdx = rightButtonRefs.current.findIndex((btn) => btn && !btn.disabled);
+            if (firstAvailableIdx !== -1 && rightButtonRefs.current[firstAvailableIdx]) {
+                rightButtonRefs.current[firstAvailableIdx]?.focus();
+            }
+        }, 10);
+    };
+
+    const handleLeftClick = (idx: number) => {
+        handleLeftSelect(idx);
     };
 
     const handleRightClick = (rightValue: string) => {
+        handleRightSelect(rightValue);
+    };
+
+    // Handle right column selection (keyboard or click)
+    const handleRightSelect = (rightValue: string) => {
         if (showSolution || selectedLeft === null) return;
-        setMatches((prev) => ({ ...prev, [selectedLeft]: rightValue }));
+
+        // Get the match before updating state
+        const currentSelectedLeft = selectedLeft;
+
+        setMatches((prev) => {
+            const newMatches = { ...prev, [currentSelectedLeft]: rightValue };
+            const isAllMatched = Object.keys(newMatches).length === content.pairs.length;
+
+            // If all pairs are matched, focus the check button
+            if (isAllMatched) {
+                setTimeout(() => {
+                    checkButtonRef.current?.focus();
+                }, 10);
+            }
+
+            return newMatches;
+        });
         setSelectedLeft(null);
+
+        // Switch focus back to left column - find first unmatched item (only if not all matched)
+        if (Object.keys(matches).length < content.pairs.length - 1) {
+            setTimeout(() => {
+                const firstUnmatchedIdx = content.pairs.findIndex((_, idx) => matches[idx] === undefined);
+                if (firstUnmatchedIdx !== -1 && leftButtonRefs.current[firstUnmatchedIdx]) {
+                    leftButtonRefs.current[firstUnmatchedIdx]?.focus();
+                }
+            }, 10);
+        }
     };
 
     const handleReset = () => {
@@ -80,7 +179,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
 
             <div className="grid grid-cols-2 gap-3" role="group" aria-labelledby="matching-instruction">
                 {/* Left column */}
-                <div className="space-y-2">
+                <div className="space-y-2" ref={leftColumnRef} role="radiogroup" aria-label={t('exercises.matching.leftColumn')}>
                     {content.pairs.map((pair, idx) => {
                         const isSelected = selectedLeft === idx;
                         const matchedValue = matches[idx];
@@ -99,6 +198,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                         return (
                             <button
                                 key={idx}
+                                ref={(el) => { leftButtonRefs.current[idx] = el; }}
                                 onClick={() => handleLeftClick(idx)}
                                 disabled={showSolution}
                                 aria-pressed={isSelected}
@@ -128,7 +228,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                 </div>
 
                 {/* Right column (shuffled) */}
-                <div className="space-y-2">
+                <div className="space-y-2" ref={rightColumnRef} role="group" aria-label={t('exercises.matching.rightColumn')}>
                     {shuffledRight.map((rightValue, rIdx) => {
                         const used = rightUsed.has(rightValue);
 
@@ -150,6 +250,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                         return (
                             <button
                                 key={`right-${rIdx}`}
+                                ref={(el) => { rightButtonRefs.current[rIdx] = el; }}
                                 onClick={() => handleRightClick(rightValue)}
                                 disabled={showSolution || used}
                                 aria-disabled={used && !showSolution}
@@ -191,6 +292,7 @@ export function MatchingExercise({ content, hints, onSubmit, showSolution }: Pro
                         </button>
                     )}
                     <button
+                        ref={checkButtonRef}
                         onClick={handleCheck}
                         disabled={!allMatched}
                         className="flex-1 py-3 bg-accent-500 text-white font-bold rounded-xl hover:bg-accent-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"

@@ -48,9 +48,24 @@ interface StorageEntry<T> {
 const STORAGE_VERSION = 1;
 
 /**
- * Prefix for all storage keys to avoid collisions.
+ * Default app ID used when VITE_APP_ID is not set.
  */
-const KEY_PREFIX = 'mte:';
+const DEFAULT_APP_ID = 'daz';
+
+/**
+ * Get the current app ID from the build-time environment variable.
+ */
+function getAppId(): string {
+    return import.meta.env.VITE_APP_ID || DEFAULT_APP_ID;
+}
+
+/**
+ * Prefix for all storage keys to avoid collisions.
+ * Includes app ID for multi-app isolation.
+ */
+function getKeyPrefix(): string {
+    return `mte:${getAppId()}:`;
+}
 
 // ============================================================================
 // Core Storage Functions
@@ -66,7 +81,7 @@ export function getStorageItem<K extends StorageKey>(
     key: K
 ): StorageKeyMap[K] | undefined {
     try {
-        const prefixedKey = `${KEY_PREFIX}${key}`;
+        const prefixedKey = `${getKeyPrefix()}${key}`;
         const stored = localStorage.getItem(prefixedKey);
 
         if (!stored) {
@@ -100,7 +115,7 @@ export function setStorageItem<K extends StorageKey>(
     value: StorageKeyMap[K]
 ): void {
     try {
-        const prefixedKey = `${KEY_PREFIX}${key}`;
+        const prefixedKey = `${getKeyPrefix()}${key}`;
         const entry: StorageEntry<StorageKeyMap[K]> = {
             value,
             version: STORAGE_VERSION,
@@ -120,7 +135,7 @@ export function setStorageItem<K extends StorageKey>(
  */
 export function removeStorageItem(key: StorageKey): void {
     try {
-        const prefixedKey = `${KEY_PREFIX}${key}`;
+        const prefixedKey = `${getKeyPrefix()}${key}`;
         localStorage.removeItem(prefixedKey);
     } catch (error) {
         console.error(`Failed to remove ${key} from localStorage:`, error);
@@ -134,7 +149,7 @@ export function removeStorageItem(key: StorageKey): void {
  * @returns Whether the key exists
  */
 export function hasStorageItem(key: StorageKey): boolean {
-    const prefixedKey = `${KEY_PREFIX}${key}`;
+    const prefixedKey = `${getKeyPrefix()}${key}`;
     return localStorage.getItem(prefixedKey) !== null;
 }
 
@@ -166,7 +181,7 @@ export function clearAllStorageItems(): void {
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key?.startsWith(KEY_PREFIX)) {
+            if (key?.startsWith(getKeyPrefix())) {
                 keysToRemove.push(key);
             }
         }

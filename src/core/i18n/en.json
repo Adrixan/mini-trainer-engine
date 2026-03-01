@@ -302,7 +302,9 @@
         },
         "matching": {
             "instruction": "Connect the matching pairs",
-            "solution": "Solution:"
+            "solution": "Solution:",
+            "leftColumn": "Numbers (left column)",
+            "rightColumn": "Words (right column)"
         },
         "wordOrder": {
             "yourSentence": "Your sentence",

@@ -4,7 +4,10 @@
  * Visual star rating display for exercise results.
  */
 
+import { useEffect } from 'react';
 import type { StarRating } from '@/types/gamification';
+import { useAppStore } from '@core/stores/appStore';
+import { playStar } from '@core/utils/sounds';
 
 interface StarDisplayProps {
     /** Number of filled stars (0-3) */
@@ -47,6 +50,19 @@ export function StarDisplay({
     const emptyStars = showEmpty ? maxStars - filledStars : 0;
 
     const label = ariaLabel ?? `${filledStars} out of ${maxStars} stars`;
+
+    // Play star sound when stars are animated
+    useEffect(() => {
+        if (animate && filledStars > 0) {
+            const soundEnabled = useAppStore.getState().settings.soundEnabled;
+            // Play sound for each star with staggered delay
+            for (let i = 0; i < filledStars; i++) {
+                setTimeout(() => {
+                    playStar(i, soundEnabled);
+                }, i * 200);
+            }
+        }
+    }, [filledStars, animate]);
 
     return (
         <div
