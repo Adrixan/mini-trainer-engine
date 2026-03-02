@@ -286,3 +286,138 @@ All exercise components now use shared utilities:
 ## Last Updated
 
 2026-03-01
+
+---
+
+## Implementation Update (2026-03-02)
+
+### Volksschule Learning Apps Expansion
+
+Based on the Austrian curriculum (vs-lehrplan.pdf), the following new learning apps have been created:
+
+#### New Apps Added
+
+| App ID | Subject | Description | Status |
+|--------|---------|-------------|--------|
+| deutsch | Deutsch | German language (reading, writing, grammar) | Template created |
+| sachunterricht | Sachunterricht | General studies (nature, society, technology) | Template created |
+| musik | Musik | Music education | Template created |
+| kunst | Kunst und Gestaltung | Art and design | Template created |
+| technik | Technik und Design | Technology and design | Template created |
+| englisch | Englisch | English as foreign language | Template created |
+
+#### App Structure
+
+Each new app follows the established architecture:
+
+```
+src/apps/[subject]/
+├── app.json        # App configuration
+├── areas.json      # Learning areas with stages
+├── themes.json     # Topics/themes
+├── exercises.json  # Exercise templates
+└── badges.json     # Achievement system
+```
+
+#### Curriculum Alignment (Volksschule 1-4)
+
+The themes and areas are aligned to the Austrian curriculum:
+
+- **Level 1**: 1st grade (1. Schulstufe)
+- **Level 2**: 2nd grade (2. Schulstufe)  
+- **Level 3**: 3rd/4th grade (3./4. Schulstufe)
+
+#### Build Commands
+
+USB builds:
+```bash
+npm run build:deutsch
+npm run build:sachunterricht
+npm run build:musik
+npm run build:kunst
+npm run build:technik
+npm run build:englisch
+```
+
+PWA builds:
+```bash
+npm run build:deutsch:pwa
+npm run build:sachunterricht:pwa
+# etc.
+```
+
+Build all apps:
+```bash
+npm run build:all          # Both USB and PWA for all apps
+npm run build:all:usb      # USB only
+npm run build:all:pwa      # PWA only
+```
+
+#### Subject Details
+
+**Deutsch** (German):
+- Areas: Sprachbewusstsein, Wortschatz, Lesen, Schreiben, Grammatik, Sprechen, Rechtschreibung
+- 10 themes covering literacy skills
+
+**Sachunterricht** (General Studies):
+- Areas: Menschen, Natur, Raum, Technik, Gesundheit, Gesellschaft
+- 15 themes covering science, social studies, health
+
+**Musik** (Music):
+- Areas: Singen, Rhythmus, Instrumente, Hören, Tanz, Musiktheorie
+- 10 themes covering music education
+
+**Kunst und Gestaltung** (Art):
+- Areas: Grundlagen, Techniken, Motivation, Gestaltung, Rezeption, Projekte
+- 12 themes covering art education
+
+**Technik und Design** (Technology):
+- Areas: Grundlagen, Praxis, Technik, Digital, Planung, Projekte
+- 11 themes covering technology education
+
+**Englisch** (English):
+- Areas: Vocabulary, Grammar, Communication, Listening, Reading, Writing
+- 15 themes covering foreign language learning
+
+#### Next Steps
+
+1. Expand exercises.json for each subject with curriculum-aligned content
+2. Create SVG icons for each app
+3. Add translations (i18n) for all new content
+4. Test all builds
+
+## Last Updated
+
+2026-03-02
+
+---
+
+## Implementation Update (2026-03-02 - continued)
+
+### Exercise Expansion Completed
+
+All new apps now have comprehensive exercise sets:
+
+| App | Exercises | Status |
+|-----|-----------|--------|
+| deutsch | 35 | ✅ Complete |
+| sachunterricht | 47 | ✅ Complete |
+| musik | 26 | ✅ Complete |
+| kunst | 37 | ✅ Complete |
+| technik | 25 | ✅ Complete |
+| englisch | 27 | ✅ Complete |
+
+### Icons Added
+
+Created SVG icons for all new apps:
+- public/deutsch-icon.svg
+- public/sachunterricht-icon.svg
+- public/musik-icon.svg
+- public/kunst-icon.svg
+- public/technik-icon.svg
+- public/englisch-icon.svg
+
+### Test Results
+
+- All 518 tests pass ✅
+- Config validation passes ✅
