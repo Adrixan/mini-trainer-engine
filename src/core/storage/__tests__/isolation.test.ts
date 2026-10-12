@@ -264,7 +264,7 @@ describe('Persisted store scoping', () => {
     it('scopes store names by app id', async () => {
         vi.stubEnv('VITE_APP_ID', 'mathematik');
         const { scopedStoreName } = await import('../../appId');
-        expect(scopedStoreName('mini-trainer-profile')).toBe('mini-trainer-profile:mathematik');
+        expect(scopedStoreName('profile')).toBe('mini-trainer-profile:mathematik');
     });
 
     it('copies a legacy unscoped store into the app scope once', async () => {
@@ -272,7 +272,7 @@ describe('Persisted store scoping', () => {
         localStorageMock.setItem('mini-trainer-profile', '{"state":{"activeProfile":null}}');
 
         const { adoptLegacyStore } = await import('../../appId');
-        adoptLegacyStore('mini-trainer-profile');
+        adoptLegacyStore('profile');
 
         const store = localStorageMock._getStore();
         expect(store['mini-trainer-profile:mathematik']).toBe('{"state":{"activeProfile":null}}');
@@ -286,7 +286,7 @@ describe('Persisted store scoping', () => {
         localStorageMock.setItem('mini-trainer-profile:mathematik', 'current');
 
         const { adoptLegacyStore } = await import('../../appId');
-        adoptLegacyStore('mini-trainer-profile');
+        adoptLegacyStore('profile');
 
         expect(localStorageMock._getStore()['mini-trainer-profile:mathematik']).toBe('current');
     });
@@ -297,7 +297,7 @@ describe('Persisted store scoping', () => {
         localStorageMock.setItem('mini-trainer-profile:mathematik', 'math profile');
 
         const { adoptLegacyStore } = await import('../../appId');
-        adoptLegacyStore('mini-trainer-profile');
+        adoptLegacyStore('profile');
 
         const store = localStorageMock._getStore();
         expect(Object.keys(store).sort()).toEqual(['mini-trainer-profile:mathematik', 'mte:mathematik:app:theme']);
