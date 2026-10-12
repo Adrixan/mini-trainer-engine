@@ -149,7 +149,7 @@ describe('localStorage Isolation', () => {
             expect(keys).toContain('mte:mathematik:app:theme');
         });
 
-        it('default app ID falls back to daz', async () => {
+        it('default app ID falls back to the engine default', async () => {
             // Use vi.stubEnv to mock undefined
             vi.stubEnv('VITE_APP_ID', undefined);
 
@@ -162,8 +162,8 @@ describe('localStorage Isolation', () => {
             const store = localStorageMock._getStore();
             const keys = Object.keys(store);
 
-            // Should use daz as default
-            expect(keys).toContain('mte:daz:app:locale');
+            // Should use the app configured in trainer.config.json
+            expect(keys).toContain(`mte:${__TRAINER__.defaultAppId}:app:locale`);
         });
     });
 
@@ -246,6 +246,10 @@ describe('localStorage Isolation', () => {
 // Persisted store scoping
 // ============================================================================
 
+const PREFIX = __TRAINER__.storePrefix;
+const FIRST_APP = __TRAINER__.defaultAppId;
+const OTHER_APP = 'other-app';
+
 describe('Persisted store scoping', () => {
     let localStorageMock: ReturnType<typeof createLocalStorageMock>;
 
@@ -262,63 +266,73 @@ describe('Persisted store scoping', () => {
     });
 
     it('scopes store names by app id', async () => {
-        vi.stubEnv('VITE_APP_ID', 'mathematik');
+        vi.stubEnv('VITE_APP_ID', OTHER_APP);
         const { scopedStoreName } = await import('../../appId');
-        expect(scopedStoreName('profile')).toBe('mini-trainer-profile:mathematik');
+        expect(scopedStoreName('profile')).toBe(`${PREFIX}-profile:${OTHER_APP}`);
     });
 
     it('copies a legacy unscoped store into the app scope once', async () => {
-        vi.stubEnv('VITE_APP_ID', 'mathematik');
-        localStorageMock.setItem('mini-trainer-profile', '{"state":{"activeProfile":null}}');
+        vi.stubEnv('VITE_APP_ID', OTHER_APP);
+        localStorageMock.setItem(`${PREFIX}-profile`, '{"state":{"activeProfile":null}}');
 
         const { adoptLegacyStore } = await import('../../appId');
         adoptLegacyStore('profile');
 
         const store = localStorageMock._getStore();
-        expect(store['mini-trainer-profile:mathematik']).toBe('{"state":{"activeProfile":null}}');
+        expect(store[`${PREFIX}-profile:${OTHER_APP}`]).toBe('{"state":{"activeProfile":null}}');
         // Legacy key stays so other apps on the same origin can adopt it too
-        expect(store['mini-trainer-profile']).toBeDefined();
+        expect(store[`${PREFIX}-profile`]).toBeDefined();
+    });
+
+    it('also adopts the name used before the engine had variants', async () => {
+        vi.stubEnv('VITE_APP_ID', OTHER_APP);
+        localStorageMock.setItem('mini-trainer-settings', 'old settings');
+
+        const { adoptLegacyStore } = await import('../../appId');
+        adoptLegacyStore('settings');
+
+        expect(localStorageMock._getStore()[`${PREFIX}-settings:${OTHER_APP}`]).toBe('old settings');
     });
 
     it('never overwrites data the app already has', async () => {
-        vi.stubEnv('VITE_APP_ID', 'mathematik');
-        localStorageMock.setItem('mini-trainer-profile', 'legacy');
-        localStorageMock.setItem('mini-trainer-profile:mathematik', 'current');
+        vi.stubEnv('VITE_APP_ID', OTHER_APP);
+        localStorageMock.setItem(`${PREFIX}-profile`, 'legacy');
+        localStorageMock.setItem(`${PREFIX}-profile:${OTHER_APP}`, 'current');
 
         const { adoptLegacyStore } = await import('../../appId');
         adoptLegacyStore('profile');
 
-        expect(localStorageMock._getStore()['mini-trainer-profile:mathematik']).toBe('current');
+        expect(localStorageMock._getStore()[`${PREFIX}-profile:${OTHER_APP}`]).toBe('current');
     });
 
     it('does not touch the keys of other apps', async () => {
-        vi.stubEnv('VITE_APP_ID', 'daz');
-        localStorageMock.setItem('mte:mathematik:app:theme', 'x');
-        localStorageMock.setItem('mini-trainer-profile:mathematik', 'math profile');
+        vi.stubEnv('VITE_APP_ID', FIRST_APP);
+        localStorageMock.setItem(`mte:${OTHER_APP}:app:theme`, 'x');
+        localStorageMock.setItem(`${PREFIX}-profile:${OTHER_APP}`, 'other profile');
 
         const { adoptLegacyStore } = await import('../../appId');
         adoptLegacyStore('profile');
 
         const store = localStorageMock._getStore();
-        expect(Object.keys(store).sort()).toEqual(['mini-trainer-profile:mathematik', 'mte:mathematik:app:theme']);
+        expect(Object.keys(store).sort()).toEqual([`${PREFIX}-profile:${OTHER_APP}`, `mte:${OTHER_APP}:app:theme`]);
     });
 
     it('keeps the profile of two apps separate', async () => {
-        vi.stubEnv('VITE_APP_ID', 'daz');
-        const daz = await import('../../stores/profileStore');
-        daz.useProfileStore.getState().createProfile('Anna', '🦊', ['grammar']);
+        vi.stubEnv('VITE_APP_ID', FIRST_APP);
+        const first = await import('../../stores/profileStore');
+        first.useProfileStore.getState().createProfile('Anna', '🦊', ['grammar']);
 
-        vi.stubEnv('VITE_APP_ID', 'mathematik');
+        vi.stubEnv('VITE_APP_ID', OTHER_APP);
         vi.resetModules();
-        const math = await import('../../stores/profileStore');
-        expect(math.useProfileStore.getState().activeProfile).toBeNull();
+        const second = await import('../../stores/profileStore');
+        expect(second.useProfileStore.getState().activeProfile).toBeNull();
 
-        const created = math.useProfileStore.getState().createProfile('Ben', '🐻', ['numbers', 'geometry']);
+        const created = second.useProfileStore.getState().createProfile('Ben', '🐻', ['numbers', 'geometry']);
         expect(Object.keys(created.currentLevels)).toEqual(['numbers', 'geometry']);
 
         const store = localStorageMock._getStore();
-        expect(JSON.parse(String(store['mini-trainer-profile:daz'])).state.activeProfile.nickname).toBe('Anna');
-        expect(JSON.parse(String(store['mini-trainer-profile:mathematik'])).state.activeProfile.nickname).toBe('Ben');
+        expect(JSON.parse(String(store[`${PREFIX}-profile:${FIRST_APP}`])).state.activeProfile.nickname).toBe('Anna');
+        expect(JSON.parse(String(store[`${PREFIX}-profile:${OTHER_APP}`])).state.activeProfile.nickname).toBe('Ben');
     });
 });
 

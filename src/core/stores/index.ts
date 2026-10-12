@@ -21,6 +21,7 @@ export type {
     AppSettings,
     AppState,
     FontSize,
+    Theme,
     PinCheckResult,
     TeacherAuth,
 } from './appStore';

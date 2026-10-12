@@ -2,5 +2,35 @@
     "engineName": "Mini Trainer",
     "defaultAppId": "daz",
     "storePrefix": "mini-trainer",
-    "language": "de"
+    "language": "de",
+    "defaultTheme": "default",
+    "themes": [
+        "default"
+    ],
+    "avatars": [
+        "🦊",
+        "🐻",
+        "🐰",
+        "🦁",
+        "🐸",
+        "🐼",
+        "🦄",
+        "🐕",
+        "🐱",
+        "🐵",
+        "🦋",
+        "🌟"
+    ],
+    "i18n": {
+        "de": {
+            "app": {
+                "title": "Mini Trainer"
+            }
+        },
+        "en": {
+            "app": {
+                "title": "Mini Trainer"
+            }
+        }
+    }
 }
