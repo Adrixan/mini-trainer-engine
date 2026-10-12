@@ -148,90 +148,48 @@ export function getCurrentAppId(): string {
 }
 
 /**
- * Load app configuration (app.json).
- * Falls back to defaults if not available.
- *
- * @returns AppConfig with primary color and terminology
+ * Fallback app configuration, used while app.json is loading or missing.
+ * Real builds always ship app.json (see scripts/lib/app-build.mjs).
  */
-export async function loadAppConfig(): Promise<AppConfig> {
-    const appId = getAppId();
-    const windowObj = window as unknown as Record<string, unknown>;
-
-    // Check window object first for USB/offline mode
-    if (windowObj.__TRAINER_APP__) {
-        return windowObj.__TRAINER_APP__ as AppConfig;
-    }
-
-    // Try to fetch app.json from apps directory
-    const appPath = `./apps/${appId}/app.json`;
-
-    try {
-        const response = await fetch(appPath);
-        if (response.ok) {
-            return await response.json() as AppConfig;
-        }
-    } catch {
-        // Ignore fetch errors, use defaults
-    }
-
-    // Return default config based on appId
-    return getDefaultAppConfig(appId);
-}
-
-/**
- * Get default app config for known apps.
- */
-function getDefaultAppConfig(appId: string): AppConfig {
-    if (appId === 'daz') {
-        return {
-            id: 'daz',
-            name: 'Deutsch als Zweitsprache',
-            version: '1.0.0',
-            build: { pwaEnabled: true, usbDistribution: true },
-            display: { primaryColor: '#3b82f6', icon: '/assets/daz-icon.svg' },
-            terminology: {
-                level: 'Wortschatz-Level',
-                levelPlural: 'Wortschatz-Level',
-                theme: 'Thema',
-                themePlural: 'Themen',
-                exercise: 'Übung',
-                exercisePlural: 'Übungen',
-            },
-        };
-    }
-    if (appId === 'mathematik') {
-        return {
-            id: 'mathematik',
-            name: 'Mathematik Grundstufe',
-            version: '1.0.0',
-            build: { pwaEnabled: true, usbDistribution: true },
-            display: { primaryColor: '#10b981', icon: '/assets/mathematik-icon.svg' },
-            terminology: {
-                level: 'Level',
-                levelPlural: 'Level',
-                theme: 'Thema',
-                themePlural: 'Themen',
-                exercise: 'Aufgabe',
-                exercisePlural: 'Aufgaben',
-            },
-        };
-    }
-    // Default fallback
+export function defaultAppConfig(appId: string = getAppId()): AppConfig {
     return {
         id: appId,
-        name: 'Mini Trainer',
+        name: appId,
         version: '1.0.0',
         build: { pwaEnabled: true, usbDistribution: true },
         display: { primaryColor: '#3b82f6', icon: '/icon.svg' },
         terminology: {
             level: 'Level',
             levelPlural: 'Level',
-            theme: 'Theme',
-            themePlural: 'Themes',
-            exercise: 'Exercise',
-            exercisePlural: 'Exercises',
+            theme: 'Thema',
+            themePlural: 'Themen',
+            exercise: 'Übung',
+            exercisePlural: 'Übungen',
         },
     };
+}
+
+/**
+ * Load the app configuration (app.json).
+ *
+ * USB builds provide it as `window.__TRAINER_APP__`; PWA builds and the dev
+ * server also serve `config/app.json`.
+ */
+export async function loadAppConfig(): Promise<AppConfig> {
+    const fromWindow = (window as unknown as Record<string, unknown>).__TRAINER_APP__;
+    if (fromWindow) {
+        return { ...defaultAppConfig(), ...(fromWindow as Partial<AppConfig>) };
+    }
+
+    try {
+        const response = await fetch('./config/app.json');
+        if (response.ok) {
+            return { ...defaultAppConfig(), ...(await response.json() as Partial<AppConfig>) };
+        }
+    } catch {
+        // Not available: fall through to the defaults.
+    }
+    return defaultAppConfig();
 }
 
 // ============================================================================
