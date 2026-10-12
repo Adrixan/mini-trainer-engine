@@ -286,8 +286,9 @@
             "instruction": "Ergänze das fehlende Wort!",
             "content": {
                 "type": "fill-blank",
-                "question": "Um am Computer zu schreiben, benötigt man eine ______.",
-                "correctAnswer": "Tastatur"
+                "sentence": "Um am Computer zu schreiben, benötigt man eine {{blank}}.",
+                "correctAnswer": "Tastatur",
+                "acceptableAnswers": []
             },
             "hints": ["Sie hat Buchstaben und Zahlen"],
             "feedbackCorrect": "Richtig! Die Tastatur dient zum Schreiben!",
@@ -339,8 +340,9 @@
             "instruction": "Ergänze das fehlende Wort!",
             "content": {
                 "type": "fill-blank",
-                "question": "Eine technische Zeichnung wird auch ______ genannt.",
-                "correctAnswer": "Werkplan"
+                "sentence": "Eine technische Zeichnung wird auch {{blank}} genannt.",
+                "correctAnswer": "Werkplan",
+                "acceptableAnswers": []
             },
             "hints": ["Er zeigt, wie etwas gebaut werden soll"],
             "feedbackCorrect": "Richtig! Der Werkplan zeigt den Bauplan!",
@@ -448,8 +450,9 @@
             "instruction": "Ergänze das fehlende Wort!",
             "content": {
                 "type": "fill-blank",
-                "question": "Bevor man mit dem Bauen beginnt, sollte man einen ______ erstellen.",
-                "correctAnswer": "Plan"
+                "sentence": "Bevor man mit dem Bauen beginnt, sollte man einen {{blank}} erstellen.",
+                "correctAnswer": "Plan",
+                "acceptableAnswers": []
             },
             "hints": ["Er zeigt, wie das Ergebnis aussehen soll"],
             "feedbackCorrect": "Richtig! Ein Plan zeigt den Weg zum Ziel!",

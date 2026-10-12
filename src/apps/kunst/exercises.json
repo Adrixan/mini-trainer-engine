@@ -66,9 +66,9 @@
             "instruction": "Wie heißt diese Form?",
             "content": {
                 "type": "fill-blank",
-                "question": "Eine Form mit 4 Ecken und 4 gleich langen Seiten heißt ___",
-                "correctAnswers": ["Quadrat", "quadrat"],
-                "caseSensitive": false
+                "sentence": "Eine Form mit 4 Ecken und 4 gleich langen Seiten heißt {{blank}}",
+                "correctAnswer": "Quadrat",
+                "acceptableAnswers": ["quadrat"]
             },
             "hints": ["Es hat 4 Ecken"],
             "feedbackCorrect": "Genau! Das Quadrat!",
@@ -141,9 +141,9 @@
             "instruction": "Welche Technik verwendest du, um weiche Übergänge zwischen Farben zu erzeugen?",
             "content": {
                 "type": "fill-blank",
-                "question": "Um weiche Farbübergänge zu machen, verwendet man die ___ -Technik.",
-                "correctAnswers": ["Lasur", "lasur", "Wisch", "wisch"],
-                "caseSensitive": false
+                "sentence": "Um weiche Farbübergänge zu machen, verwendet man die {{blank}}-Technik.",
+                "correctAnswer": "Lasur",
+                "acceptableAnswers": ["lasur", "Wisch", "wisch"]
             },
             "hints": ["Man wischt die Farbe ineinander"],
             "feedbackCorrect": "Richtig! Die Lasur- oder Wisch-Technik!",
@@ -216,9 +216,9 @@
             "instruction": "Wie nennt man die Adern auf einem Blatt?",
             "content": {
                 "type": "fill-blank",
-                "question": "Die Adern auf einem Blatt heißen ___",
-                "correctAnswers": ["Blattader", "Blattadern", "Ader", "Adern"],
-                "caseSensitive": false
+                "sentence": "Die Adern auf einem Blatt heißen {{blank}}",
+                "correctAnswer": "Blattader",
+                "acceptableAnswers": ["Blattadern", "Ader", "Adern"]
             },
             "hints": ["Sie transportieren Wasser im Blatt"],
             "feedbackCorrect": "Genau! Blattadern!",
@@ -252,9 +252,9 @@
             "instruction": "Wo befindet sich das Gesicht im Verhältnis zum Körper?",
             "content": {
                 "type": "fill-blank",
-                "question": "Das Gesicht befindet sich am ___ des Körpers.",
-                "correctAnswers": ["Kopf", "kopf", "oberen Teil", "Oberteil"],
-                "caseSensitive": false
+                "sentence": "Das Gesicht befindet sich am {{blank}} des Körpers.",
+                "correctAnswer": "Kopf",
+                "acceptableAnswers": ["kopf", "oberen Teil", "Oberteil"]
             },
             "hints": ["Der Kopf ist oben"],
             "feedbackCorrect": "Richtig! Am Kopf oben!",
@@ -327,9 +327,9 @@
             "instruction": "Welche Farbe eignet sich besonders gut für Stempeldruck?",
             "content": {
                 "type": "fill-blank",
-                "question": "Für Stempeldruck eignet sich ___ besonders gut.",
-                "correctAnswers": ["Stempelfarbe", "stempelfarbe", "Fingerfarbe", "fingerfarbe"],
-                "caseSensitive": false
+                "sentence": "Für Stempeldruck eignet sich {{blank}} besonders gut.",
+                "correctAnswer": "Stempelfarbe",
+                "acceptableAnswers": ["stempelfarbe", "Fingerfarbe", "fingerfarbe"]
             },
             "hints": ["Es ist eine spezielle Farbe zum Stempeln"],
             "feedbackCorrect": "Richtig! Stempelfarbe!",
@@ -365,7 +365,7 @@
                 "type": "matching",
                 "pairs": [
                     {"left": "📄 Papier", "right": "Schere"},
-                    {"left": "🪵 Holz", "right": ["Säge", "Holzhammer"]},
+                    {"left": "🪵 Holz", "right": "Säge oder Holzhammer"},
                     {"left": "🎨 Farbe", "right": "Pinsel"},
                     {"left": "🧱 Ton", "right": "Hände oder Modellierwerkzeug"}
                 ]
@@ -402,9 +402,9 @@
             "instruction": "Wie nennt man den Künstler, der ein Bild malt?",
             "content": {
                 "type": "fill-blank",
-                "question": "Der Künstler, der ein Bild malt, heißt ___",
-                "correctAnswers": ["Maler", "maler"],
-                "caseSensitive": false
+                "sentence": "Der Künstler, der ein Bild malt, heißt {{blank}}",
+                "correctAnswer": "Maler",
+                "acceptableAnswers": ["maler"]
             },
             "hints": ["Er nutzt Pinsel und Farben"],
             "feedbackCorrect": "Genau! Der Maler!",
@@ -477,9 +477,9 @@
             "instruction": "Welches Naturmaterial kann man zum Basteln verwenden?",
             "content": {
                 "type": "fill-blank",
-                "question": "___ sind Naturmaterialien, die man zum Basteln verwenden kann.",
-                "correctAnswers": ["Blätter", "Blüten", "Zweige", "Rinden", "Naturmaterial"],
-                "caseSensitive": false
+                "sentence": "{{blank}} sind Naturmaterialien, die man zum Basteln verwenden kann.",
+                "correctAnswer": "Blätter",
+                "acceptableAnswers": ["Blüten", "Zweige", "Rinden", "Naturmaterial"]
             },
             "hints": ["Man findet sie draußen in der Natur"],
             "feedbackCorrect": "Richtig! Blätter, Blüten, Zweige!",
@@ -513,9 +513,9 @@
             "instruction": "Wie nennt man eine geometrische Form mit 5 Ecken?",
             "content": {
                 "type": "fill-blank",
-                "question": "Eine Form mit 5 Ecken heißt ___",
-                "correctAnswers": ["Fünfeck", "Pentagon", "fünfeck"],
-                "caseSensitive": false
+                "sentence": "Eine Form mit 5 Ecken heißt {{blank}}",
+                "correctAnswer": "Fünfeck",
+                "acceptableAnswers": ["Pentagon", "fünfeck"]
             },
             "hints": ["Es beginnt mit F und hat 5 Ecken"],
             "feedbackCorrect": "Genau! Ein Fünfeck (Pentagon)!",
@@ -570,9 +570,9 @@
             "instruction": "Welche Proportionen (Verhältnisse) hat ein erwachsener Mensch?",
             "content": {
                 "type": "fill-blank",
-            "question": "Der Kopf ist etwa ___ mal so groß wie die Hand.",
-                "correctAnswers": ["3", "drei", "3-mal", "dreimal"],
-                "caseSensitive": false
+                "sentence": "Der Kopf ist etwa {{blank}} mal so groß wie die Hand.",
+                "correctAnswer": "3",
+                "acceptableAnswers": ["drei", "3-mal", "dreimal"]
             },
             "hints": ["Bei Erwachsenen ist der Kopf größer als bei Kindern"],
             "feedbackCorrect": "Richtig! Etwa 3-mal!",
@@ -627,9 +627,9 @@
             "instruction": "Warum ist es wichtig, die Werkstatt aufzuräumen?",
             "content": {
                 "type": "fill-blank",
-                "question": "Man räumt auf, damit ___ und die Werkstatt sauber bleibt.",
-                "correctAnswers": ["niemand", "alle", "keiner", "die Umwelt"],
-                "caseSensitive": false
+                "sentence": "Man räumt auf, damit {{blank}} und die Werkstatt sauber bleibt.",
+                "correctAnswer": "niemand",
+                "acceptableAnswers": ["alle", "keiner", "die Umwelt"]
             },
             "hints": ["Es geht um Sicherheit und Sauberkeit"],
             "feedbackCorrect": "Richtig! Damit niemand verletzt wird!",
@@ -684,9 +684,9 @@
             "instruction": "Welches Material entsteht aus gepressten Holzfasern?",
             "content": {
                 "type": "fill-blank",
-                "question": "___ wird aus gepressten Holzfasern hergestellt.",
-                "correctAnswers": ["Papier", "papier", "Pappe", "pappe"],
-                "caseSensitive": false
+                "sentence": "{{blank}} wird aus gepressten Holzfasern hergestellt.",
+                "correctAnswer": "Papier",
+                "acceptableAnswers": ["papier", "Pappe", "pappe"]
             },
             "hints": ["Man schreibt und zeichnet darauf"],
             "feedbackCorrect": "Richtig! Papier!",

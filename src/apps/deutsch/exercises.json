@@ -302,8 +302,9 @@
             "instruction": "Schreibe das Wort richtig",
             "content": {
                 "type": "fill-blank",
-                "sentence": "H__nd",
-                "correctAnswer": "u"
+                "sentence": "H{{blank}}nd",
+                "correctAnswer": "u",
+                "acceptableAnswers": []
             },
             "hints": ["Es fehlt ein Selbstlaut"],
             "feedbackCorrect": "Sehr gut! Hund!",
@@ -372,7 +373,7 @@
             "content": {
                 "type": "multiple-choice",
                 "question": "Apfel",
-                "options": ["Apffel", "Apfel", "Apfel", "Affel"],
+                "options": ["Apffel", "Apfel", "Aphel", "Affel"],
                 "correctIndex": 1
             },
             "hints": ["Ein p und ein f"],
@@ -417,7 +418,7 @@
         {
             "id": "deu-l1-sprechen-001",
             "type": "multiple-choice",
-            "areaId": "sprechen-hoeren",
+            "areaId": "sprechen",
             "themeId": "sprechen-hoeiren",
             "level": 1,
             "difficulty": 1,
@@ -435,7 +436,7 @@
         {
             "id": "deu-l2-sprechen-002",
             "type": "matching",
-            "areaId": "sprechen-hoeren",
+            "areaId": "sprechen",
             "themeId": "sprechen-hoeiren",
             "level": 2,
             "difficulty": 2,
@@ -456,7 +457,7 @@
         {
             "id": "deu-l3-sprechen-003",
             "type": "multiple-choice",
-            "areaId": "sprechen-hoeren",
+            "areaId": "sprechen",
             "themeId": "sprechen-hoeiren",
             "level": 3,
             "difficulty": 2,
@@ -474,7 +475,7 @@
         {
             "id": "deu-l1-sprach-001",
             "type": "multiple-choice",
-            "areaId": "sprachbetrachtung",
+            "areaId": "sprachbewusstsein",
             "themeId": "sprachbetrachtung",
             "level": 1,
             "difficulty": 1,
@@ -492,7 +493,7 @@
         {
             "id": "deu-l2-sprach-002",
             "type": "multiple-choice",
-            "areaId": "sprachbetrachtung",
+            "areaId": "sprachbewusstsein",
             "themeId": "sprachbetrachtung",
             "level": 2,
             "difficulty": 2,
@@ -510,7 +511,7 @@
         {
             "id": "deu-l2-sprach-003",
             "type": "matching",
-            "areaId": "sprachbetrachtung",
+            "areaId": "sprachbewusstsein",
             "themeId": "sprachbetrachtung",
             "level": 2,
             "difficulty": 2,
@@ -531,7 +532,7 @@
         {
             "id": "deu-l3-sprach-004",
             "type": "fill-blank",
-            "areaId": "sprachbetrachtung",
+            "areaId": "sprachbewusstsein",
             "themeId": "sprachbetrachtung",
             "level": 3,
             "difficulty": 3,
@@ -548,7 +549,7 @@
         {
             "id": "deu-l3-sprach-005",
             "type": "multiple-choice",
-            "areaId": "sprachbetrachtung",
+            "areaId": "sprachbewusstsein",
             "themeId": "sprachbetrachtung",
             "level": 3,
             "difficulty": 3,
@@ -626,8 +627,9 @@
             "instruction": "Schreibe das Wort mit dem richtigen Buchstaben",
             "content": {
                 "type": "fill-blank",
-                "sentence": "F__sch",
-                "correctAnswer": "i"
+                "sentence": "F{{blank}}sch",
+                "correctAnswer": "i",
+                "acceptableAnswers": []
             },
             "hints": ["Ein Fisch lebt im Wasser"],
             "feedbackCorrect": "Richtig! Fisch.",
