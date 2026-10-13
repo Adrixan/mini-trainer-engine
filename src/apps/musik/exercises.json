@@ -95,7 +95,7 @@
         {
             "id": "mu-l1-tanz-001",
             "type": "multiple-choice",
-            "areaId": "bewegung",
+            "areaId": "tanz",
             "themeId": "tanz-bewegung",
             "level": 1,
             "difficulty": 1,
@@ -131,7 +131,7 @@
         {
             "id": "mu-l2-noten-001",
             "type": "multiple-choice",
-            "areaId": "noten",
+            "areaId": "theorie",
             "themeId": "noten-lesen",
             "level": 2,
             "difficulty": 2,
@@ -177,9 +177,9 @@
             "instruction": "Ergänze die fehlende Note",
             "content": {
                 "type": "fill-blank",
-                "question": "♩ ♩ __ ♩",
-                "answer": "♩",
-                "alternatives": ["♩", "𝅗𝅥", "𝅘𝅥𝅮"]
+                "sentence": "♩ ♩ {{blank}} ♩",
+                "correctAnswer": "♩",
+                "acceptableAnswers": ["𝅗𝅥", "𝅘𝅥𝅮"]
             },
             "hints": ["Es fehlt noch ein Schlag"],
             "feedbackCorrect": "Richtig! Noch eine Viertelnote!",
@@ -188,7 +188,7 @@
         {
             "id": "mu-l2-melodie-001",
             "type": "multiple-choice",
-            "areaId": "melodie",
+            "areaId": "theorie",
             "themeId": "melodie",
             "level": 2,
             "difficulty": 2,
@@ -206,7 +206,7 @@
         {
             "id": "mu-l2-welt-001",
             "type": "multiple-choice",
-            "areaId": "musik-der-welt",
+            "areaId": "hoeren",
             "themeId": "musik-der-welt",
             "level": 2,
             "difficulty": 2,
@@ -224,11 +224,11 @@
         {
             "id": "mu-l2-geschichte-001",
             "type": "multiple-choice",
-            "areaId": "geschichte",
+            "areaId": "theorie",
             "themeId": "musik-geschichte",
             "level": 2,
             "difficulty": 2,
-            "instruction": "Wer hat diese berümt?",
+            "instruction": "Wer hat diese berühmte Melodie komponiert?",
             "content": {
                 "type": "multiple-choice",
                 "question": "🎵 Wiener Walzer",
@@ -260,7 +260,7 @@
         {
             "id": "mu-l3-komponisten-001",
             "type": "matching",
-            "areaId": "wissen",
+            "areaId": "theorie",
             "themeId": "komponisten",
             "level": 3,
             "difficulty": 3,
@@ -270,7 +270,10 @@
                 "pairs": [
                     {"left": "🎵 W.A. Mozart", "right": "🎼 Eine kleine Nachtmusik"},
                     {"left": "🎵 L. van Beethoven", "right": "🎼 9. Symphonie"},
-                    {"left": "🎵 J. Strauß", "right": "🎼 An der schönen blauen Donau"},
+                    {
+                        "left": "🎵 J. Strauß",
+                        "right": "🎼 An der schönen blauen Donau"
+                    },
                     {"left": "🎵 F. Schubert", "right": "🎼 Der Erlkönig"}
                 ]
             },
@@ -281,16 +284,16 @@
         {
             "id": "mu-l3-noten-001",
             "type": "fill-blank",
-            "areaId": "noten",
+            "areaId": "theorie",
             "themeId": "noten-lesen",
             "level": 3,
             "difficulty": 3,
             "instruction": "Wie viele Schläge hat diese Notenfolge?",
             "content": {
                 "type": "fill-blank",
-                "question": "𝅗𝅥 + 𝅗𝅥 + ♩ + ♩ = ?",
-                "answer": "6",
-                "alternatives": ["6", "sechs"]
+                "sentence": "𝅗𝅥 + 𝅗𝅥 + ♩ + ♩ = {{blank}}",
+                "correctAnswer": "6",
+                "acceptableAnswers": ["sechs"]
             },
             "hints": ["Halbe = 2, Viertel = 1"],
             "feedbackCorrect": "Richtig! 2+2+1+1 = 6!",
@@ -317,7 +320,7 @@
         {
             "id": "mu-l3-tanz-001",
             "type": "multiple-choice",
-            "areaId": "bewegung",
+            "areaId": "tanz",
             "themeId": "tanz-bewegung",
             "level": 3,
             "difficulty": 3,
@@ -335,7 +338,7 @@
         {
             "id": "mu-l3-welt-001",
             "type": "multiple-choice",
-            "areaId": "musik-der-welt",
+            "areaId": "hoeren",
             "themeId": "musik-der-welt",
             "level": 3,
             "difficulty": 3,
@@ -353,7 +356,7 @@
         {
             "id": "mu-l1-noten-001",
             "type": "multiple-choice",
-            "areaId": "noten",
+            "areaId": "theorie",
             "themeId": "noten-lesen",
             "level": 1,
             "difficulty": 1,
@@ -371,7 +374,7 @@
         {
             "id": "mu-l1-komponisten-001",
             "type": "multiple-choice",
-            "areaId": "wissen",
+            "areaId": "theorie",
             "themeId": "komponisten",
             "level": 1,
             "difficulty": 1,
@@ -389,7 +392,7 @@
         {
             "id": "mu-l2-geschichte-002",
             "type": "multiple-choice",
-            "areaId": "geschichte",
+            "areaId": "theorie",
             "themeId": "musik-geschichte",
             "level": 2,
             "difficulty": 2,
@@ -407,7 +410,7 @@
         {
             "id": "mu-l3-geschichte-002",
             "type": "multiple-choice",
-            "areaId": "geschichte",
+            "areaId": "theorie",
             "themeId": "musik-geschichte",
             "level": 3,
             "difficulty": 3,
@@ -425,7 +428,7 @@
         {
             "id": "mu-l1-tanz-002",
             "type": "multiple-choice",
-            "areaId": "bewegung",
+            "areaId": "tanz",
             "themeId": "tanz-bewegung",
             "level": 1,
             "difficulty": 1,
@@ -464,7 +467,7 @@
         {
             "id": "mu-l3-melodie-002",
             "type": "multiple-choice",
-            "areaId": "melodie",
+            "areaId": "theorie",
             "themeId": "melodie",
             "level": 3,
             "difficulty": 3,

@@ -12531,14 +12531,9 @@
                 "type": "fill-blank",
                 "sentence": "Mama {{blank}} gestern Kuchen gebacken.",
                 "correctAnswer": "hat",
-                "acceptableAnswers": [
-                    "hat"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Welches Hilfsverb passt? „haben\" oder „sein\"?",
-                "Mama (3. Person Singular) → hat"
-            ],
+            "hints": ["Welches Hilfsverb passt? „haben\" oder „sein\"?", "Mama (3. Person Singular) → hat"],
             "feedbackCorrect": "Richtig! Mama hat Kuchen gebacken! 🎉",
             "feedbackIncorrect": "Die richtige Form ist „hat\" – Mama hat Kuchen gebacken."
         },
@@ -12554,14 +12549,9 @@
                 "type": "fill-blank",
                 "sentence": "Wir {{blank}} in die Schule gegangen.",
                 "correctAnswer": "sind",
-                "acceptableAnswers": [
-                    "sind"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "„Gehen\" ist ein Bewegungsverb.",
-                "Bei Bewegungsverben: „sein\" + Partizip II"
-            ],
+            "hints": ["„Gehen\" ist ein Bewegungsverb.", "Bei Bewegungsverben: „sein\" + Partizip II"],
             "feedbackCorrect": "Genau! Wir sind in die Schule gegangen! 🎉",
             "feedbackIncorrect": "Bei „gehen\" braucht man „sein\": Wir sind gegangen."
         },
@@ -12629,14 +12619,9 @@
                 "type": "fill-blank",
                 "sentence": "Oma {{blank}} früher in einem alten Haus. (wohnen)",
                 "correctAnswer": "wohnte",
-                "acceptableAnswers": [
-                    "wohnte"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Das Präteritum von „wohnen\": wohnte",
-                "Regelmäßig: Stamm + -te"
-            ],
+            "hints": ["Das Präteritum von „wohnen\": wohnte", "Regelmäßig: Stamm + -te"],
             "feedbackCorrect": "Richtig! Oma wohnte in einem alten Haus. 🎉",
             "feedbackIncorrect": "Das Präteritum von „wohnen\" ist „wohnte\"."
         },
@@ -12652,14 +12637,9 @@
                 "type": "fill-blank",
                 "sentence": "Die Kinder {{blank}} gestern in der Schule.",
                 "correctAnswer": "waren",
-                "acceptableAnswers": [
-                    "waren"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Das Präteritum von „sein\":",
-                "ich war, du warst, er war, wir waren, sie waren"
-            ],
+            "hints": ["Das Präteritum von „sein\":", "ich war, du warst, er war, wir waren, sie waren"],
             "feedbackCorrect": "Super! Die Kinder waren gestern in der Schule. 🎉",
             "feedbackIncorrect": "Die richtige Antwort: Die Kinder waren in der Schule."
         },
@@ -12701,14 +12681,9 @@
                 "type": "fill-blank",
                 "sentence": "Im Sommer {{blank}} wir schwimmen gehen.",
                 "correctAnswer": "werden",
-                "acceptableAnswers": [
-                    "werden"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Futur I = „werden\" + Infinitiv",
-                "Wir → werden"
-            ],
+            "hints": ["Futur I = „werden\" + Infinitiv", "Wir → werden"],
             "feedbackCorrect": "Super! Im Sommer werden wir schwimmen gehen. 🎉",
             "feedbackIncorrect": "Futur I: werden + Infinitiv. Im Sommer werden wir schwimmen gehen."
         },
@@ -12801,13 +12776,9 @@
                 "type": "fill-blank",
                 "sentence": "Das Kind {{blank}} sehr traurig. (sein)",
                 "correctAnswer": "war",
-                "acceptableAnswers": [
-                    "war"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Präteritum von „sein\": ich war, du warst, er war…"
-            ],
+            "hints": ["Präteritum von „sein\": ich war, du warst, er war…"],
             "feedbackCorrect": "Richtig! Das Kind war sehr traurig. 🎉",
             "feedbackIncorrect": "Das Präteritum von „sein\" in der 3. Person: war."
         },
@@ -12956,14 +12927,9 @@
                 "type": "fill-blank",
                 "sentence": "Das Fenster {{blank}} geöffnet. (sein)",
                 "correctAnswer": "ist",
-                "acceptableAnswers": [
-                    "ist"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Zustandspassiv: „sein\" + Partizip II",
-                "3. Person Singular von „sein\" → ist"
-            ],
+            "hints": ["Zustandspassiv: „sein\" + Partizip II", "3. Person Singular von „sein\" → ist"],
             "feedbackCorrect": "Super! Das Fenster ist geöffnet. 🎉",
             "feedbackIncorrect": "Zustandspassiv: Das Fenster ist geöffnet."
         },
@@ -12979,14 +12945,9 @@
                 "type": "fill-blank",
                 "sentence": "Der Kuchen {{blank}} gebacken. (werden)",
                 "correctAnswer": "wird",
-                "acceptableAnswers": [
-                    "wird"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Vorgangspassiv: „werden\" + Partizip II",
-                "3. Person Singular von „werden\" → wird"
-            ],
+            "hints": ["Vorgangspassiv: „werden\" + Partizip II", "3. Person Singular von „werden\" → wird"],
             "feedbackCorrect": "Richtig! Der Kuchen wird gebacken. 🎉",
             "feedbackIncorrect": "Vorgangspassiv: Der Kuchen wird gebacken."
         },
@@ -13088,13 +13049,9 @@
                 "type": "fill-blank",
                 "sentence": "Die Straße {{blank}} gerade repariert. (werden)",
                 "correctAnswer": "wird",
-                "acceptableAnswers": [
-                    "wird"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Vorgangspassiv: werden + Partizip II"
-            ],
+            "hints": ["Vorgangspassiv: werden + Partizip II"],
             "feedbackCorrect": "Richtig! Die Straße wird gerade repariert. 🎉",
             "feedbackIncorrect": "Vorgangspassiv: Die Straße wird gerade repariert."
         },
@@ -13801,14 +13758,9 @@
                 "type": "fill-blank",
                 "sentence": "Ich gehe… nein, ich {{blank}} gestern in die Schule. (gehen, Perfekt)",
                 "correctAnswer": "bin gegangen",
-                "acceptableAnswers": [
-                    "bin gegangen"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Selbstkorrektur: Präsens → Perfekt",
-                "gehen im Perfekt: bin gegangen"
-            ],
+            "hints": ["Selbstkorrektur: Präsens → Perfekt", "gehen im Perfekt: bin gegangen"],
             "feedbackCorrect": "Toll! Du hast dich selbst korrigiert — das ist eine wichtige Strategie! 🎉",
             "feedbackIncorrect": "Die korrigierte Form: „Ich bin gestern in die Schule gegangen.\""
         },
@@ -13885,14 +13837,9 @@
                 "type": "fill-blank",
                 "sentence": "{{blank}} heißt das auf Deutsch? (Fragewort)",
                 "correctAnswer": "Wie",
-                "acceptableAnswers": [
-                    "Wie",
-                    "wie"
-                ]
+                "acceptableAnswers": ["wie"]
             },
-            "hints": [
-                "Man fragt: „Wie heißt das auf Deutsch?\""
-            ],
+            "hints": ["Man fragt: „Wie heißt das auf Deutsch?\""],
             "feedbackCorrect": "Richtig! „Wie heißt das auf Deutsch?\" — super Strategie! 🎉",
             "feedbackIncorrect": "Man fragt: „Wie heißt das auf Deutsch?\""
         },
@@ -14339,14 +14286,9 @@
                 "type": "fill-blank",
                 "sentence": "Meine {{blank}} heißt Anna. (mutter/Mutter)",
                 "correctAnswer": "Mutter",
-                "acceptableAnswers": [
-                    "Mutter"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Nomen (Hauptwörter) schreibt man groß.",
-                "„Mutter\" ist ein Nomen."
-            ],
+            "hints": ["Nomen (Hauptwörter) schreibt man groß.", "„Mutter\" ist ein Nomen."],
             "feedbackCorrect": "Richtig! „Mutter\" ist ein Nomen und wird großgeschrieben. 🎉",
             "feedbackIncorrect": "Nomen schreibt man groß: Mutter."
         },
@@ -14362,15 +14304,9 @@
                 "type": "fill-blank",
                 "sentence": "Mein Kopf tut mir weh, ich habe Kopfschmerzen. Die F{{blank}}ße sind auch kalt.",
                 "correctAnswer": "ü",
-                "acceptableAnswers": [
-                    "ü",
-                    "Ü"
-                ]
+                "acceptableAnswers": ["Ü"]
             },
-            "hints": [
-                "Der Singular ist „Fuß\".",
-                "Fuß → Füße (Umlaut u → ü)"
-            ],
+            "hints": ["Der Singular ist „Fuß\".", "Fuß → Füße (Umlaut u → ü)"],
             "feedbackCorrect": "Richtig! Füße mit ü — vom Wortstamm „Fuß\". 🎉",
             "feedbackIncorrect": "Fuß → Füße mit ü."
         },
@@ -14422,14 +14358,9 @@
                 "type": "fill-blank",
                 "sentence": "Die Stra{{blank}}e ist sehr lang.",
                 "correctAnswer": "ß",
-                "acceptableAnswers": [
-                    "ß"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Nach langem Vokal schreibt man „ß\".",
-                "„Straße\" hat ein langes a."
-            ],
+            "hints": ["Nach langem Vokal schreibt man „ß\".", "„Straße\" hat ein langes a."],
             "feedbackCorrect": "Richtig! „Straße\" mit ß nach langem Vokal. 🎉",
             "feedbackIncorrect": "Nach langem Vokal: ß → Straße."
         },
@@ -14471,14 +14402,9 @@
                 "type": "fill-blank",
                 "sentence": "Ein Haus → viele {{blank}} (Mehrzahl)",
                 "correctAnswer": "Häuser",
-                "acceptableAnswers": [
-                    "Häuser"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Der Stammvokal ändert sich: au → äu.",
-                "Haus → Häuser"
-            ],
+            "hints": ["Der Stammvokal ändert sich: au → äu.", "Haus → Häuser"],
             "feedbackCorrect": "Super! Haus → Häuser (Umlaut au → äu). 🎉",
             "feedbackIncorrect": "Haus → Häuser — der Vokal ändert sich: au → äu."
         },
@@ -14530,13 +14456,9 @@
                 "type": "fill-blank",
                 "sentence": "{{blank}} Ampel ist rot. (die/Die)",
                 "correctAnswer": "Die",
-                "acceptableAnswers": [
-                    "Die"
-                ]
+                "acceptableAnswers": []
             },
-            "hints": [
-                "Am Satzanfang schreibt man immer groß!"
-            ],
+            "hints": ["Am Satzanfang schreibt man immer groß!"],
             "feedbackCorrect": "Richtig! Am Satzanfang immer großschreiben. 🎉",
             "feedbackIncorrect": "Am Satzanfang: Die Ampel ist rot."
         },

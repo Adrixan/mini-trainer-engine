@@ -312,17 +312,17 @@
         },
         {
             "id": "su-l2-koerper-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "ich-und-mein-koerper",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Unser ___ pumpt das Blut durch den Körper.",
-                "correctAnswers": ["Herz"],
-                " distractors": ["Gehirn", "Lunge", "Magen"]
+                "options": ["Gehirn", "Herz", "Lunge", "Magen"],
+                "correctIndex": 1
             },
             "hints": ["Es schlägt in unserer Brust"],
             "feedbackCorrect": "Richtig! Das Herz pumpt Blut!",
@@ -348,17 +348,17 @@
         },
         {
             "id": "su-l2-schule-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "schule",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "In der ___ lernen wir lesen, schreiben und rechnen.",
-                "correctAnswers": ["Schule"],
-                "distractors": ["Kirche", "Bibliothek", "Museum"]
+                "options": ["Kirche", "Schule", "Bibliothek", "Museum"],
+                "correctIndex": 1
             },
             "hints": ["Du gehst jeden Tag hin"],
             "feedbackCorrect": "Richtig! In der Schule lernen wir!",
@@ -387,17 +387,17 @@
         },
         {
             "id": "su-l2-tiere-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "tiere",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
-                "question": "Der ___ ist ein Haustier, das miaut und Mäuse fängt.",
-                "correctAnswers": ["Katze"],
-                "distractors": ["Hund", "Hamster", "Fisch"]
+                "type": "multiple-choice",
+                "question": "Die ___ ist ein Haustier, das miaut und Mäuse fängt.",
+                "options": ["Katze", "Hund", "Hamster", "Fisch"],
+                "correctIndex": 0
             },
             "hints": ["Es ist kleiner als ein Hund und hat Schnurrhaare"],
             "feedbackCorrect": "Richtig! Die Katze miaut!",
@@ -423,17 +423,17 @@
         },
         {
             "id": "su-l2-wetter-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "wetter",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Wenn es blitzt und donnert, gibt es ein ___.",
-                "correctAnswers": ["Gewitter"],
-                "distractors": ["Schneesturm", "Regenbogen", "Nebel"]
+                "options": ["Schneesturm", "Regenbogen", "Gewitter", "Nebel"],
+                "correctIndex": 2
             },
             "hints": ["Es ist sehr stürmisch mit Blitz und Donner"],
             "feedbackCorrect": "Richtig! Ein Gewitter ist es!",
@@ -459,17 +459,17 @@
         },
         {
             "id": "su-l2-verkehr-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "verkehr",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
-                "question": "Mit dem ___ kommen Menschen sicher über die Straße.",
-                "correctAnswers": ["Ampel", "Fußgängerübergang"],
-                "distractors": ["Auto", "Fahrrad"]
+                "type": "multiple-choice",
+                "question": "Mit der ___ kommen Menschen sicher über die Straße.",
+                "options": ["Auto", "Fahrrad", "Ampel"],
+                "correctIndex": 2
             },
             "hints": ["Es hat rot, gelb und grün"],
             "feedbackCorrect": "Richtig! Die Ampel hilft uns!",
@@ -516,17 +516,17 @@
         },
         {
             "id": "su-l2-geschichte-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "geschichte",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Vor langer Zeit lebten die Menschen in ___.",
-                "correctAnswers": ["Höhlen"],
-                "distractors": ["Wohnungen", "Schlössern", "Zelten"]
+                "options": ["Höhlen", "Wohnungen", "Schlössern", "Zelten"],
+                "correctIndex": 0
             },
             "hints": ["Sie lebten in Felswohnungen"],
             "feedbackCorrect": "Richtig! Sie lebten in Höhlen!",
@@ -552,17 +552,17 @@
         },
         {
             "id": "su-l2-umwelt-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "umwelt",
             "level": 2,
             "difficulty": 2,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Wir sollen ___ sparen, indem wir das Licht ausmachen.",
-                "correctAnswers": ["Energie"],
-                "distractors": ["Zeit", "Geld", "Platz"]
+                "options": ["Zeit", "Energie", "Geld", "Platz"],
+                "correctIndex": 1
             },
             "hints": ["Sie kommt aus der Steckdose"],
             "feedbackCorrect": "Richtig! Wir sollen Energie sparen!",
@@ -591,17 +591,17 @@
         },
         {
             "id": "su-l3-koerper-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "ich-und-mein-koerper",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
-                "question": "Das ___ ist unser größtes Organ und schützt uns.",
-                "correctAnswers": ["Haut"],
-                "distractors": ["Knochen", "Muskel", "Herz"]
+                "type": "multiple-choice",
+                "question": "Die ___ ist unser größtes Organ und schützt uns.",
+                "options": ["Knochen", "Muskel", "Haut", "Herz"],
+                "correctIndex": 2
             },
             "hints": ["Es bedeckt unseren ganzen Körper"],
             "feedbackCorrect": "Richtig! Die Haut ist unser größtes Organ!",
@@ -645,17 +645,17 @@
         },
         {
             "id": "su-l3-zeit-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "zeit",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Ein ___ hat 24 Stunden.",
-                "correctAnswers": ["Tag"],
-                "distractors": ["Jahr", "Monat", "Minute"]
+                "options": ["Tag", "Jahr", "Monat", "Minute"],
+                "correctIndex": 0
             },
             "hints": ["Er geht von Mitternacht bis Mitternacht"],
             "feedbackCorrect": "Richtig! Ein Tag hat 24 Stunden!",
@@ -681,17 +681,17 @@
         },
         {
             "id": "su-l3-pflanzen-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "pflanzen",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Die ___ der Pflanze nehmen Wasser und Nährstoffe aus dem Boden auf.",
-                "correctAnswers": ["Wurzeln"],
-                "distractors": ["Blätter", "Blüten", "Stamm"]
+                "options": ["Blätter", "Blüten", "Wurzeln", "Stamm"],
+                "correctIndex": 2
             },
             "hints": ["Sie befinden sich unter der Erde"],
             "feedbackCorrect": "Richtig! Die Wurzeln nehmen Wasser auf!",
@@ -717,17 +717,17 @@
         },
         {
             "id": "su-l3-landschaft-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "natur",
             "themeId": "landschaft",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Ein ___ ist ein hohes Gebirge mit Schnee auf dem Gipfel.",
-                "correctAnswers": ["Berg"],
-                "distractors": ["Tal", "Fluss", "Wald"]
+                "options": ["Berg", "Tal", "Fluss", "Wald"],
+                "correctIndex": 0
             },
             "hints": ["Er ist sehr hoch und hat oft Schnee"],
             "feedbackCorrect": "Richtig! Ein Berg ist sehr hoch!",
@@ -753,17 +753,17 @@
         },
         {
             "id": "su-l3-technik-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "technik-im-alltag",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Mit dem ___ können wir Nachrichten in alle Welt schicken.",
-                "correctAnswers": ["Internet", "E-Mail", "Smartphone"],
-                "distractors": ["Radio", "Fernseher", "Herds"]
+                "options": ["Internet", "Radio", "Fernseher", "Herd"],
+                "correctIndex": 0
             },
             "hints": ["Es verbindet Computer auf der ganzen Welt"],
             "feedbackCorrect": "Richtig! Das Internet verbindet die Welt!",
@@ -810,17 +810,17 @@
         },
         {
             "id": "su-l3-medien-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "medien",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Im ___ können wir nach Informationen suchen.",
-                "correctAnswers": ["Internet", "Browser", "Suchmaschine"],
-                "distractors": ["Buch", "Zeitung", "Fernseher"]
+                "options": ["Internet", "Buch", "Zeitung", "Fernseher"],
+                "correctIndex": 0
             },
             "hints": ["Es ist ein Netzwerk aus Computern"],
             "feedbackCorrect": "Richtig! Im Internet finden wir Informationen!",
@@ -846,17 +846,17 @@
         },
         {
             "id": "su-l3-berufe-001",
-            "type": "fill-blank",
+            "type": "multiple-choice",
             "areaId": "menschen",
             "themeId": "berufe-arbeitswelt",
             "level": 3,
             "difficulty": 3,
             "instruction": "Ergänze die fehlenden Wörter",
             "content": {
-                "type": "fill-blank",
+                "type": "multiple-choice",
                 "question": "Ein ___ plant und baut Häuser.",
-                "correctAnswers": ["Architekt"],
-                "distractors": ["Lehrer", "Arzt", "Bäcker"]
+                "options": ["Lehrer", "Arzt", "Bäcker", "Architekt"],
+                "correctIndex": 3
             },
             "hints": ["Er zeichnet Baupläne"],
             "feedbackCorrect": "Richtig! Der Architekt plant Häuser!",

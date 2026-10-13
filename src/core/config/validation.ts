@@ -193,10 +193,10 @@ export function validateAreas(areas: unknown): ValidationResult {
             warnings.push(warning('MISSING_CATEGORY', `Area ${area.id ?? index} is missing category`, `${path}.category`));
         }
 
-        // Stages validation
-        if (!isArray(area.stages)) {
-            errors.push(error('MISSING_STAGES', `Area ${area.id ?? index} must have stages array`, `${path}.stages`));
-        } else {
+        // Stages validation (optional — newer app configs may not include stages)
+        if (area.stages !== undefined && !isArray(area.stages)) {
+            errors.push(error('INVALID_STAGES', `Area ${area.id ?? index} has stages but it is not an array`, `${path}.stages`));
+        } else if (isArray(area.stages)) {
             const levelSet = new Set<number>();
 
             area.stages.forEach((stage, stageIndex) => {
@@ -364,42 +364,46 @@ export function validateBadges(badges: unknown): ValidationResult {
             return;
         }
 
-        // Check badge object
-        if (!isObject(badgeItem.badge)) {
-            errors.push(error('MISSING_BADGE_OBJECT', `Badge item at index ${index} is missing badge object`, `${path}.badge`));
-            return;
-        }
-
-        const badge = badgeItem.badge as Record<string, unknown>;
+        // Detect format: nested has `badge` sub-object, flat has `id` at top level
+        const isNested = isObject(badgeItem.badge);
+        const badge = isNested
+            ? (badgeItem.badge as Record<string, unknown>)
+            : (badgeItem as Record<string, unknown>);
 
         if (!isNonEmptyString(badge.id)) {
-            errors.push(error('MISSING_BADGE_ID', `Badge at index ${index} is missing ID`, `${path}.badge.id`));
+            errors.push(error('MISSING_BADGE_ID', `Badge at index ${index} is missing ID`, `${path}.${isNested ? 'badge.' : ''}id`));
         } else {
             if (badgeIds.has(badge.id)) {
-                errors.push(error('DUPLICATE_BADGE_ID', `Duplicate badge ID: ${badge.id}`, `${path}.badge.id`));
+                errors.push(error('DUPLICATE_BADGE_ID', `Duplicate badge ID: ${badge.id}`, `${path}.${isNested ? 'badge.' : ''}id`));
             }
             badgeIds.add(badge.id);
         }
 
         if (!isNonEmptyString(badge.name)) {
-            errors.push(error('MISSING_BADGE_NAME', `Badge ${badge.id ?? index} is missing name`, `${path}.badge.name`));
+            errors.push(error('MISSING_BADGE_NAME', `Badge ${badge.id ?? index} is missing name`, `${path}.${isNested ? 'badge.' : ''}name`));
         }
 
         if (!isNonEmptyString(badge.description)) {
-            warnings.push(warning('MISSING_BADGE_DESCRIPTION', `Badge ${badge.id ?? index} is missing description`, `${path}.badge.description`));
+            warnings.push(warning('MISSING_BADGE_DESCRIPTION', `Badge ${badge.id ?? index} is missing description`, `${path}.${isNested ? 'badge.' : ''}description`));
         }
 
         if (!isNonEmptyString(badge.icon)) {
-            warnings.push(warning('MISSING_BADGE_ICON', `Badge ${badge.id ?? index} is missing icon`, `${path}.badge.icon`));
+            warnings.push(warning('MISSING_BADGE_ICON', `Badge ${badge.id ?? index} is missing icon`, `${path}.${isNested ? 'badge.' : ''}icon`));
         }
 
-        // Check type and threshold
-        if (!isNonEmptyString(badgeItem.type)) {
-            warnings.push(warning('MISSING_BADGE_TYPE', `Badge ${badge.id ?? index} is missing type`, `${path}.type`));
-        }
-
-        if (typeof badgeItem.threshold !== 'number') {
-            warnings.push(warning('MISSING_THRESHOLD', `Badge ${badge.id ?? index} is missing threshold`, `${path}.threshold`));
+        if (isNested) {
+            // Nested format: check type and threshold at item level
+            if (!isNonEmptyString(badgeItem.type)) {
+                warnings.push(warning('MISSING_BADGE_TYPE', `Badge ${badge.id ?? index} is missing type`, `${path}.type`));
+            }
+            if (typeof badgeItem.threshold !== 'number') {
+                warnings.push(warning('MISSING_THRESHOLD', `Badge ${badge.id ?? index} is missing threshold`, `${path}.threshold`));
+            }
+        } else {
+            // Flat format: check requirement object
+            if (badgeItem.requirement !== undefined && !isObject(badgeItem.requirement)) {
+                warnings.push(warning('INVALID_REQUIREMENT', `Badge ${badge.id ?? index} has invalid requirement`, `${path}.requirement`));
+            }
         }
     });
 

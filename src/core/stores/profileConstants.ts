@@ -5,22 +5,9 @@
  */
 
 /**
- * Available avatar emojis for profile creation.
+ * Available avatar emojis for profile creation (trainer.config.json).
  */
-export const AVATAR_EMOJIS = [
-    '🦊', // Fox
-    '🐻', // Bear
-    '🐰', // Bunny
-    '🦁', // Lion
-    '🐸', // Frog
-    '🐼', // Panda
-    '🦄', // Unicorn
-    '🐕', // Dog
-    '🐱', // Cat
-    '🐵', // Monkey
-    '🦋', // Butterfly
-    '🌟', // Star
-] as const;
+export const AVATAR_EMOJIS: readonly string[] = __TRAINER__.avatars;
 
 /**
  * Maximum nickname length for user profiles.

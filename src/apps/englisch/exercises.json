@@ -46,8 +46,9 @@
             "instruction": "Complete the greeting",
             "content": {
                 "type": "fill-blank",
-                "question": "Good {{blank}}! How are you?",
-                "correctAnswer": "afternoon"
+                "sentence": "Good {{blank}}! How are you?",
+                "correctAnswer": "afternoon",
+                "acceptableAnswers": []
             },
             "hints": ["Used after noon"],
             "feedbackCorrect": "Correct! Good afternoon!",
@@ -101,9 +102,9 @@
             "instruction": "Fill in the color",
             "content": {
                 "type": "fill-blank",
-                "question": "The sky is {{blank}}.",
+                "sentence": "The sky is {{blank}}.",
                 "correctAnswer": "blue",
-                "image": "🌤️"
+                "acceptableAnswers": []
             },
             "hints": ["What color is the sky on a sunny day?"],
             "feedbackCorrect": "Correct! Blue!",
@@ -155,8 +156,9 @@
             "instruction": "Complete the family word",
             "content": {
                 "type": "fill-blank",
-                "question": "My father's son is my {{blank}}.",
-                "correctAnswer": "brother"
+                "sentence": "My father's son is my {{blank}}.",
+                "correctAnswer": "brother",
+                "acceptableAnswers": []
             },
             "hints": ["A male sibling"],
             "feedbackCorrect": "Correct! Brother!",
@@ -190,8 +192,9 @@
             "instruction": "Fill in the animal",
             "content": {
                 "type": "fill-blank",
-                "question": "The {{blank}} says 'Woof'.",
-                "correctAnswer": "dog"
+                "sentence": "The {{blank}} says 'Woof'.",
+                "correctAnswer": "dog",
+                "acceptableAnswers": []
             },
             "hints": ["A loyal pet"],
             "feedbackCorrect": "Correct! Dog!",
@@ -225,8 +228,9 @@
             "instruction": "Fill in the food",
             "content": {
                 "type": "fill-blank",
-                "question": "I like to eat {{blank}}.",
-                "correctAnswer": "apples"
+                "sentence": "I like to eat {{blank}}.",
+                "correctAnswer": "apples",
+                "acceptableAnswers": []
             },
             "hints": ["A red fruit"],
             "feedbackCorrect": "Correct! Apples!",
@@ -260,8 +264,9 @@
             "instruction": "Fill in the body part",
             "content": {
                 "type": "fill-blank",
-                "question": "I hear with my {{blank}}.",
-                "correctAnswer": "ears"
+                "sentence": "I hear with my {{blank}}.",
+                "correctAnswer": "ears",
+                "acceptableAnswers": []
             },
             "hints": ["Located on the sides of your head"],
             "feedbackCorrect": "Correct! Ears!",
@@ -367,8 +372,9 @@
             "instruction": "Fill in the question word",
             "content": {
                 "type": "fill-blank",
-                "question": "{{blank}} are you from?",
-                "correctAnswer": "Where"
+                "sentence": "{{blank}} are you from?",
+                "correctAnswer": "Where",
+                "acceptableAnswers": []
             },
             "hints": ["Used to ask about a place"],
             "feedbackCorrect": "Correct! Where!",
@@ -402,8 +408,9 @@
             "instruction": "Fill in the past tense",
             "content": {
                 "type": "fill-blank",
-                "question": "Yesterday she {{blank}} to school.",
-                "correctAnswer": "walked"
+                "sentence": "Yesterday she {{blank}} to school.",
+                "correctAnswer": "walked",
+                "acceptableAnswers": []
             },
             "hints": ["Add -ed to walk"],
             "feedbackCorrect": "Correct! Walked!",
@@ -437,8 +444,9 @@
             "instruction": "Fill in the preposition",
             "content": {
                 "type": "fill-blank",
-                "question": "The book is {{blank}} the desk.",
-                "correctAnswer": "on"
+                "sentence": "The book is {{blank}} the desk.",
+                "correctAnswer": "on",
+                "acceptableAnswers": []
             },
             "hints": ["On top of"],
             "feedbackCorrect": "Correct! On!",
@@ -472,8 +480,9 @@
             "instruction": "Fill in the daily activity",
             "content": {
                 "type": "fill-blank",
-                "question": "In the evening I {{blank}} my teeth.",
-                "correctAnswer": "brush"
+                "sentence": "In the evening I {{blank}} my teeth.",
+                "correctAnswer": "brush",
+                "acceptableAnswers": []
             },
             "hints": ["Clean your teeth"],
             "feedbackCorrect": "Correct! Brush!",

@@ -14,12 +14,16 @@ export {
     selectAnimationsEnabled,
     selectSoundEnabled,
     selectTeacherAuthenticated,
+    selectHasTeacherPin,
 } from './appStore';
 
 export type {
     AppSettings,
     AppState,
     FontSize,
+    Theme,
+    PinCheckResult,
+    TeacherAuth,
 } from './appStore';
 
 // Profile store
